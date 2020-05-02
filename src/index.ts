@@ -2,6 +2,7 @@ import Controller from './controller/Controller';
 import Display from './display/Display';
 import Game from './game/Game';
 import Engine from './engine/Engine';
+import store from './store';
 
 window.addEventListener('DOMContentLoaded', () => {
   const margin = 32;
@@ -64,4 +65,16 @@ window.addEventListener('DOMContentLoaded', () => {
   resize();
 
   engine.start();
+
+  if (process.env.NODE_ENV !== 'production') {
+    setInterval(() => {
+      store.dispatch({
+        type: 'updateState',
+        payload: {
+          game,
+          controller,
+        },
+      });
+    }, 500);
+  }
 });
