@@ -1,3 +1,4 @@
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 const path = require('path');
 
 module.exports = {
@@ -29,5 +30,11 @@ module.exports = {
   },
 
   devtool: 'cheap-module-source-map',
-  devServer: {}
+  devServer: {},
+
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: 'index.html'
+    })
+  ]
 };

@@ -9,6 +9,7 @@ export default class {
   }
 
   getInput (isDown: boolean): void {
+    // this prevents repeating actions, if button keeps beeing down
     if (this.isDown !== isDown) {
       this.isActive = isDown;
     }
