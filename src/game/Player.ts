@@ -5,7 +5,8 @@ export default class {
   y: number;
   width: number;
   height: number;
-  color: string;
+  color1: string;
+  color2: string;
   weight: number;
   speed: number;
   isJumping: boolean;
@@ -18,9 +19,10 @@ export default class {
     this.y = 0;
 
     // Appearance
-    this.width = 16;
-    this.height = 16;
-    this.color = '#ff0000';
+    this.width = 8;
+    this.height = 8;
+    this.color1 = '#404040';
+    this.color1 = '#f0f0f0';
 
     // Physics
     this.weight = 20;
@@ -40,8 +42,6 @@ export default class {
 
   jump (): void {
     if (!this.isJumping) {
-      this.updateColor();
-
       this.isJumping = true;
       this.velocityY -= this.weight;
     }
@@ -50,13 +50,5 @@ export default class {
   update (): void {
     this.x += this.velocityX;
     this.y += this.velocityY;
-  }
-
-  updateColor (): void {
-    this.color = `#${Math.floor(Math.random() * 16777216).toString(16)}`;
-
-    if (this.color.length !== 7) {
-      this.color = `${this.color.slice(0, 1)}0${this.color.slice(1, 6)}`;
-    }
   }
 }

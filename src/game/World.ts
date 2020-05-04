@@ -1,5 +1,6 @@
 // The class is responsible for keeping and processing the game world
 import Player from './Player';
+import map from '../assets/map.json';
 
 export default class {
   friction: number;
@@ -8,18 +9,23 @@ export default class {
   height: number;
   width: number;
   player: Player;
+  map: number[];
+  columns: number;
+  rows: number;
+  tileSize: number;
 
   constructor () {
     // Physics
-    // friction force
     this.friction = 0.9;
-    // gravitation force
     this.gravity = 3;
 
     // Appearance
-    this.backgroundColor = 'rgba(40,48,56,0.25)';
-    this.height = 72;
-    this.width = 128;
+    this.columns = 20;
+    this.rows = 20;
+    this.tileSize = 8;
+    this.map = map.layers[0].data;
+    this.height = this.tileSize * this.rows;
+    this.width = this.tileSize * this.columns;
 
     // Objects
     this.player = new Player();
