@@ -22,6 +22,7 @@ window.addEventListener('DOMContentLoaded', () => {
   };
 
   const render = () => {
+    display.drawMap(game.world.background, game.world.columns);
     display.drawMap(game.world.map, game.world.columns);
     display.drawPlayer(
       game.world.player,

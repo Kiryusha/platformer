@@ -1,6 +1,7 @@
 // The class is responsible for keeping and processing the game world
 import Player from './Player';
 import map from '../assets/map.json';
+import background from '../assets/background.json';
 
 export default class {
   friction: number;
@@ -10,6 +11,7 @@ export default class {
   width: number;
   player: Player;
   map: number[];
+  background: number[];
   columns: number;
   rows: number;
   tileSize: number;
@@ -24,6 +26,7 @@ export default class {
     this.rows = 20;
     this.tileSize = 8;
     this.map = map.layers[0].data;
+    this.background = background.layers[0].data;
     this.height = this.tileSize * this.rows;
     this.width = this.tileSize * this.columns;
 
