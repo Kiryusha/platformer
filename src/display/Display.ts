@@ -20,19 +20,18 @@ export default class {
       height: number,
     },
     color1: string,
-    color2: string,
   ): void {
     this.buffer.fillStyle = color1;
     this.buffer.fillRect(
-      Math.floor(rectangle.x),
-      Math.floor(rectangle.y),
+      Math.round(rectangle.x),
+      Math.round(rectangle.y),
       rectangle.width,
       rectangle.height,
     );
     this.buffer.fillStyle = '#000000';
     this.buffer.fillRect(
-      Math.floor(rectangle.x + 1),
-      Math.floor(rectangle.y + 1),
+      Math.round(rectangle.x + 1),
+      Math.round(rectangle.y + 1),
       rectangle.width - 2,
       rectangle.height - 2,
     );

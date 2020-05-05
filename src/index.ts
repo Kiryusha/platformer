@@ -22,13 +22,13 @@ window.addEventListener('DOMContentLoaded', () => {
   };
 
   const render = () => {
-    display.drawMap(game.world.background, game.world.columns);
-    display.drawMap(game.world.map, game.world.columns);
+    display.drawMap(game.world.backgroundMap, game.world.columns);
+    display.drawMap(game.world.middleMap, game.world.columns);
     display.drawPlayer(
       game.world.player,
       game.world.player.color1,
-      game.world.player.color2,
     );
+    display.drawMap(game.world.frontMap, game.world.columns);
     display.render();
   };
 
