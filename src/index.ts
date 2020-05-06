@@ -20,7 +20,6 @@ window.addEventListener('DOMContentLoaded', () => {
     );
     display.render();
   };
-
   const render = () => {
     display.drawMap(game.world.backgroundMap, game.world.columns);
     display.drawMap(game.world.middleMap, game.world.columns);
@@ -29,6 +28,11 @@ window.addEventListener('DOMContentLoaded', () => {
       game.world.player.color1,
     );
     display.drawMap(game.world.frontMap, game.world.columns);
+    display.drawCollisionDebugMap(
+      game.world.collisionDebugMap,
+      game.world.columns,
+      game.world.tileSize,
+    );
     display.render();
   };
 

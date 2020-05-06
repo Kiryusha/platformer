@@ -10,16 +10,16 @@ export default class extends GameObject {
   velocityY: number;
 
   constructor () {
-    super(16, 104, 4, 4);
+    super(16, 204, 16, 16);
 
     // Appearance
     this.color1 = '#404040';
     this.color1 = '#f0f0f0';
 
     // Physics
-    this.weight = 17;
-    this.speed = 0.5;
-    this.isJumping = true;
+    this.weight = 33;
+    this.speed = 0.8;
+    this.isJumping = false;
     this.velocityX = 0;
     this.velocityY = 0;
   }
@@ -39,10 +39,15 @@ export default class extends GameObject {
     }
   }
 
-  update (): void {
+  update (gravity: number, friction: number): void {
     this.xOld = this.x;
     this.yOld = this.y;
+
+    this.velocityY += gravity;
     this.x += this.velocityX;
     this.y += this.velocityY;
+
+    this.velocityX *= friction;
+    this.velocityY *= friction;
   }
 }

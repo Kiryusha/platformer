@@ -9,7 +9,6 @@ export default class {
     tileY: number,
     tileSize: number,
   ): void {
-    // console.log(platformType)
     switch (platformType) {
       case 215: // top
         this.collidePlatformTop(object, tileY);
@@ -54,7 +53,6 @@ export default class {
   ): boolean {
     if (object.getBottom() > tileTop && object.getOldBottom() <= tileTop) {
       object.setBottom(tileTop - 0.01);
-      // console.log('collidePlatformTop')
       object.velocityY = 0;
       object.isJumping = false;
       return true;

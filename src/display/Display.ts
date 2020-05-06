@@ -37,6 +37,38 @@ export default class {
     );
   }
 
+  drawCollisionDebugMap(
+    map: (number | string)[],
+    mapColumns: number,
+    tileSize: number,
+  ): void {
+    const colorsDictionary: {
+      [sideName: string]: string
+    } = {
+      top: 'rgba(255, 0, 0, 0.8)',
+      left: 'rgba(0, 181, 204, 0.8)',
+      right: 'rgba(145, 61, 136, 0.8)',
+      bottom: 'rgba(255, 255, 0, 0.8)',
+    };
+    for (let i: number = 0; i < map.length; i += 1) {
+      const position = i;
+
+
+      if (map[i]) {
+        const mapRow = Math.floor(position / mapColumns);
+        const mapColumn = position % mapColumns;
+
+        this.buffer.fillStyle = colorsDictionary[map[i]];
+        this.buffer.fillRect(
+          mapColumn * tileSize,
+          mapRow * tileSize,
+          tileSize,
+          tileSize,
+        );
+      }
+    }
+  }
+
   drawMap (map: number[], mapColumns: number): void {
     for (let i: number = 0; i < map.length; i += 1) {
       const id = map[i];
