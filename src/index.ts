@@ -1,9 +1,10 @@
-import Controller from './controller/Controller';
-import Display from './display/Display';
-import Game from './game/Game';
-import Engine from './engine/Engine';
+import Controller from './core/controller/Controller';
+import Display from './core/display/Display';
+import Game from './core/game/Game';
+import Engine from './core/engine/Engine';
 import store from './store';
 import tileSet from './assets/images/tileset.png';
+import map from './assets/levels/map.json';
 // import playerSprite from './assets/images/skip.png';
 
 declare global {
@@ -13,7 +14,7 @@ declare global {
   }
 }
 
-window.addEventListener('DOMContentLoaded', () => {
+window.addEventListener('DOMContentLoaded', async () => {
   const margin = 32;
   const fps = 1000 / 30;
 
@@ -71,7 +72,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
   const controller = new Controller();
   const display = new Display(document.getElementById('game') as HTMLCanvasElement);
-  const game = new Game();
+  const game = new Game(map);
   const engine = new Engine(fps, render, update);
 
   // Synchronize display buffer size with the world size
@@ -83,10 +84,10 @@ window.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('keyup', handleKeyEvent);
   window.addEventListener('resize', resize);
 
-  display.assetsManager.loadAsset(tileSet, () => {
-    resize();
-    engine.start();
-  });
+  await display.assetsManager.loadAsset(tileSet);
+
+  resize();
+  engine.start();
 
   if (process.env.NODE_ENV !== 'production') {
     setInterval(() => {

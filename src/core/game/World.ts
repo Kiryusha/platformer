@@ -1,7 +1,6 @@
 // The class is responsible for keeping and processing the game world
 import Player from './Player';
 import Collider from './Collider';
-import map from '../assets/levels/map.json';
 
 export default class {
   gravity: number;
@@ -17,8 +16,10 @@ export default class {
   tileSize: number;
   player: Player;
   collider: Collider;
+  map: gameMap;
 
-  constructor () {
+  constructor (map: gameMap) {
+    this.map = map;
     // Physics
     this.gravity = 2;
 
@@ -26,11 +27,11 @@ export default class {
     this.columns = 40;
     this.rows = 40;
     this.tileSize = 8;
-    this.backgroundMap = map.layers[0].data;
-    this.middleMap = map.layers[1].data;
-    this.frontMap = map.layers[2].data;
-    this.collisionMap = map.layers[3].data;
-    this.collisionDebugMap = map.layers[4].data;
+    this.backgroundMap = this.map.layers[0].data;
+    this.middleMap = this.map.layers[1].data;
+    this.frontMap = this.map.layers[2].data;
+    this.collisionMap = this.map.layers[3].data;
+    this.collisionDebugMap = this.map.layers[4].data;
     this.height = this.tileSize * this.rows;
     this.width = this.tileSize * this.columns;
 
@@ -55,7 +56,7 @@ export default class {
     let bottomRight;
     let platformType;
 
-    this.collisionDebugMap = [...map.layers[4].data];
+    this.collisionDebugMap = [...this.map.layers[4].data];
 
     // Collision of top edge
     top = Math.floor(object.getTop() / this.tileSize) - 1;

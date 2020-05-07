@@ -15,7 +15,7 @@ export default class extends GameObject {
   brakingModifier: number;
 
   constructor() {
-    super(16, 204, 16, 16);
+    super(16, 204, 24, 24);
 
     // Appearance
     this.color1 = '#404040';

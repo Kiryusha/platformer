@@ -10,11 +10,11 @@ export default class {
     this.columns = columns;
   }
 
-  loadAsset(url: string, callback: () => void): void {
-    this.image.addEventListener('load', () => {
-      callback();
-    }, { once : true});
-
-    this.image.src = url;
+  loadAsset(url: string): any {
+    return new Promise((resolve, reject) => {
+      this.image.addEventListener('load', () => resolve());
+      this.image.addEventListener('error', err => reject(err));
+      this.image.src = url;
+    });
   }
 }
