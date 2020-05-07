@@ -79,6 +79,7 @@ export default class {
     if (object.getTop() < tileBottom && object.getOldTop() >= tileBottom) {
       object.setTop(tileBottom);
       object.velocityY = 0;
+      object.isJumping = false;
       return true;
     }
     return false;

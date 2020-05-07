@@ -4,7 +4,7 @@ export default class {
   tileSize: number;
   columns: number;
 
-  constructor (tileSize: number, columns: number) {
+  constructor(tileSize: number, columns: number) {
     this.image = new Image();
     this.tileSize = tileSize;
     this.columns = columns;

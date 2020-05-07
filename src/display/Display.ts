@@ -6,13 +6,13 @@ export default class {
   context: CanvasRenderingContext2D;
   tileSheet: TileSheet;
 
-  constructor (canvas: HTMLCanvasElement) {
+  constructor(canvas: HTMLCanvasElement) {
     this.buffer = document.createElement('canvas').getContext('2d');
     this.context = canvas.getContext('2d');
     this.tileSheet = new TileSheet(8, 23);
   }
 
-  drawPlayer (
+  drawPlayer(
     rectangle: {
       x: number,
       y: number,
@@ -69,7 +69,7 @@ export default class {
     }
   }
 
-  drawMap (map: number[], mapColumns: number): void {
+  drawMap(map: number[], mapColumns: number): void {
     for (let i: number = 0; i < map.length; i += 1) {
       const id = map[i];
       const position = i;
@@ -100,7 +100,7 @@ export default class {
     }
   }
 
-  render (): void {
+  render(): void {
     this.context.drawImage(
       this.buffer.canvas,
       0,
@@ -114,7 +114,7 @@ export default class {
     );
   }
 
-  resize (
+  resize(
     width: number,
     height: number,
     ratio: number,

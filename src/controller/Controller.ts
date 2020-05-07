@@ -6,13 +6,13 @@ export default class {
   right: Button;
   up: Button;
 
-  constructor () {
+  constructor() {
     this.left = new Button();
     this.right = new Button();
     this.up = new Button();
   }
 
-  handleKeyEvent (
+  handleKeyEvent(
     type: string,
     keyCode: number
   ): void {

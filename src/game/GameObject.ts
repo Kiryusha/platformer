@@ -7,7 +7,7 @@ export default class {
   width: number;
   height: number;
 
-  constructor (
+  constructor(
     x: number,
     y: number,
     width: number,

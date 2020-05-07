@@ -3,12 +3,12 @@ export default class {
   isDown: boolean;
   isActive: boolean;
 
-  constructor () {
+  constructor() {
     this.isDown = false;
     this.isActive = false;
   }
 
-  getInput (isDown: boolean): void {
+  getInput(isDown: boolean): void {
     // this prevents repeating actions, if button keeps beeing down
     if (this.isDown !== isDown) {
       this.isActive = isDown;

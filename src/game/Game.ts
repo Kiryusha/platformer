@@ -4,11 +4,11 @@ import World from './World';
 export default class {
   world: World;
 
-  constructor () {
+  constructor() {
     this.world = new World();
   }
 
-  update (): void {
+  update(): void {
     this.world.update();
   }
 }

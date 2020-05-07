@@ -4,6 +4,13 @@ import Game from './game/Game';
 import Engine from './engine/Engine';
 import store from './store';
 
+declare global {
+  interface Window {
+    SHOW_COLLISIONS: boolean;
+    SHOW_VELOCITY: boolean;
+  }
+}
+
 window.addEventListener('DOMContentLoaded', () => {
   const margin = 32;
   const fps = 1000 / 30;
@@ -28,21 +35,28 @@ window.addEventListener('DOMContentLoaded', () => {
       game.world.player.color1,
     );
     display.drawMap(game.world.frontMap, game.world.columns);
-    display.drawCollisionDebugMap(
-      game.world.collisionDebugMap,
-      game.world.columns,
-      game.world.tileSize,
-    );
+
+    if (window.SHOW_COLLISIONS) {
+      display.drawCollisionDebugMap(
+        game.world.collisionDebugMap,
+        game.world.columns,
+        game.world.tileSize,
+      );
+    }
     display.render();
   };
 
   const update = () => {
     if (controller.left.isActive) {
-      game.world.player.moveLeft();
+      game.world.player.startMovingLeft();
+    } else if (game.world.player.isMovingLeft) {
+      game.world.player.stopMovingLeft();
     }
 
     if (controller.right.isActive) {
-      game.world.player.moveRight();
+      game.world.player.startMovingRight();
+    } else if (game.world.player.isMovingRight) {
+      game.world.player.stopMovingRight();
     }
 
     if (controller.up.isActive) {

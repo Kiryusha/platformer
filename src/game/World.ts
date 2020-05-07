@@ -4,7 +4,6 @@ import Collider from './Collider';
 import map from '../assets/map.json';
 
 export default class {
-  friction: number;
   gravity: number;
   height: number;
   width: number;
@@ -21,7 +20,6 @@ export default class {
 
   constructor () {
     // Physics
-    this.friction = 0.7;
     this.gravity = 2;
 
     // Appearance
@@ -67,8 +65,8 @@ export default class {
     topRight = top * this.columns + right;
     for (; topLeft <= topRight; topLeft += 1) {
       platformType = this.collisionMap[topLeft];
-      this.collisionDebugMap[topLeft] = 'top';
       if (platformType) {
+        this.collisionDebugMap[topLeft] = 'top';
         this.collider.processCollision(
           platformType,
           object,
@@ -85,7 +83,7 @@ export default class {
     bottom = Math.floor((object.getBottom()) / (this.tileSize));
     topLeft = top * this.columns + left;
     bottomLeft = bottom * this.columns + left;
-    for (; topLeft < bottomLeft; topLeft += this.columns) {
+    for (; topLeft <= bottomLeft; topLeft += this.columns) {
       platformType = this.collisionMap[topLeft];
       if (platformType) {
         this.collisionDebugMap[topLeft] = 'left';
@@ -105,7 +103,7 @@ export default class {
     bottom = Math.floor((object.getBottom()) / (this.tileSize));
     topRight = top * this.columns + right;
     bottomRight = bottom * this.columns + right;
-    for (; topRight < bottomRight; topRight += this.columns) {
+    for (; topRight <= bottomRight; topRight += this.columns) {
       platformType = this.collisionMap[topRight];
       if (platformType) {
         this.collisionDebugMap[topRight] = 'right';
@@ -169,7 +167,7 @@ export default class {
   }
 
   update (): void {
-    this.player.update(this.gravity, this.friction);
+    this.player.update(this.gravity);
     this.processCollision(this.player);
   }
 }
