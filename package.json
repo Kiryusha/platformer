@@ -22,6 +22,8 @@
     "@babel/preset-typescript": "^7.3.3",
     "@types/node": "7.0.0",
     "babel-loader": "8.1.0",
+    "clean-webpack-plugin": "^3.0.0",
+    "file-loader": "^6.0.0",
     "html-webpack-plugin": "^4.3.0",
     "tslint": "5.17.0",
     "tslint-loader": "3.6.0",

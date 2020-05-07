@@ -1,11 +1,12 @@
-const HtmlWebpackPlugin = require('html-webpack-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const path = require('path');
 
 module.exports = {
   entry: path.resolve(__dirname, 'src'),
 
   output: {
-    filename: '[name].bundle.js',
+    filename: 'main.js',
     path: path.resolve(__dirname, 'dist')
   },
 
@@ -25,7 +26,18 @@ module.exports = {
         test: /\.(ts|js)x?$/,
         loader: 'babel-loader',
         exclude: /node_modules/
-      }
+      },
+      {
+        test: /\.(png|svg|jpg|gif)$/,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: 'images/[name].[ext]',
+            }
+          }
+        ]
+      },
     ]
   },
 
@@ -33,8 +45,9 @@ module.exports = {
   devServer: {},
 
   plugins: [
+    new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
       template: 'index.html'
-    })
+    }),
   ]
 };

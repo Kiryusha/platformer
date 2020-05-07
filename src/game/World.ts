@@ -1,7 +1,7 @@
 // The class is responsible for keeping and processing the game world
 import Player from './Player';
 import Collider from './Collider';
-import map from '../assets/map.json';
+import map from '../assets/levels/map.json';
 
 export default class {
   gravity: number;
