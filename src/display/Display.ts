@@ -1,18 +1,19 @@
 // the class is responsible for all the rendering in the canvas
-import TileSheet from './TileSheet';
+import AssetsManager from './AssetsManager';
 
 export default class {
   buffer: CanvasRenderingContext2D;
   context: CanvasRenderingContext2D;
-  tileSheet: TileSheet;
+  assetsManager: AssetsManager;
 
   constructor(canvas: HTMLCanvasElement) {
     this.buffer = document.createElement('canvas').getContext('2d');
     this.context = canvas.getContext('2d');
-    this.tileSheet = new TileSheet(8, 23);
+    this.assetsManager = new AssetsManager(8, 23);
   }
 
-  drawPlayer(
+  // image, source_x, source_y, destination_x, destination_y, width, height
+  drawObject(
     rectangle: {
       x: number,
       y: number,
@@ -74,28 +75,28 @@ export default class {
       const id = map[i];
       const position = i;
 
-      const sourceRow = Math.floor(id / this.tileSheet.columns);
-      const sourceColumn = id % this.tileSheet.columns - 1;
+      const sourceRow = Math.floor(id / this.assetsManager.columns);
+      const sourceColumn = id % this.assetsManager.columns - 1;
 
       const mapRow = Math.floor(position / mapColumns);
       const mapColumn = position % mapColumns;
 
-      const sourceX = this.tileSheet.tileSize * sourceColumn;
-      const sourceY = this.tileSheet.tileSize * sourceRow;
+      const sourceX = this.assetsManager.tileSize * sourceColumn;
+      const sourceY = this.assetsManager.tileSize * sourceRow;
 
-      const mapX = this.tileSheet.tileSize * mapColumn;
-      const mapY = this.tileSheet.tileSize * mapRow;
+      const mapX = this.assetsManager.tileSize * mapColumn;
+      const mapY = this.assetsManager.tileSize * mapRow;
 
       this.buffer.drawImage(
-        this.tileSheet.image,
+        this.assetsManager.image,
         sourceX,
         sourceY,
-        this.tileSheet.tileSize,
-        this.tileSheet.tileSize,
+        this.assetsManager.tileSize,
+        this.assetsManager.tileSize,
         mapX,
         mapY,
-        this.tileSheet.tileSize,
-        this.tileSheet.tileSize,
+        this.assetsManager.tileSize,
+        this.assetsManager.tileSize,
       );
     }
   }

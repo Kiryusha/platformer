@@ -9,4 +9,12 @@ export default class {
     this.tileSize = tileSize;
     this.columns = columns;
   }
+
+  loadAsset(url: string, callback: () => void): void {
+    this.image.addEventListener('load', () => {
+      callback();
+    }, { once : true});
+
+    this.image.src = url;
+  }
 }
