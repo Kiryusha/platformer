@@ -2,10 +2,8 @@ import Controller from './core/controller/Controller';
 import Display from './core/display/Display';
 import Game from './core/game/Game';
 import Engine from './core/engine/Engine';
-import store from './store';
 import tileSet from './assets/images/tileset.png';
 import map from './assets/levels/map.json';
-// import playerSprite from './assets/images/skip.png';
 
 declare global {
   interface Window {
@@ -84,20 +82,8 @@ window.addEventListener('DOMContentLoaded', async () => {
   window.addEventListener('keyup', handleKeyEvent);
   window.addEventListener('resize', resize);
 
-  await display.assetsManager.loadAsset(tileSet);
+  await display.mapTileset.loadAsset(tileSet);
 
   resize();
   engine.start();
-
-  if (process.env.NODE_ENV !== 'production') {
-    setInterval(() => {
-      store.dispatch({
-        type: 'updateState',
-        payload: {
-          game,
-          controller,
-        },
-      });
-    }, 500);
-  }
 });
