@@ -21,7 +21,7 @@ export default class {
   constructor (map: gameMap) {
     this.map = map;
     // Physics
-    this.gravity = 2;
+    this.gravity = 10;
 
     // Appearance
     this.columns = 40;
@@ -55,6 +55,7 @@ export default class {
     let bottomLeft;
     let bottomRight;
     let platformType;
+    let isCollisionDetected = false;
 
     this.collisionDebugMap = [...this.map.layers[4].data];
 
@@ -67,6 +68,7 @@ export default class {
     for (; topLeft <= topRight; topLeft += 1) {
       platformType = this.collisionMap[topLeft];
       if (platformType) {
+        isCollisionDetected = true;
         this.collisionDebugMap[topLeft] = 'top';
         this.collider.processCollision(
           platformType,
@@ -87,6 +89,7 @@ export default class {
     for (; topLeft <= bottomLeft; topLeft += this.columns) {
       platformType = this.collisionMap[topLeft];
       if (platformType) {
+        isCollisionDetected = true;
         this.collisionDebugMap[topLeft] = 'left';
         this.collider.processCollision(
           platformType,
@@ -107,6 +110,7 @@ export default class {
     for (; topRight <= bottomRight; topRight += this.columns) {
       platformType = this.collisionMap[topRight];
       if (platformType) {
+        isCollisionDetected = true;
         this.collisionDebugMap[topRight] = 'right';
         this.collider.processCollision(
           platformType,
@@ -127,6 +131,7 @@ export default class {
     for (; bottomLeft <= bottomRight; bottomLeft += 1) {
       platformType = this.collisionMap[bottomLeft];
       if (platformType) {
+        isCollisionDetected = true;
         this.collisionDebugMap[bottomLeft] = 'bottom';
         this.collider.processCollision(
           platformType,
@@ -136,6 +141,10 @@ export default class {
           this.tileSize,
         );
       }
+    }
+
+    if (!isCollisionDetected && !object.isJumping && object.velocityY !== 0) {
+      object.isFalling = true;
     }
   }
 

@@ -51,12 +51,16 @@ export default class {
     object: Player,
     tileTop: number,
   ): boolean {
+    // console.log(object.getBottom(), object.getOldBottom(), tileTop, object.getBottom() > tileTop && object.getOldBottom() <= tileTop)
     if (object.getBottom() > tileTop && object.getOldBottom() <= tileTop) {
       object.setBottom(tileTop - 0.01);
       object.velocityY = 0;
       object.isJumping = false;
+      object.isFalling = false;
+      object.isOnTop = true;
       return true;
     }
+    object.isOnTop = false;
     return false;
   }
 
@@ -80,6 +84,7 @@ export default class {
       object.setTop(tileBottom);
       object.velocityY = 0;
       object.isJumping = false;
+      object.isFalling = true;
       return true;
     }
     return false;

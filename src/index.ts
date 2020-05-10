@@ -4,6 +4,7 @@ import Game from './core/game/Game';
 import Engine from './core/engine/Engine';
 import tileSet from './assets/images/tileset.png';
 import map from './assets/levels/map.json';
+import playerSprite from './assets/images/skip.png';
 
 declare global {
   interface Window {
@@ -47,7 +48,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     display.render();
   };
 
-  const update = () => {
+  const update = (step: number) => {
     if (controller.left.isActive) {
       game.world.player.startMovingLeft();
     } else if (game.world.player.isMovingLeft) {
@@ -61,11 +62,12 @@ window.addEventListener('DOMContentLoaded', async () => {
     }
 
     if (controller.up.isActive) {
-      game.world.player.jump();
-      controller.up.isActive = false;
+      game.world.player.jump(controller.up.isActive);
+    } else if (game.world.player.isJumpTriggered) {
+      game.world.player.jump(false);
     }
 
-    game.update();
+    game.update(step);
   };
 
   const controller = new Controller();
@@ -83,6 +85,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   window.addEventListener('resize', resize);
 
   await display.mapTileset.loadAsset(tileSet);
+  await display.playerSprite.loadAsset(playerSprite);
 
   resize();
   engine.start();

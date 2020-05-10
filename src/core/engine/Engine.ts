@@ -9,7 +9,6 @@ export default class {
   handleRun: any;
   timeStep: number;
   accumulatedTime: number;
-  currentTime: number;
   previousTime: number;
   isUpdated: boolean;
 
@@ -24,7 +23,6 @@ export default class {
     this.handleRun = () => {};
     this.timeStep = timeStep;
     this.previousTime = 0;
-    this.currentTime = 0;
     this.accumulatedTime = 0;
     this.isUpdated = false;
   }
@@ -39,13 +37,13 @@ export default class {
 
     while (this.accumulatedTime >= this.timeStep) {
       this.accumulatedTime -= this.timeStep;
-      this.update(timestamp);
+      this.update(this.timeStep);
       this.isUpdated = true;
     }
 
     if (this.isUpdated) {
       this.isUpdated = false;
-      this.render(timestamp);
+      this.render();
     }
 
     this.animationFrame = window.requestAnimationFrame(this.handleRun);
