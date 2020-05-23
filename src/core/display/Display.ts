@@ -4,12 +4,14 @@ import AssetsManager from './AssetsManager';
 export default class {
   buffer: CanvasRenderingContext2D;
   context: CanvasRenderingContext2D;
-  assetsManager: AssetsManager;
+  mapTileset: AssetsManager;
+  playerSprite: AssetsManager;
 
   constructor(canvas: HTMLCanvasElement) {
     this.buffer = document.createElement('canvas').getContext('2d');
     this.context = canvas.getContext('2d');
-    this.assetsManager = new AssetsManager(8, 23);
+    this.mapTileset = new AssetsManager(8, 23);
+    this.playerSprite = new AssetsManager(8, 23);
   }
 
   // image, source_x, source_y, destination_x, destination_y, width, height
@@ -75,28 +77,28 @@ export default class {
       const id = map[i];
       const position = i;
 
-      const sourceRow = Math.floor(id / this.assetsManager.columns);
-      const sourceColumn = id % this.assetsManager.columns - 1;
+      const sourceRow = Math.floor(id / this.mapTileset.columns);
+      const sourceColumn = id % this.mapTileset.columns - 1;
 
       const mapRow = Math.floor(position / mapColumns);
       const mapColumn = position % mapColumns;
 
-      const sourceX = this.assetsManager.tileSize * sourceColumn;
-      const sourceY = this.assetsManager.tileSize * sourceRow;
+      const sourceX = this.mapTileset.tileSize * sourceColumn;
+      const sourceY = this.mapTileset.tileSize * sourceRow;
 
-      const mapX = this.assetsManager.tileSize * mapColumn;
-      const mapY = this.assetsManager.tileSize * mapRow;
+      const mapX = this.mapTileset.tileSize * mapColumn;
+      const mapY = this.mapTileset.tileSize * mapRow;
 
       this.buffer.drawImage(
-        this.assetsManager.image,
+        this.mapTileset.image,
         sourceX,
         sourceY,
-        this.assetsManager.tileSize,
-        this.assetsManager.tileSize,
+        this.mapTileset.tileSize,
+        this.mapTileset.tileSize,
         mapX,
         mapY,
-        this.assetsManager.tileSize,
-        this.assetsManager.tileSize,
+        this.mapTileset.tileSize,
+        this.mapTileset.tileSize,
       );
     }
   }

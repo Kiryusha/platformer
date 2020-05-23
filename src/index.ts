@@ -38,17 +38,17 @@ window.addEventListener('DOMContentLoaded', async () => {
     );
     display.drawMap(game.world.frontMap, game.world.columns);
 
-    if (window.SHOW_COLLISIONS) {
+    // if (window.SHOW_COLLISIONS) {
       display.drawCollisionDebugMap(
         game.world.collisionDebugMap,
         game.world.columns,
         game.world.tileSize,
       );
-    }
+    // }
     display.render();
   };
 
-  const update = (step: number) => {
+  const update = () => {
     if (controller.left.isActive) {
       game.world.player.startMovingLeft();
     } else if (game.world.player.isMovingLeft) {
@@ -67,7 +67,7 @@ window.addEventListener('DOMContentLoaded', async () => {
       game.world.player.jump(false);
     }
 
-    game.update(step);
+    game.update();
   };
 
   const controller = new Controller();
