@@ -2,101 +2,154 @@
 import Player from './Player';
 
 export default class {
-  processCollision(
-    platformType: number,
-    object: Player,
-    tileX: number,
-    tileY: number,
-    tileSize: number,
+  processNarrowPhase(
+    player: Player,
+    collision: Entity,
   ): void {
-    switch (platformType) {
-      case 215: // top
-        this.collidePlatformTop(object, tileY);
+    switch (collision.name) {
+      case 'top':
+        this.collideFromTop(player, collision);
         break;
-      case 216: // right
-        this.collidePlatformRight(object, tileX + tileSize);
+      case 'right':
+        this.collideFromRight(player, collision);
         break;
-      case 217: // bottom
-        this.collidePlatformBottom(object, tileY + tileSize);
+      case 'bottom':
+        this.collideFromBottom(player, collision);
         break;
-      case 218: // left
-        this.collidePlatformLeft(object, tileX);
+      case 'left':
+        this.collideFromLeft(player, collision);
         break;
-      case 221: // top-left
-        if (this.collidePlatformTop(object, tileY)) return;
-        this.collidePlatformLeft(object, tileX);
+      case 'top-left':
+        if (this.collideFromTop(player, collision)) return;
+        this.collideFromLeft(player, collision);
         break;
-      case 222: // top-right
-        if (this.collidePlatformTop(object, tileY)) return;
-        this.collidePlatformRight(object, tileX + tileSize);
+      case 'top-right':
+        if (this.collideFromTop(player, collision)) return;
+        this.collideFromRight(player, collision);
         break;
-      case 223: // bottom-right
-        if (this.collidePlatformRight(object, tileX + tileSize)) return;
-        this.collidePlatformBottom(object, tileY + tileSize);
+      case 'bottom-right':
+        if (this.collideFromRight(player, collision)) return;
+        this.collideFromBottom(player, collision);
         break;
-      case 224: // bottom-left
-        if (this.collidePlatformLeft(object, tileX)) return;
-        this.collidePlatformBottom(object, tileY + tileSize);
+      case 'bottom-left':
+        if (this.collideFromLeft(player, collision)) return;
+        this.collideFromBottom(player, collision);
         break;
-      case 233: // all-sides wall
-        if (this.collidePlatformTop(object, tileY)) return;
-        if (this.collidePlatformLeft(object, tileX)) return;
-        if (this.collidePlatformRight(object, tileX + tileSize)) return;
-        this.collidePlatformBottom(object, tileY + tileSize);
+      case 'full':
+        if (this.collideFromTop(player, collision)) return;
+        if (this.collideFromLeft(player, collision)) return;
+        if (this.collideFromRight(player, collision)) return;
+        this.collideFromBottom(player, collision);
         break;
     }
   }
 
-  collidePlatformTop(
-    object: Player,
-    tileTop: number,
-  ): boolean {
-    // console.log(object.getBottom(), object.getOldBottom(), tileTop, object.getBottom() > tileTop && object.getOldBottom() <= tileTop)
-    if (object.getBottom() > tileTop && object.getOldBottom() <= tileTop) {
-      object.setBottom(tileTop - 0.01);
-      object.velocityY = 0;
-      object.isJumping = false;
-      object.isFalling = false;
-      object.isOnTop = true;
+  // This method exists for the future possible separation of various methods of cycling objects:
+  // quad tree, spatial hash etc. For now it is just brute forcing all of them.
+  processBroadPhase(entities: Entity[]): void {
+    this.bruteForce(entities);
+  }
+
+  bruteForce(entities: Entity[]): void {
+    const length = entities.length;
+
+    if (length > 1) {
+      for (let i = 0; i < length; i += 1) {
+        let e1 = entities[i];
+
+        for (let k = i + 1; k < length; k += 1) {
+          let e2 = entities[k];
+
+          if (this.broadPhaseComparator(e1, e2)) {
+            this.broadPhaseResolver(e1, e2)
+          }
+        }
+      }
+    }
+  }
+
+  // Checks if objects are overlapping
+  broadPhaseComparator(e1: Entity, e2: Entity): boolean {
+    // Skips all checks not related to the player in order to save resources
+    if (e1.type !== 'player' && e2.type !== 'player') {
+      return false;
+    }
+
+    // TODO: develop to complete Separating Axis Theorem
+    if (
+      e1.x < (e2.x + e2.width) &&
+      e2.x < (e1.x + e1.width) &&
+      e1.y < (e2.y + e2.height) &&
+      e2.y < (e1.y + e1.height)
+    ) {
       return true;
     }
-    object.isOnTop = false;
+
     return false;
   }
 
-  collidePlatformRight(
-    object: Player,
-    tileRight: number,
+  // Prepares argument order for narrow phase
+  broadPhaseResolver(
+    e1: any,
+    e2: any,
+  ): void {
+    if (e1.type === 'player' && e2.type === 'collision') {
+      this.processNarrowPhase(e1, e2);
+    } else if (e2.type  === 'player' && e1.type === 'collision') {
+      this.processNarrowPhase(e2, e1);
+    }
+  }
+
+  // These are specific methods for handling various cases of collisions.
+  collideFromTop(
+    player: Player,
+    collision: Entity,
   ): boolean {
-    if (object.getLeft() < tileRight && object.getOldLeft() >= tileRight) {
-      object.setLeft(tileRight);
-      object.velocityX = 0;
+    if (player.getBottom() > collision.y && player.getOldBottom() <= collision.y) {
+      player.setBottom(collision.y - 0.01);
+      player.velocityY = 0;
+      player.isJumping = false;
+      player.isFalling = false;
+      player.isOnTop = true;
+      return true;
+    }
+    player.isOnTop = false;
+    return false;
+  }
+
+  collideFromRight(
+    player: Player,
+    collision: Entity,
+  ): boolean {
+    if (player.getLeft() < (collision.x + collision.width) && player.getOldLeft() >= (collision.x + collision.width)) {
+      player.setLeft(collision.x + collision.width);
+      player.velocityX = 0;
       return true;
     }
     return false;
   }
 
-  collidePlatformBottom(
-    object: Player,
-    tileBottom: number,
+  collideFromBottom(
+    player: Player,
+    collision: Entity,
   ): boolean {
-    if (object.getTop() < tileBottom && object.getOldTop() >= tileBottom) {
-      object.setTop(tileBottom);
-      object.velocityY = 0;
-      object.isJumping = false;
-      object.isFalling = true;
+    if (player.getTop() < (collision.y + collision.height) && player.getOldTop() >= (collision.y + collision.height)) {
+      player.setTop(collision.y + collision.height);
+      player.velocityY = 0;
+      player.isJumping = false;
+      player.isFalling = true;
       return true;
     }
     return false;
   }
 
-  collidePlatformLeft(
-    object: Player,
-    tileLeft: number,
+  collideFromLeft(
+    player: Player,
+    collision: Entity,
   ): boolean {
-    if (object.getRight() > tileLeft && object.getOldRight() <= tileLeft) {
-      object.setRight(tileLeft - 0.01);
-      object.velocityX = 0;
+    if (player.getRight() > collision.x && player.getOldRight() <= collision.x) {
+      player.setRight(collision.x - 0.01);
+      player.velocityX = 0;
       return true;
     }
     return false;

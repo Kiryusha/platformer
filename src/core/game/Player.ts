@@ -1,8 +1,8 @@
 // The class is responsible for keeping and processing the player object
-import GameObject from './GameObject';
+import Entity from './Entity';
 import { bound } from '../../util';
 
-export default class extends GameObject {
+export default class Player extends Entity {
   color1: string;
   jumpImpulse: number;
   maxSpeed: number;
@@ -19,18 +19,20 @@ export default class extends GameObject {
   maxJumpingSpeed: number;
   friction: number;
     isOnTop: boolean;
+    isFreezed: any;
 
   constructor() {
-    super(16, 204, 24, 24);
+    super(16, 204, 20, 20);
 
     // Appearance
     this.color1 = '#404040';
     this.color1 = '#f0f0f0';
 
     // Physics
+    this.type = 'player';
     this.jumpImpulse = 221;
     this.maxSpeed = 3;
-    this.maxJumpingSpeed = 10;
+    this.maxJumpingSpeed = 9;
     this.isOnTop = false;
     this.isJumping = false;
     this.isJumpTriggered = false;
@@ -42,6 +44,7 @@ export default class extends GameObject {
     this.isMovingLeft = false;
     this.isMovingRight = false;
     this.friction = 0.09;
+    this.isFreezed = false;
   }
 
   startMovingLeft(): void {
@@ -65,11 +68,16 @@ export default class extends GameObject {
   }
 
   update(gravity: number): void {
-    this.adjustHorizontalMovement();
-    this.adjustVerticalMovement(gravity);
+    if (!this.isFreezed) {
+      this.adjustHorizontalMovement();
+      this.adjustVerticalMovement(gravity);
+    }
   }
 
   adjustVerticalMovement(gravity: number): void {
+    // if (Math.floor(this.y / 8) - Math.floor(this.yOld / 8) > 1) {
+    //   this.isFreezed = true;
+    // }
     //
     this.velocityYModifier = gravity;
     this.yOld = this.y;
@@ -88,16 +96,6 @@ export default class extends GameObject {
       -this.maxJumpingSpeed,
       this.maxJumpingSpeed,
     );
-
-    // if (this.velocityY === (this.friction * this.velocityYModifier)) {
-    //   this.velocityY = 0;
-    // }
-
-    // if (this.velocityY > 0 && !this.isOnTop) {
-    //   this.isFalling = true;
-    // }
-
-    // console.log(this.velocityY, this.isFalling, this.isOnTop)
 
     this.y += this.velocityY + (this.friction * this.velocityY);
   }
