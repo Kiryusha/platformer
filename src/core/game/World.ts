@@ -20,7 +20,10 @@ export default class {
   rawLayers: any;
   collisionObjects: any;
 
-  constructor (map: gameMap) {
+  constructor (
+    map: gameMap,
+    playerSpriteMap: spriteMap,
+  ) {
     // Physics
     this.gravity = 10;
 
@@ -34,7 +37,7 @@ export default class {
     this.height = this.tileSize * this.rows;
     this.width = this.tileSize * this.columns;
 
-    this.player = new Player();
+    this.player = new Player(playerSpriteMap);
     this.collider = new Collider();
   }
 

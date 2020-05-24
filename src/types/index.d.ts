@@ -7,6 +7,10 @@ interface gameMap {
   layers: any[]
 }
 
+interface spriteMap {
+  frames: Object
+}
+
 interface mapObject {
   name: string,
   type: string;

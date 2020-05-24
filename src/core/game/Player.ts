@@ -1,5 +1,6 @@
 // The class is responsible for keeping and processing the player object
 import Entity from './Entity';
+import SpriteSet from './SpriteSet';
 import { bound } from '../../util';
 
 export default class Player extends Entity {
@@ -18,8 +19,9 @@ export default class Player extends Entity {
   isJumpTriggered: boolean;
   maxJumpingSpeed: number;
   friction: number;
+  spriteSet: SpriteSet;
 
-  constructor() {
+  constructor(playerSpriteMap: spriteMap) {
     super(16, 204, 20, 20, 'character', 'player');
 
     // Appearance
@@ -40,6 +42,52 @@ export default class Player extends Entity {
     this.isMovingLeft = false;
     this.isMovingRight = false;
     this.friction = 0.09;
+
+    // animation stuff
+    this.setAnimationFrames(playerSpriteMap);
+  }
+
+  setAnimationFrames(playerSpriteMap: spriteMap): void {
+    this.spriteSet = new SpriteSet(
+      playerSpriteMap,
+      37,
+      32,
+      {
+        idle: [
+          'player-idle-1',
+          'player-idle-2',
+          'player-idle-3',
+          'player-idle-4',
+          'player-idle-5',
+          'player-idle-6',
+          'player-idle-7',
+          'player-idle-8',
+          'player-idle-9',
+        ],
+        skip: [
+          'player-skip-1',
+          'player-skip-2',
+          'player-skip-3',
+          'player-skip-4',
+          'player-skip-5',
+          'player-skip-6',
+          'player-skip-7',
+          'player-skip-8',
+        ],
+        jump: [
+          'player-jump-1',
+          'player-jump-2',
+          'player-jump-3',
+          'player-jump-4',
+        ],
+        fall: [
+          'player-fall-1',
+          'player-fall-2',
+          'player-fall-3',
+          'player-fall-4',
+        ]
+      }
+    );
   }
 
   startMovingLeft(): void {

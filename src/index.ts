@@ -2,9 +2,10 @@ import Controller from './core/controller/Controller';
 import Display from './core/display/Display';
 import Game from './core/game/Game';
 import Engine from './core/engine/Engine';
-import tileSet from './assets/images/tileset.png';
 import map from './assets/levels/map.json';
-import playerSprite from './assets/images/skip.png';
+import playerSpriteMap from './assets/sprite-maps/player.json';
+import tileSet from './assets/images/tileset.png';
+import playerSprite from './assets/images/player.png';
 
 declare global {
   interface Window {
@@ -70,7 +71,7 @@ window.addEventListener('DOMContentLoaded', async () => {
 
   const controller = new Controller();
   const display = new Display(document.getElementById('game') as HTMLCanvasElement);
-  const game = new Game(map);
+  const game = new Game(map, playerSpriteMap);
   const engine = new Engine(fps, render, update);
 
   // Synchronize display buffer size with the world size
