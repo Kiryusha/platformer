@@ -28,7 +28,7 @@ export default class {
     this.rows = 40;
     this.tileSize = 8;
 
-    this.processMap(map)
+    this.processMap(map);
 
     this.height = this.tileSize * this.rows;
     this.width = this.tileSize * this.columns;
@@ -59,7 +59,11 @@ export default class {
 
   processCollision (): void {
     this.processBoundariesCollision(this.player);
-    this.collider.processBroadPhase([this.player, ...this.collisionObjects]);
+    const collisions = this.collider.processBroadPhase([this.player, ...this.collisionObjects]);
+
+    if (!collisions.length) {
+      this.player.isFalling = true;
+    }
   }
 
   processBoundariesCollision (object: Player): void {

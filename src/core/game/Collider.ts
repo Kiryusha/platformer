@@ -1,6 +1,4 @@
 // The class is responsible for processing all the possible collisions
-import Player from './Player';
-
 export default class {
   processNarrowPhase(
     player: Player,
@@ -46,12 +44,14 @@ export default class {
 
   // This method exists for the future possible separation of various methods of cycling objects:
   // quad tree, spatial hash etc. For now it is just brute forcing all of them.
-  processBroadPhase(entities: Entity[]): void {
-    this.bruteForce(entities);
+  processBroadPhase(entities: Entity[]): any[] {
+    return this.bruteForce(entities);
   }
 
-  bruteForce(entities: Entity[]): void {
+  bruteForce(entities: Entity[]): any[] {
+    // based on https://github.com/reu/broadphase.js/blob/master/src/brute-force.js
     const length = entities.length;
+    const collisions = [];
 
     if (length > 1) {
       for (let i = 0; i < length; i += 1) {
@@ -61,11 +61,14 @@ export default class {
           let e2 = entities[k];
 
           if (this.broadPhaseComparator(e1, e2)) {
-            this.broadPhaseResolver(e1, e2)
+            this.broadPhaseResolver(e1, e2);
+            collisions.push([e1, e2]);
           }
         }
       }
     }
+
+    return collisions;
   }
 
   // Checks if objects are overlapping
@@ -110,10 +113,8 @@ export default class {
       player.velocityY = 0;
       player.isJumping = false;
       player.isFalling = false;
-      player.isOnTop = true;
       return true;
     }
-    player.isOnTop = false;
     return false;
   }
 

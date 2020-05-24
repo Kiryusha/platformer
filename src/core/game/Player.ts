@@ -18,8 +18,6 @@ export default class Player extends Entity {
   isJumpTriggered: boolean;
   maxJumpingSpeed: number;
   friction: number;
-    isOnTop: boolean;
-    isFreezed: any;
 
   constructor() {
     super(16, 204, 20, 20);
@@ -33,18 +31,16 @@ export default class Player extends Entity {
     this.jumpImpulse = 221;
     this.maxSpeed = 3;
     this.maxJumpingSpeed = 9;
-    this.isOnTop = false;
     this.isJumping = false;
     this.isJumpTriggered = false;
     this.isFalling = true;
     this.accelerationModifier = 6;
-    this.brakingModifier = 3;
+    this.brakingModifier = 6;
     this.velocityX = 0;
     this.velocityY = 0;
     this.isMovingLeft = false;
     this.isMovingRight = false;
     this.friction = 0.09;
-    this.isFreezed = false;
   }
 
   startMovingLeft(): void {
@@ -68,17 +64,11 @@ export default class Player extends Entity {
   }
 
   update(gravity: number): void {
-    if (!this.isFreezed) {
-      this.adjustHorizontalMovement();
-      this.adjustVerticalMovement(gravity);
-    }
+    this.adjustHorizontalMovement();
+    this.adjustVerticalMovement(gravity);
   }
 
   adjustVerticalMovement(gravity: number): void {
-    // if (Math.floor(this.y / 8) - Math.floor(this.yOld / 8) > 1) {
-    //   this.isFreezed = true;
-    // }
-    //
     this.velocityYModifier = gravity;
     this.yOld = this.y;
 

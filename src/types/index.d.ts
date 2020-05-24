@@ -33,3 +33,10 @@ interface Entity {
   setOldLeft(x: number): void;
   setOldBottom(y: number): void;
 }
+
+interface Player extends Entity {
+  velocityX: number;
+  velocityY: number;
+  isJumping: boolean;
+  isFalling: boolean;
+}
