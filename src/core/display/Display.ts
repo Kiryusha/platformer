@@ -40,34 +40,32 @@ export default class {
     );
   }
 
-  drawCollisionDebugMap(
-    map: (number | string)[],
-    mapColumns: number,
-    tileSize: number,
-  ): void {
+  drawCollisionDebugMap(map: any[]): void {
     const colorsDictionary: {
       [sideName: string]: string
     } = {
       top: 'rgba(255, 0, 0, 0.8)',
+      'top-left': 'rgba(255, 100, 0, 0.8)',
+      'top-right': 'rgba(255, 0, 136, 0.8)',
       left: 'rgba(0, 181, 204, 0.8)',
       right: 'rgba(145, 61, 136, 0.8)',
       bottom: 'rgba(255, 255, 0, 0.8)',
+      'bottom-left': 'rgba(255, 255, 204, 0.8)',
+      'bottom-right': 'rgba(255, 255, 136, 0.8)',
+      full: 'rgba(255, 255, 255, 0.8)',
     };
-    for (let i: number = 0; i < map.length; i += 1) {
-      const position = i;
 
-
-      if (map[i]) {
-        const mapRow = Math.floor(position / mapColumns);
-        const mapColumn = position % mapColumns;
-
-        this.buffer.fillStyle = colorsDictionary[map[i]];
-        this.buffer.fillRect(
-          mapColumn * tileSize,
-          mapRow * tileSize,
-          tileSize,
-          tileSize,
-        );
+    for (let i = 0; i < map.length; i += 1) {
+      for (let k = 0; k < map[i].length; k += 1) {
+        if (map[i][k].type === 'collision') {
+          this.buffer.fillStyle = colorsDictionary[map[i][k].name];
+          this.buffer.fillRect(
+            map[i][k].x,
+            map[i][k].y,
+            map[i][k].width,
+            map[i][k].height,
+          );
+        }
       }
     }
   }

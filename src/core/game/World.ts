@@ -62,12 +62,13 @@ export default class {
     this.middleMap = [...this.rawLayers.middle];
     this.frontMap = [...this.rawLayers.front];
     this.collisionObjects = [...this.rawLayers.collisionsObjects];
-    this.collisionDebugMap = [...this.rawLayers.debug];
+    this.collisionDebugMap = [];
   }
 
   processCollision (): void {
     this.processBoundariesCollision(this.player);
     const collisions = this.collider.processBroadPhase([this.player, ...this.collisionObjects]);
+    this.collisionDebugMap = collisions;
 
     if (!collisions.length) {
       this.player.isFalling = true;

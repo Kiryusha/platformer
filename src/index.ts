@@ -38,13 +38,11 @@ window.addEventListener('DOMContentLoaded', async () => {
     );
     display.drawMap(game.world.frontMap, game.world.columns);
 
-    // if (window.SHOW_COLLISIONS) {
-      display.drawCollisionDebugMap(
-        game.world.collisionDebugMap,
-        game.world.columns,
-        game.world.tileSize,
-      );
-    // }
+    // Collisions debugging tool: to visualise collisions type window.SHOW_COLLISIONS = true
+    // in browser console
+    if (window.SHOW_COLLISIONS) {
+      display.drawCollisionDebugMap(game.world.collisionDebugMap);
+    }
     display.render();
   };
 
