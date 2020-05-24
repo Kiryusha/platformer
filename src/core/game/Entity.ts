@@ -14,13 +14,18 @@ export default class implements Entity {
     y: number,
     width: number,
     height: number,
+    type: string,
+    name: string,
   ) {
+    // types
+    this.type = type;
+    this.name = name;
+
     // Position
     this.x = x;
     this.y = y;
     this.xOld = x;
     this.yOld = y;
-    this.type = '';
 
     // Appearance
     this.width = width;

@@ -1,4 +1,5 @@
 // The class is responsible for keeping and processing the game world
+import Entity from './Entity';
 import Player from './Player';
 import Collider from './Collider';
 
@@ -44,17 +45,24 @@ export default class {
           result[layer.name] = layer.data;
           break;
         case 'objectgroup':
-          result[layer.name] = layer.objects;
+          result[layer.name] = layer.objects.map((object: mapObject) => new Entity(
+            object.x,
+            object.y,
+            object.width,
+            object.height,
+            object.type,
+            object.name,
+          ));
       }
 
       return result;
     }, {});
 
-    this.backgroundMap = this.rawLayers.background;
-    this.middleMap = this.rawLayers.middle;
-    this.frontMap = this.rawLayers.front;
-    this.collisionObjects = this.rawLayers.collisionsObjects;
-    this.collisionDebugMap = this.rawLayers.debug;
+    this.backgroundMap = [...this.rawLayers.background];
+    this.middleMap = [...this.rawLayers.middle];
+    this.frontMap = [...this.rawLayers.front];
+    this.collisionObjects = [...this.rawLayers.collisionsObjects];
+    this.collisionDebugMap = [...this.rawLayers.debug];
   }
 
   processCollision (): void {

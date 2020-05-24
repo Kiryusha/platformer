@@ -7,6 +7,15 @@ interface gameMap {
   layers: any[]
 }
 
+interface mapObject {
+  name: string,
+  type: string;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+
 interface Entity {
   name: string,
   type: string;

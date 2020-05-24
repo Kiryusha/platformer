@@ -20,14 +20,13 @@ export default class Player extends Entity {
   friction: number;
 
   constructor() {
-    super(16, 204, 20, 20);
+    super(16, 204, 20, 20, 'character', 'player');
 
     // Appearance
     this.color1 = '#404040';
     this.color1 = '#f0f0f0';
 
     // Physics
-    this.type = 'player';
     this.jumpImpulse = 221;
     this.maxSpeed = 3;
     this.maxJumpingSpeed = 9;

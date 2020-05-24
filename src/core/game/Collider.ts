@@ -74,16 +74,16 @@ export default class {
   // Checks if objects are overlapping
   broadPhaseComparator(e1: Entity, e2: Entity): boolean {
     // Skips all checks not related to the player in order to save resources
-    if (e1.type !== 'player' && e2.type !== 'player') {
+    if (e1.type !== 'character' && e2.type !== 'character') {
       return false;
     }
 
     // TODO: develop to complete Separating Axis Theorem
     if (
-      e1.x < (e2.x + e2.width) &&
-      e2.x < (e1.x + e1.width) &&
-      e1.y < (e2.y + e2.height) &&
-      e2.y < (e1.y + e1.height)
+      e1.getLeft() < e2.getRight() &&
+      e2.getLeft() < e1.getRight() &&
+      e1.getTop() < e2.getBottom() &&
+      e2.getTop() < e1.getBottom()
     ) {
       return true;
     }
@@ -96,9 +96,9 @@ export default class {
     e1: any,
     e2: any,
   ): void {
-    if (e1.type === 'player' && e2.type === 'collision') {
+    if (e1.type === 'character' && e2.type === 'collision') {
       this.processNarrowPhase(e1, e2);
-    } else if (e2.type  === 'player' && e1.type === 'collision') {
+    } else if (e2.type  === 'character' && e1.type === 'collision') {
       this.processNarrowPhase(e2, e1);
     }
   }
