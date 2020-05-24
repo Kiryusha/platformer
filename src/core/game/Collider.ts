@@ -108,8 +108,8 @@ export default class {
     player: Player,
     collision: Entity,
   ): boolean {
-    if (player.getBottom() > collision.y && player.getOldBottom() <= collision.y) {
-      player.setBottom(collision.y - 0.01);
+    if (player.getBottom() > collision.getTop() && player.getOldBottom() <= collision.getTop()) {
+      player.setBottom(collision.getTop() - 0.01);
       player.velocityY = 0;
       player.isJumping = false;
       player.isFalling = false;
@@ -122,7 +122,7 @@ export default class {
     player: Player,
     collision: Entity,
   ): boolean {
-    if (player.getLeft() < (collision.x + collision.width) && player.getOldLeft() >= (collision.x + collision.width)) {
+    if (player.getLeft() < collision.getRight() && player.getOldLeft() >= collision.getRight()) {
       player.setLeft(collision.x + collision.width);
       player.velocityX = 0;
       return true;
@@ -134,7 +134,7 @@ export default class {
     player: Player,
     collision: Entity,
   ): boolean {
-    if (player.getTop() < (collision.y + collision.height) && player.getOldTop() >= (collision.y + collision.height)) {
+    if (player.getTop() < collision.getBottom() && player.getOldTop() >= collision.getBottom()) {
       player.setTop(collision.y + collision.height);
       player.velocityY = 0;
       player.isJumping = false;
@@ -148,8 +148,8 @@ export default class {
     player: Player,
     collision: Entity,
   ): boolean {
-    if (player.getRight() > collision.x && player.getOldRight() <= collision.x) {
-      player.setRight(collision.x - 0.01);
+    if (player.getRight() > collision.getLeft() && player.getOldRight() <= collision.getLeft()) {
+      player.setRight(collision.getLeft() - 0.01);
       player.velocityX = 0;
       return true;
     }
