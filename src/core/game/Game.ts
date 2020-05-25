@@ -4,11 +4,8 @@ import World from './World';
 export default class {
   world: World;
 
-  constructor(
-    map: gameMap,
-    playerSpriteMap: spriteMap,
-  ) {
-    this.world = new World(map, playerSpriteMap);
+  constructor(map: gameMap) {
+    this.world = new World(map);
   }
 
   update(): void {

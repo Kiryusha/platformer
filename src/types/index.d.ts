@@ -8,7 +8,7 @@ interface gameMap {
 }
 
 interface spriteMap {
-  frames: Object
+  frames: any
 }
 
 interface mapObject {

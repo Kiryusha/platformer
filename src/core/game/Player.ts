@@ -1,7 +1,8 @@
 // The class is responsible for keeping and processing the player object
 import Entity from './Entity';
-import SpriteSet from './SpriteSet';
+import Animator from './Animator';
 import { bound } from '../../util';
+import playerSpriteMap from '../../assets/sprite-maps/player.json';
 
 export default class Player extends Entity {
   color1: string;
@@ -19,10 +20,10 @@ export default class Player extends Entity {
   isJumpTriggered: boolean;
   maxJumpingSpeed: number;
   friction: number;
-  spriteSet: SpriteSet;
+  animator: Animator;
 
-  constructor(playerSpriteMap: spriteMap) {
-    super(16, 204, 20, 20, 'character', 'player');
+  constructor() {
+    super(16, 204, 15, 15, 'character', 'player');
 
     // Appearance
     this.color1 = '#404040';
@@ -44,11 +45,11 @@ export default class Player extends Entity {
     this.friction = 0.09;
 
     // animation stuff
-    this.setAnimationFrames(playerSpriteMap);
+    this.setAnimationDefaults(playerSpriteMap);
   }
 
-  setAnimationFrames(playerSpriteMap: spriteMap): void {
-    this.spriteSet = new SpriteSet(
+  setAnimationDefaults(playerSpriteMap: spriteMap): void {
+    this.animator = new Animator(
       playerSpriteMap,
       37,
       32,
@@ -90,6 +91,22 @@ export default class Player extends Entity {
     );
   }
 
+  updateAnimation() {
+    if (this.isMovingLeft && !this.isJumping && !this.isFalling) {
+      this.animator.changeFrameset('skip', 'loop');
+    } else if (this.isMovingRight && !this.isJumping && !this.isFalling) {
+      this.animator.changeFrameset('skip', 'loop');
+    } else if (this.isFalling) {
+      this.animator.changeFrameset('fall', 'loop');
+    } else if (this.isJumping) {
+      this.animator.changeFrameset('jump', 'loop');
+    } else {
+      this.animator.changeFrameset('idle', 'loop');
+    }
+
+    this.animator.animate();
+  }
+
   startMovingLeft(): void {
     this.isMovingLeft = true;
   }
@@ -113,6 +130,7 @@ export default class Player extends Entity {
   update(gravity: number): void {
     this.adjustHorizontalMovement();
     this.adjustVerticalMovement(gravity);
+    this.updateAnimation();
   }
 
   adjustVerticalMovement(gravity: number): void {
@@ -168,9 +186,5 @@ export default class Player extends Entity {
     }
 
     this.x += this.velocityX;
-
-    if (window.SHOW_VELOCITY && this.velocityX !== 0) {
-      console.log(this.velocityX);
-    }
   }
 }

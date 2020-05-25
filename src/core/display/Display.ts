@@ -16,27 +16,34 @@ export default class {
 
   // image, source_x, source_y, destination_x, destination_y, width, height
   drawObject(
-    rectangle: {
-      x: number,
-      y: number,
-      width: number,
-      height: number,
-    },
-    color1: string,
+    image,
+    sourceX: number,
+    sourceY: number,
+    destinationX: number,
+    destinationY: number,
+    width: number,
+    height: number,
   ): void {
-    this.buffer.fillStyle = color1;
-    this.buffer.fillRect(
-      Math.round(rectangle.x),
-      Math.round(rectangle.y),
-      rectangle.width,
-      rectangle.height,
-    );
-    this.buffer.fillStyle = '#000000';
-    this.buffer.fillRect(
-      Math.round(rectangle.x + 1),
-      Math.round(rectangle.y + 1),
-      rectangle.width - 2,
-      rectangle.height - 2,
+    // console.log(image,
+    // sourceX,
+    // sourceY,
+    // width,
+    // height,
+    // Math.round(destinationX),
+    // Math.round(destinationY),
+    // width,
+    // height)
+    // <img src=​"images/​player.png"> 111 64 undefined undefined NaN 212 undefined undefined
+    this.buffer.drawImage(
+      image,
+      sourceX,
+      sourceY,
+      width,
+      height,
+      Math.round(destinationX),
+      Math.round(destinationY),
+      width,
+      height,
     );
   }
 

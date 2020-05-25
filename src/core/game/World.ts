@@ -20,10 +20,7 @@ export default class {
   rawLayers: any;
   collisionObjects: any;
 
-  constructor (
-    map: gameMap,
-    playerSpriteMap: spriteMap,
-  ) {
+  constructor (map: gameMap) {
     // Physics
     this.gravity = 10;
 
@@ -37,7 +34,7 @@ export default class {
     this.height = this.tileSize * this.rows;
     this.width = this.tileSize * this.columns;
 
-    this.player = new Player(playerSpriteMap);
+    this.player = new Player();
     this.collider = new Collider();
   }
 
@@ -73,7 +70,8 @@ export default class {
     const collisions = this.collider.processBroadPhase([this.player, ...this.collisionObjects]);
     this.collisionDebugMap = collisions;
 
-    if (!collisions.length) {
+    // TODO: Fix condition, as last frame of jumping is taken for falling
+    if (!collisions.length && this.player.velocityY > 0) {
       this.player.isFalling = true;
     }
   }

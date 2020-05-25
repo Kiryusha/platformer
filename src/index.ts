@@ -3,7 +3,6 @@ import Display from './core/display/Display';
 import Game from './core/game/Game';
 import Engine from './core/engine/Engine';
 import map from './assets/levels/map.json';
-import playerSpriteMap from './assets/sprite-maps/player.json';
 import tileSet from './assets/images/tileset.png';
 import playerSprite from './assets/images/player.png';
 
@@ -33,9 +32,17 @@ window.addEventListener('DOMContentLoaded', async () => {
   const render = () => {
     display.drawMap(game.world.backgroundMap, game.world.columns);
     display.drawMap(game.world.middleMap, game.world.columns);
+
+    const { frame } = game.world.player.animator.spriteMap.frames[game.world.player.animator.frameValue];
+
     display.drawObject(
-      game.world.player,
-      game.world.player.color1,
+      display.playerSprite.image,
+      frame.x,
+      frame.y,
+      game.world.player.x + Math.floor(game.world.player.width * 0.5 - frame.w * 0.5),
+      game.world.player.y - Math.floor(frame.h - game.world.player.height),
+      frame.w,
+      frame.h
     );
     display.drawMap(game.world.frontMap, game.world.columns);
 
@@ -71,7 +78,7 @@ window.addEventListener('DOMContentLoaded', async () => {
 
   const controller = new Controller();
   const display = new Display(document.getElementById('game') as HTMLCanvasElement);
-  const game = new Game(map, playerSpriteMap);
+  const game = new Game(map);
   const engine = new Engine(fps, render, update);
 
   // Synchronize display buffer size with the world size
