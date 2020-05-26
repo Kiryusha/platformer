@@ -32,14 +32,13 @@ export default class {
 
   flipImage(url: string): any {
     return new Promise((resolve, reject) => {
-      const canvas = document.createElement('canvas');
-      const buffer = canvas.getContext('2d');
+      const buffer = document.createElement('canvas').getContext('2d');
       const image = new Image();
       image.src = url;
       image.addEventListener('error', err => reject(err));
       image.addEventListener('load', () => {
-        canvas.width  = image.width;
-        canvas.height = image.height;
+        buffer.canvas.width  = image.width;
+        buffer.canvas.height = image.height;
         buffer.save();
         buffer.scale(-1, 1);
         buffer.drawImage(
@@ -50,7 +49,7 @@ export default class {
           image.height,
         );
         buffer.restore();
-        this.flippedImage = canvas;
+        this.flippedImage = buffer.canvas;
         resolve();
       }, { once: true });
     });
