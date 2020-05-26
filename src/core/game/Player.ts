@@ -21,6 +21,7 @@ export default class Player extends Entity {
   maxJumpingSpeed: number;
   friction: number;
   animator: Animator;
+  isFacingLeft: boolean;
 
   constructor() {
     super(16, 204, 15, 15, 'character', 'player');
@@ -45,6 +46,7 @@ export default class Player extends Entity {
     this.friction = 0.09;
 
     // animation stuff
+    this.isFacingLeft = true;
     this.setAnimationDefaults(playerSpriteMap);
   }
 
@@ -93,21 +95,22 @@ export default class Player extends Entity {
 
   updateAnimation() {
     if (this.isMovingLeft && !this.isJumping && !this.isFalling) {
-      this.animator.changeFrameset('skip', 'loop');
+      this.animator.changeFrameset('skip', 'loop', 2);
     } else if (this.isMovingRight && !this.isJumping && !this.isFalling) {
-      this.animator.changeFrameset('skip', 'loop');
+      this.animator.changeFrameset('skip', 'loop', 2);
     } else if (this.isFalling) {
-      this.animator.changeFrameset('fall', 'loop');
+      this.animator.changeFrameset('fall', 'loop', 4);
     } else if (this.isJumping) {
-      this.animator.changeFrameset('jump', 'loop');
+      this.animator.changeFrameset('jump', 'loop', 4);
     } else {
-      this.animator.changeFrameset('idle', 'loop');
+      this.animator.changeFrameset('idle', 'loop', 4);
     }
 
     this.animator.animate();
   }
 
   startMovingLeft(): void {
+    this.isFacingLeft = true;
     this.isMovingLeft = true;
   }
 
@@ -116,6 +119,7 @@ export default class Player extends Entity {
   }
 
   startMovingRight(): void {
+    this.isFacingLeft = false;
     this.isMovingRight = true;
   }
 

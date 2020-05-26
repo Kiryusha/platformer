@@ -10,6 +10,7 @@ export default class {
   activeFrameSet: string;
   frameIndex: number;
   frameValue: string;
+  flippedSpriteMap: spriteMap;
 
   constructor(
     spriteMap: spriteMap,
@@ -18,6 +19,7 @@ export default class {
     frames: {},
   ) {
     this.spriteMap = spriteMap;
+    this.flippedSpriteMap = spriteMap;
     this.frameWidth = frameWidth;
     this.frameHeight = frameHeight;
     this.frames = frames;
@@ -28,6 +30,17 @@ export default class {
     this.mode = 'pause';
     this.frameIndex = 0;
     this.frameValue = '';
+
+    this.getXFlippedCoords();
+  }
+
+  getXFlippedCoords() {
+    this.flippedSpriteMap = JSON.parse(JSON.stringify(this.spriteMap));
+
+    Object.keys(this.flippedSpriteMap.frames).map(frameName => {
+      this.flippedSpriteMap.frames[frameName].frame.x =
+        this.flippedSpriteMap.meta.size.w - this.flippedSpriteMap.frames[frameName].frame.x - this.flippedSpriteMap.frames[frameName].frame.w;
+    });
   }
 
   animate(): void {

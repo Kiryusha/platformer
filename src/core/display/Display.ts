@@ -16,7 +16,7 @@ export default class {
 
   // image, source_x, source_y, destination_x, destination_y, width, height
   drawObject(
-    image,
+    image: CanvasImageSource,
     sourceX: number,
     sourceY: number,
     destinationX: number,
@@ -24,16 +24,6 @@ export default class {
     width: number,
     height: number,
   ): void {
-    // console.log(image,
-    // sourceX,
-    // sourceY,
-    // width,
-    // height,
-    // Math.round(destinationX),
-    // Math.round(destinationY),
-    // width,
-    // height)
-    // <img src=​"images/​player.png"> 111 64 undefined undefined NaN 212 undefined undefined
     this.buffer.drawImage(
       image,
       sourceX,

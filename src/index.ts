@@ -32,11 +32,20 @@ window.addEventListener('DOMContentLoaded', async () => {
   const render = () => {
     display.drawMap(game.world.backgroundMap, game.world.columns);
     display.drawMap(game.world.middleMap, game.world.columns);
+    let frame;
 
-    const { frame } = game.world.player.animator.spriteMap.frames[game.world.player.animator.frameValue];
+    if (game.world.player.isFacingLeft) {
+      frame =
+        game.world.player.animator.flippedSpriteMap.frames[game.world.player.animator.frameValue].frame;
+    } else {
+      frame =
+        game.world.player.animator.spriteMap.frames[game.world.player.animator.frameValue].frame;
+    }
+
+    // console.log(frame);
 
     display.drawObject(
-      display.playerSprite.image,
+      game.world.player.isFacingLeft ? display.playerSprite.flippedImage : display.playerSprite.image,
       frame.x,
       frame.y,
       game.world.player.x + Math.floor(game.world.player.width * 0.5 - frame.w * 0.5),
@@ -91,7 +100,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   window.addEventListener('resize', resize);
 
   await display.mapTileset.loadAsset(tileSet);
-  await display.playerSprite.loadAsset(playerSprite);
+  await display.playerSprite.loadAsset(playerSprite, true);
 
   resize();
   engine.start();

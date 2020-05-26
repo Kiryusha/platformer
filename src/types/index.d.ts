@@ -9,6 +9,7 @@ interface gameMap {
 
 interface spriteMap {
   frames: any
+  meta: any
 }
 
 interface mapObject {
