@@ -1,6 +1,10 @@
 Rabbit-girl platformer
 ------------------------------
 
+## Demo:
+
+- https://kiryusha.github.io/platformer/dist/
+
 ## Assets used:
 
 - https://trixelized.itch.io/nightfield
