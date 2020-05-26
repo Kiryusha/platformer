@@ -14,7 +14,7 @@ declare global {
 }
 
 window.addEventListener('DOMContentLoaded', async () => {
-  const margin = 32;
+  const aspectRatio = 9 / 16;
   const fps = 1000 / 30;
 
   const handleKeyEvent = (event: { type: string; keyCode: number; }) => {
@@ -23,11 +23,11 @@ window.addEventListener('DOMContentLoaded', async () => {
 
   const resize = () => {
     display.resize(
-      document.documentElement.clientWidth - margin,
-      document.documentElement.clientHeight - margin,
-      game.world.height / game.world.width,
+      document.documentElement.clientWidth,
+      document.documentElement.clientHeight,
+      aspectRatio,
     );
-    display.render();
+    display.render(game.world.player, game.world.width, game.world.height);
   };
   const render = () => {
     display.drawMap(game.world.backgroundMap, game.world.columns);
@@ -60,7 +60,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     if (window.SHOW_COLLISIONS) {
       display.drawCollisionDebugMap(game.world.collisionDebugMap);
     }
-    display.render();
+    display.render(game.world.player, game.world.width, game.world.height);
   };
 
   const update = () => {

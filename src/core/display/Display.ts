@@ -6,15 +6,21 @@ export default class {
   context: CanvasRenderingContext2D;
   mapTileset: AssetsManager;
   playerSprite: AssetsManager;
+  camera: { x: number; y: number; width: number; height: number; };
 
   constructor(canvas: HTMLCanvasElement) {
     this.buffer = document.createElement('canvas').getContext('2d');
     this.context = canvas.getContext('2d');
     this.mapTileset = new AssetsManager(8, 23);
     this.playerSprite = new AssetsManager(8, 23);
+    this.camera = {
+      x: 0,
+      y: 0,
+      width: 256,
+      height: 144,
+    }
   }
 
-  // image, source_x, source_y, destination_x, destination_y, width, height
   drawObject(
     image: CanvasImageSource,
     sourceX: number,
@@ -98,18 +104,54 @@ export default class {
     }
   }
 
-  render(): void {
+  render(
+    player: Player,
+    width: number,
+    height: number,
+  ): void {
+    this.adjustCamera(player, width, height);
     this.context.drawImage(
       this.buffer.canvas,
-      0,
-      0,
-      this.buffer.canvas.width,
-      this.buffer.canvas.height,
+      this.camera.x,
+      this.camera.y,
+      this.camera.width,
+      this.camera.height,
       0,
       0,
       this.context.canvas.width,
       this.context.canvas.height,
     );
+  }
+
+  adjustCamera(
+    player: Player,
+    width: number,
+    height: number,
+  ): void {
+    const playerXCenter = player.x + (player.width / 2);
+    const playerYCenter = player.y + (player.height / 2);
+
+    let positionX = playerXCenter - (this.camera.width / 2);
+    let positionY = playerYCenter - (this.camera.height / 2);
+
+    if (positionX < 0) {
+      positionX = 0;
+    }
+
+    if ((playerXCenter + (this.camera.width / 2)) > width) {
+      positionX = width - this.camera.width;
+    }
+
+    if (positionY < 0) {
+      positionY = 0
+    }
+
+    if ((playerYCenter + (this.camera.height / 2)) > height) {
+      positionY = height - this.camera.height;
+    }
+
+    this.camera.x = positionX;
+    this.camera.y = positionY;
   }
 
   resize(
