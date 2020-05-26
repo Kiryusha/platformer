@@ -46,7 +46,7 @@ export default class Player extends Entity {
     this.friction = 0.09;
 
     // animation stuff
-    this.isFacingLeft = true;
+    this.isFacingLeft = false;
     this.setAnimationDefaults(playerSpriteMap);
   }
 
