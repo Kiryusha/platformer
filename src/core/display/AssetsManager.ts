@@ -7,6 +7,7 @@ export default class {
 
   constructor(tileSize: number, columns: number) {
     this.image = new Image();
+    this.tileSize = tileSize;
     this.columns = columns;
   }
 
@@ -31,7 +32,7 @@ export default class {
 
   flipImage(url: string): any {
     return new Promise((resolve, reject) => {
-      const canvas = document.createElement('canvas')
+      const canvas = document.createElement('canvas');
       const buffer = canvas.getContext('2d');
       const image = new Image();
       image.src = url;

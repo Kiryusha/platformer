@@ -58,7 +58,7 @@ export default class {
     delay: number = 5,
     frameIndex: number = 0,
   ): void {
-    if (this.activeFrameSet === frameSet) {
+    if (this.activeFrameSet === frameSet && this.delay === delay) {
       return;
     }
 

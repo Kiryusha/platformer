@@ -82,6 +82,12 @@ window.addEventListener('DOMContentLoaded', async () => {
       game.world.player.jump(false);
     }
 
+    if (controller.shift.isActive) {
+      game.world.player.startSprinting();
+    } else if (game.world.player.isSprinting) {
+      game.world.player.stopSprinting();
+    }
+
     game.update();
   };
 

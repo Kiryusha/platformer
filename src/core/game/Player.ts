@@ -22,9 +22,10 @@ export default class Player extends Entity {
   friction: number;
   animator: Animator;
   isFacingLeft: boolean;
+  isSprinting: boolean;
 
   constructor() {
-    super(16, 204, 15, 15, 'character', 'player');
+    super(16, 204, 15, 20, 'character', 'player');
 
     // Appearance
     this.color1 = '#404040';
@@ -44,6 +45,7 @@ export default class Player extends Entity {
     this.isMovingLeft = false;
     this.isMovingRight = false;
     this.friction = 0.09;
+    this.isSprinting = false;
 
     // animation stuff
     this.isFacingLeft = false;
@@ -94,10 +96,12 @@ export default class Player extends Entity {
   }
 
   updateAnimation() {
-    if (this.isMovingLeft && !this.isJumping && !this.isFalling) {
-      this.animator.changeFrameset('skip', 'loop', 2);
-    } else if (this.isMovingRight && !this.isJumping && !this.isFalling) {
-      this.animator.changeFrameset('skip', 'loop', 2);
+    if ((this.isMovingLeft || this.isMovingRight) && !this.isJumping && !this.isFalling) {
+      if (this.isSprinting) {
+        this.animator.changeFrameset('skip', 'loop', 1.33);
+      } else {
+        this.animator.changeFrameset('skip', 'loop', 2);
+      }
     } else if (this.isFalling) {
       this.animator.changeFrameset('fall', 'loop', 4);
     } else if (this.isJumping) {
@@ -109,9 +113,23 @@ export default class Player extends Entity {
     this.animator.animate();
   }
 
+  startSprinting(): void {
+    this.isSprinting = true;
+    this.maxSpeed = 5;
+    this.accelerationModifier = 10;
+  }
+
+  stopSprinting(): void {
+    this.isSprinting = false;
+    this.maxSpeed = 3;
+    this.accelerationModifier = 6;
+  }
+
   startMovingLeft(): void {
-    this.isFacingLeft = true;
-    this.isMovingLeft = true;
+    if (!this.isMovingRight) {
+      this.isFacingLeft = true;
+      this.isMovingLeft = true;
+    }
   }
 
   stopMovingLeft(): void {
@@ -119,8 +137,10 @@ export default class Player extends Entity {
   }
 
   startMovingRight(): void {
-    this.isFacingLeft = false;
-    this.isMovingRight = true;
+    if (!this.isMovingLeft) {
+      this.isFacingLeft = false;
+      this.isMovingRight = true;
+    }
   }
 
   stopMovingRight(): void {
@@ -167,10 +187,20 @@ export default class Player extends Entity {
       if (this.velocityX > -this.maxSpeed) {
         this.velocityX -= this.maxSpeed / this.accelerationModifier;
       }
+
+      // slowing down after sprinting
+      if (this.velocityX < -this.maxSpeed) {
+        this.velocityX += this.maxSpeed / this.accelerationModifier;
+      }
     // And vice versa for the moving to the right.
     } else if (this.isMovingRight) {
       if (this.velocityX < this.maxSpeed) {
         this.velocityX += this.maxSpeed / this.accelerationModifier;
+      }
+
+      // slowing down after sprinting
+      if (this.velocityX > this.maxSpeed) {
+        this.velocityX -= this.maxSpeed / this.accelerationModifier;
       }
     // If we stop left and right moving, then we completely slow down for
     // as many frames as specified in the modifier.
