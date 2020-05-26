@@ -114,9 +114,11 @@ export default class Player extends Entity {
   }
 
   startSprinting(): void {
-    this.isSprinting = true;
-    this.maxSpeed = 5;
-    this.accelerationModifier = 10;
+    if (!this.isJumping) {
+      this.isSprinting = true;
+      this.maxSpeed = 5;
+      this.accelerationModifier = 10;
+    }
   }
 
   stopSprinting(): void {
