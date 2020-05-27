@@ -88,6 +88,12 @@ window.addEventListener('DOMContentLoaded', async () => {
       game.world.player.stopSprinting();
     }
 
+    if (controller.down.isActive) {
+      game.world.player.startCroaching();
+    } else if (game.world.player.isCroaching) {
+      game.world.player.stopCroaching();
+    }
+
     game.update();
   };
 

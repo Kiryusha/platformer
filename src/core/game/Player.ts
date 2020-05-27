@@ -23,13 +23,12 @@ export default class Player extends Entity {
   animator: Animator;
   isFacingLeft: boolean;
   isSprinting: boolean;
+  isCroaching: boolean;
+  isKeepCroaching: boolean;
+  croachingCounter: number;
 
   constructor() {
     super(16, 204, 15, 20, 'character', 'player');
-
-    // Appearance
-    this.color1 = '#404040';
-    this.color1 = '#f0f0f0';
 
     // Physics
     this.jumpImpulse = 221;
@@ -46,6 +45,9 @@ export default class Player extends Entity {
     this.isMovingRight = false;
     this.friction = 0.09;
     this.isSprinting = false;
+    this.isCroaching = false;
+    this.isKeepCroaching = false;
+    this.croachingCounter = 0;
 
     // animation stuff
     this.isFacingLeft = false;
@@ -90,6 +92,12 @@ export default class Player extends Entity {
           'player-fall-2',
           'player-fall-3',
           'player-fall-4',
+        ],
+        duck: [
+          'player-duck-1',
+          'player-duck-2',
+          'player-duck-3',
+          'player-duck-4',
         ]
       }
     );
@@ -106,6 +114,8 @@ export default class Player extends Entity {
       this.animator.changeFrameset('fall', 'loop', 4);
     } else if (this.isJumping) {
       this.animator.changeFrameset('jump', 'loop', 4);
+    } else if (this.isCroaching) {
+      this.animator.changeFrameset('duck', 'loop', 4);
     } else {
       this.animator.changeFrameset('idle', 'loop', 4);
     }
@@ -113,8 +123,26 @@ export default class Player extends Entity {
     this.animator.animate();
   }
 
+  startCroaching(): void {
+    this.isCroaching = true;
+    this.isSprinting = false;
+    this.isMovingLeft = false;
+    this.isMovingRight = false;
+    this.brakingModifier = 24;
+    this.height = 15;
+  }
+
+  stopCroaching(): void {
+    this.isCroaching = false;
+    this.isKeepCroaching = false;
+    this.croachingCounter = 0;
+    this.brakingModifier = 6;
+    this.height = 20;
+    this.y -= 5;
+  }
+
   startSprinting(): void {
-    if (!this.isJumping) {
+    if (!this.isJumping && !this.isCroaching) {
       this.isSprinting = true;
       this.maxSpeed = 5;
       this.accelerationModifier = 10;
@@ -128,7 +156,7 @@ export default class Player extends Entity {
   }
 
   startMovingLeft(): void {
-    if (!this.isMovingRight) {
+    if (!this.isMovingRight && !this.isCroaching) {
       this.isFacingLeft = true;
       this.isMovingLeft = true;
     }
@@ -139,7 +167,7 @@ export default class Player extends Entity {
   }
 
   startMovingRight(): void {
-    if (!this.isMovingLeft) {
+    if (!this.isMovingLeft && !this.isCroaching) {
       this.isFacingLeft = false;
       this.isMovingRight = true;
     }

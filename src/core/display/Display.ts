@@ -18,7 +18,7 @@ export default class {
       y: 0,
       width: 256,
       height: 144,
-    }
+    };
   }
 
   drawObject(
@@ -143,7 +143,7 @@ export default class {
     }
 
     if (positionY < 0) {
-      positionY = 0
+      positionY = 0;
     }
 
     if ((playerYCenter + (this.camera.height / 2)) > height) {
