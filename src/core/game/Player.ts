@@ -26,6 +26,7 @@ export default class Player extends Entity {
   isCroaching: boolean;
   isKeepCroaching: boolean;
   croachingCounter: number;
+  isStuck: boolean;
 
   constructor() {
     super(16, 204, 15, 20, 'character', 'player');
@@ -178,7 +179,9 @@ export default class Player extends Entity {
   }
 
   jump(value: boolean): void {
-    this.isJumpTriggered = value;
+    if (!this.isStuck) {
+      this.isJumpTriggered = value;
+    }
   }
 
   update(gravity: number): void {

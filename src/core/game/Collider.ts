@@ -4,6 +4,7 @@ export default class {
     player: Player,
     collision: Entity,
   ): void {
+    player.isStuck = false;
     switch (collision.name) {
       case 'top':
         this.collideFromTop(player, collision);
@@ -37,7 +38,8 @@ export default class {
         if (this.collideFromTop(player, collision)) return;
         if (this.collideFromLeft(player, collision)) return;
         if (this.collideFromRight(player, collision)) return;
-        this.collideFromBottom(player, collision);
+        if (this.collideFromBottom(player, collision)) return;
+        player.isStuck = true;
         break;
     }
   }

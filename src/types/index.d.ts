@@ -49,6 +49,7 @@ interface Entity {
 }
 
 interface Player extends Entity {
+  isStuck: boolean;
   velocityX: number;
   velocityY: number;
   isJumping: boolean;
