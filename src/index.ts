@@ -98,7 +98,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   };
 
   const controller = new Controller();
-  const display = new Display(document.getElementById('game') as HTMLCanvasElement);
+  const display = new Display(document.getElementById('game') as HTMLCanvasElement, 256, 144);
   const game = new Game(map);
   const engine = new Engine(fps, render, update);
 

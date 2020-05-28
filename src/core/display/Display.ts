@@ -1,24 +1,24 @@
 // the class is responsible for all the rendering in the canvas
 import AssetsManager from './AssetsManager';
+import Camera from './Camera';
 
 export default class {
   buffer: CanvasRenderingContext2D;
   context: CanvasRenderingContext2D;
   mapTileset: AssetsManager;
   playerSprite: AssetsManager;
-  camera: { x: number; y: number; width: number; height: number; };
+  camera: Camera;
 
-  constructor(canvas: HTMLCanvasElement) {
+  constructor(
+    canvas: HTMLCanvasElement,
+    cameraWidth: number,
+    cameraHeight: number,
+  ) {
     this.buffer = document.createElement('canvas').getContext('2d');
     this.context = canvas.getContext('2d');
     this.mapTileset = new AssetsManager(8, 23);
     this.playerSprite = new AssetsManager(8, 23);
-    this.camera = {
-      x: 0,
-      y: 0,
-      width: 256,
-      height: 144,
-    };
+    this.camera = new Camera(cameraWidth, cameraHeight);
   }
 
   drawObject(
@@ -106,10 +106,10 @@ export default class {
 
   render(
     player: Player,
-    width: number,
-    height: number,
+    stageWidth: number,
+    stageHeight: number,
   ): void {
-    this.adjustCamera(player, width, height);
+    this.camera.adjustCamera(player, stageWidth, stageHeight);
     this.context.drawImage(
       this.buffer.canvas,
       this.camera.x,
@@ -121,37 +121,6 @@ export default class {
       this.context.canvas.width,
       this.context.canvas.height,
     );
-  }
-
-  adjustCamera(
-    player: Player,
-    width: number,
-    height: number,
-  ): void {
-    const playerXCenter = player.x + (player.width / 2);
-    const playerYCenter = player.y + (player.height / 2);
-
-    let positionX = playerXCenter - (this.camera.width / 2);
-    let positionY = playerYCenter - (this.camera.height / 2);
-
-    if (positionX < 0) {
-      positionX = 0;
-    }
-
-    if ((playerXCenter + (this.camera.width / 2)) > width) {
-      positionX = width - this.camera.width;
-    }
-
-    if (positionY < 0) {
-      positionY = 0;
-    }
-
-    if ((playerYCenter + (this.camera.height / 2)) > height) {
-      positionY = height - this.camera.height;
-    }
-
-    this.camera.x = positionX;
-    this.camera.y = positionY;
   }
 
   resize(
