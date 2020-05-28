@@ -1,4 +1,5 @@
 // The class is responsible for processing all world objects
+// Entity has everything related to positioning: directly obtaining coordinates or setting them
 export default class implements Entity {
   name: string;
   x: number;

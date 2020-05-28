@@ -105,7 +105,7 @@ export default class {
   }
 
   render(
-    player: Player,
+    player: Character,
     stageWidth: number,
     stageHeight: number,
   ): void {

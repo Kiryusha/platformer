@@ -2,10 +2,8 @@
 import Entity from './Entity';
 import Animator from './Animator';
 import { bound } from '../../util';
-import playerSpriteMap from '../../assets/sprite-maps/player.json';
 
-export default class Player extends Entity {
-  color1: string;
+export default class Character extends Entity {
   jumpImpulse: number;
   maxSpeed: number;
   isJumping: boolean;
@@ -28,83 +26,51 @@ export default class Player extends Entity {
   croachingCounter: number;
   isStuck: boolean;
 
-  constructor() {
-    super(16, 204, 15, 20, 'character', 'player');
+  constructor(stats: CharacterStats, playerSpriteMap: spriteMap) {
+    super(
+      stats.x,
+      stats.y,
+      stats.width,
+      stats.height,
+      stats.type,
+      stats.name,
+    );
 
     // Physics
-    this.jumpImpulse = 221;
-    this.maxSpeed = 3;
-    this.maxJumpingSpeed = 9;
-    this.isJumping = false;
-    this.isJumpTriggered = false;
-    this.isFalling = true;
-    this.accelerationModifier = 6;
-    this.brakingModifier = 6;
-    this.velocityX = 0;
-    this.velocityY = 0;
-    this.isMovingLeft = false;
-    this.isMovingRight = false;
-    this.friction = 0.09;
-    this.isSprinting = false;
-    this.isCroaching = false;
-    this.isKeepCroaching = false;
-    this.croachingCounter = 0;
+    this.jumpImpulse = stats.jumpImpulse;
+    this.maxSpeed = stats.maxSpeed;
+    this.maxJumpingSpeed = stats.maxJumpingSpeed;
+    this.isJumping = stats.isJumping;
+    this.isJumpTriggered = stats.isJumpTriggered;
+    this.isFalling = stats.isFalling;
+    this.accelerationModifier = stats.accelerationModifier;
+    this.brakingModifier = stats.brakingModifier;
+    this.velocityX = stats.velocityX;
+    this.velocityY = stats.velocityY;
+    this.isMovingLeft = stats.isMovingLeft;
+    this.isMovingRight = stats.isMovingRight;
+    this.friction = stats.friction;
+    this.isSprinting = stats.isSprinting;
+    this.isCroaching = stats.isCroaching;
+    this.isKeepCroaching = stats.isKeepCroaching;
+    this.croachingCounter = stats.croachingCounter;
+    this.isStuck = stats.isStuck;
 
     // animation stuff
-    this.isFacingLeft = false;
-    this.setAnimationDefaults(playerSpriteMap);
+    this.isFacingLeft = stats.isFacingLeft;
+    this.setAnimationDefaults(stats, playerSpriteMap);
   }
 
-  setAnimationDefaults(playerSpriteMap: spriteMap): void {
+  setAnimationDefaults(stats: CharacterStats, playerSpriteMap: spriteMap): void {
     this.animator = new Animator(
       playerSpriteMap,
-      37,
-      32,
-      {
-        idle: [
-          'player-idle-1',
-          'player-idle-2',
-          'player-idle-3',
-          'player-idle-4',
-          'player-idle-5',
-          'player-idle-6',
-          'player-idle-7',
-          'player-idle-8',
-          'player-idle-9',
-        ],
-        skip: [
-          'player-skip-1',
-          'player-skip-2',
-          'player-skip-3',
-          'player-skip-4',
-          'player-skip-5',
-          'player-skip-6',
-          'player-skip-7',
-          'player-skip-8',
-        ],
-        jump: [
-          'player-jump-1',
-          'player-jump-2',
-          'player-jump-3',
-          'player-jump-4',
-        ],
-        fall: [
-          'player-fall-1',
-          'player-fall-2',
-          'player-fall-3',
-          'player-fall-4',
-        ],
-        duck: [
-          'player-duck-1',
-          'player-duck-2',
-          'player-duck-3',
-          'player-duck-4',
-        ]
-      }
+      stats.frameWidth,
+      stats.frameHeight,
+      stats.frames,
     );
   }
 
-  updateAnimation() {
+  updateAnimation(): void {
     if ((this.isMovingLeft || this.isMovingRight) && !this.isJumping && !this.isFalling) {
       if (this.isSprinting) {
         this.animator.changeFrameset('skip', 'loop', 1.33);

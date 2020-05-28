@@ -1,7 +1,7 @@
 // The class is responsible for processing all the possible collisions
 export default class {
   processNarrowPhase(
-    player: Player,
+    player: Character,
     collision: Entity,
   ): void {
     player.isStuck = false;
@@ -107,7 +107,7 @@ export default class {
 
   // These are specific methods for handling various cases of collisions.
   collideFromTop(
-    player: Player,
+    player: Character,
     collision: Entity,
   ): boolean {
     if (player.getBottom() > collision.getTop() && player.getOldBottom() <= collision.getTop()) {
@@ -121,7 +121,7 @@ export default class {
   }
 
   collideFromRight(
-    player: Player,
+    player: Character,
     collision: Entity,
   ): boolean {
     if (player.getLeft() < collision.getRight() && player.getOldLeft() >= collision.getRight()) {
@@ -133,7 +133,7 @@ export default class {
   }
 
   collideFromBottom(
-    player: Player,
+    player: Character,
     collision: Entity,
   ): boolean {
     if (player.getTop() < collision.getBottom() && player.getOldTop() >= collision.getBottom()) {
@@ -147,7 +147,7 @@ export default class {
   }
 
   collideFromLeft(
-    player: Player,
+    player: Character,
     collision: Entity,
   ): boolean {
     if (player.getRight() > collision.getLeft() && player.getOldRight() <= collision.getLeft()) {

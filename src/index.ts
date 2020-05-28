@@ -42,8 +42,6 @@ window.addEventListener('DOMContentLoaded', async () => {
         game.world.player.animator.spriteMap.frames[game.world.player.animator.frameValue].frame;
     }
 
-    // console.log(frame);
-
     display.drawObject(
       game.world.player.isFacingLeft ? display.playerSprite.flippedImage : display.playerSprite.image,
       frame.x,

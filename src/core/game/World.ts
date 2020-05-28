@@ -1,7 +1,10 @@
 // The class is responsible for keeping and processing the game world
 import Entity from './Entity';
-import Player from './Player';
+import Character from './Character';
 import Collider from './Collider';
+// Characters
+import playerSpriteMap from '../../assets/sprite-maps/player.json';
+import playerStats from '../../assets/stats/player.json';
 
 export default class {
   gravity: number;
@@ -14,7 +17,7 @@ export default class {
   columns: number;
   rows: number;
   tileSize: number;
-  player: Player;
+  player: Character;
   collider: Collider;
   map: gameMap;
   rawLayers: any;
@@ -37,7 +40,7 @@ export default class {
     this.height = this.tileSize * this.rows;
     this.width = this.tileSize * this.columns;
 
-    this.player = new Player();
+    this.player = new Character(playerStats, playerSpriteMap);
     this.collider = new Collider();
   }
 
@@ -79,7 +82,7 @@ export default class {
     }
   }
 
-  processBoundariesCollision (object: Player): void {
+  processBoundariesCollision (object: Character): void {
     // collisions with the world boundaries
     // left
     if (object.x < 0) {

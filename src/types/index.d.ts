@@ -48,10 +48,78 @@ interface Entity {
   setOldBottom(y: number): void;
 }
 
-interface Player extends Entity {
-  isStuck: boolean;
+interface Character extends Entity {
+  jumpImpulse: number;
+  maxSpeed: number;
+  isJumping: boolean;
   velocityX: number;
   velocityY: number;
-  isJumping: boolean;
+  isMovingLeft: boolean;
+  isMovingRight: boolean;
+  accelerationModifier: number;
+  brakingModifier: number;
   isFalling: boolean;
+  velocityYModifier: number;
+  isJumpTriggered: boolean;
+  maxJumpingSpeed: number;
+  friction: number;
+  animator: {};
+  isFacingLeft: boolean;
+  isSprinting: boolean;
+  isCroaching: boolean;
+  isKeepCroaching: boolean;
+  croachingCounter: number;
+  isStuck: boolean;
+  setAnimationDefaults(stats: CharacterStats, playerSpriteMap: spriteMap): void;
+  updateAnimation(): void;
+  startCroaching(): void;
+  stopCroaching(): void;
+  startSprinting(): void;
+  stopSprinting(): void;
+  startMovingLeft(): void;
+  stopMovingLeft(): void;
+  startMovingRight(): void;
+  stopMovingRight(): void;
+  jump(value: boolean): void;
+  update(gravity: number): void;
+  adjustVerticalMovement(gravity: number): void;
+  adjustHorizontalMovement(): void;
+}
+
+interface CharacterStats {
+  name: string,
+  type: string;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  isStuck: boolean;
+  jumpImpulse: number;
+  maxSpeed: number;
+  maxJumpingSpeed: number;
+  isJumping: boolean;
+  isJumpTriggered: boolean;
+  isFalling: boolean;
+  accelerationModifier: number;
+  brakingModifier: number;
+  velocityX: number;
+  velocityY: number;
+  isMovingLeft: boolean;
+  isMovingRight: boolean;
+  friction: number;
+  isSprinting: boolean;
+  isCroaching: boolean;
+  isKeepCroaching: boolean;
+  croachingCounter: number;
+  isFacingLeft: boolean;
+  spriteMap: {},
+  frameWidth: number;
+  frameHeight: number;
+  frames: {
+    idle: string[],
+    skip: string[],
+    jump: string[],
+    fall: string[],
+    duck: string[]
+  };
 }
