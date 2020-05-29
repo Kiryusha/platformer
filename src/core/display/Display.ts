@@ -86,14 +86,31 @@ export default class {
       const mapRow = Math.floor(position / mapColumns);
       const mapColumn = position % mapColumns;
 
+      const sourceX = this.mapTileset.tileSize * sourceColumn;
+      const sourceY = this.mapTileset.tileSize * sourceRow;
+
+      const mapX = this.mapTileset.tileSize * mapColumn;
+      const mapY = this.mapTileset.tileSize * mapRow;
+
+      // Do not draw what does not get into the camera right now, plus a margin of two tiles.
+      // Margin is needed in order to avoid glitches during fast movement
+      const margin = this.mapTileset.tileSize * 2;
+
+      if (
+        mapY > this.camera.y + this.camera.height + margin
+        || mapY < this.camera.y - margin
+        || mapX > this.camera.x + this.camera.width + margin
+        || mapX < this.camera.x - margin
+      ) continue;
+
       this.buffer.drawImage(
         this.mapTileset.image,
-        this.mapTileset.tileSize * sourceColumn,
-        this.mapTileset.tileSize * sourceRow,
+        sourceX,
+        sourceY,
         this.mapTileset.tileSize,
         this.mapTileset.tileSize,
-        this.mapTileset.tileSize * mapColumn,
-        this.mapTileset.tileSize * mapRow,
+        mapX,
+        mapY,
         this.mapTileset.tileSize,
         this.mapTileset.tileSize,
       );
