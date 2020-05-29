@@ -75,6 +75,8 @@ export default class {
 
   drawMap(map: number[], mapColumns: number): void {
     for (let i: number = 0; i < map.length; i += 1) {
+      if (!map[i]) continue;
+
       const id = map[i];
       const position = i;
 
@@ -84,20 +86,14 @@ export default class {
       const mapRow = Math.floor(position / mapColumns);
       const mapColumn = position % mapColumns;
 
-      const sourceX = this.mapTileset.tileSize * sourceColumn;
-      const sourceY = this.mapTileset.tileSize * sourceRow;
-
-      const mapX = this.mapTileset.tileSize * mapColumn;
-      const mapY = this.mapTileset.tileSize * mapRow;
-
       this.buffer.drawImage(
         this.mapTileset.image,
-        sourceX,
-        sourceY,
+        this.mapTileset.tileSize * sourceColumn,
+        this.mapTileset.tileSize * sourceRow,
         this.mapTileset.tileSize,
         this.mapTileset.tileSize,
-        mapX,
-        mapY,
+        this.mapTileset.tileSize * mapColumn,
+        this.mapTileset.tileSize * mapRow,
         this.mapTileset.tileSize,
         this.mapTileset.tileSize,
       );
