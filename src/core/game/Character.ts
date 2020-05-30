@@ -21,10 +21,11 @@ export default class Character extends Entity {
   animator: Animator;
   isFacingLeft: boolean;
   isSprinting: boolean;
-  isCroaching: boolean;
-  isKeepCroaching: boolean;
-  croachingCounter: number;
+  isDucking: boolean;
+  isKeepDucking: boolean;
+  duckingCounter: number;
   isStuck: boolean;
+  defaults: CharacterStats;
 
   constructor(stats: CharacterStats, playerSpriteMap: spriteMap) {
     super(
@@ -35,6 +36,7 @@ export default class Character extends Entity {
       stats.type,
       stats.name,
     );
+    this.defaults = stats;
 
     // Physics
     this.jumpImpulse = stats.jumpImpulse;
@@ -51,9 +53,9 @@ export default class Character extends Entity {
     this.isMovingRight = stats.isMovingRight;
     this.friction = stats.friction;
     this.isSprinting = stats.isSprinting;
-    this.isCroaching = stats.isCroaching;
-    this.isKeepCroaching = stats.isKeepCroaching;
-    this.croachingCounter = stats.croachingCounter;
+    this.isDucking = stats.isDucking;
+    this.isKeepDucking = stats.isKeepDucking;
+    this.duckingCounter = stats.duckingCounter;
     this.isStuck = stats.isStuck;
 
     // animation stuff
@@ -81,7 +83,7 @@ export default class Character extends Entity {
       this.animator.changeFrameset('fall', 'loop', 4);
     } else if (this.isJumping) {
       this.animator.changeFrameset('jump', 'loop', 4);
-    } else if (this.isCroaching) {
+    } else if (this.isDucking) {
       this.animator.changeFrameset('duck', 'loop', 4);
     } else {
       this.animator.changeFrameset('idle', 'loop', 4);
@@ -90,26 +92,31 @@ export default class Character extends Entity {
     this.animator.animate();
   }
 
-  startCroaching(): void {
-    this.isCroaching = true;
-    this.isSprinting = false;
-    this.isMovingLeft = false;
-    this.isMovingRight = false;
-    this.brakingModifier = 24;
-    this.height = 15;
+  startDucking(): void {
+    if (!this.isJumping && !this.isFalling) {
+      if (!this.isDucking) {
+        this.y += 5;
+      }
+      this.isDucking = true;
+      this.isSprinting = false;
+      this.isMovingLeft = false;
+      this.isMovingRight = false;
+      this.brakingModifier = 24;
+      this.height = 15;
+    }
   }
 
-  stopCroaching(): void {
-    this.isCroaching = false;
-    this.isKeepCroaching = false;
-    this.croachingCounter = 0;
+  stopDucking(): void {
+    this.isDucking = false;
+    this.isKeepDucking = false;
+    this.duckingCounter = 0;
     this.brakingModifier = 6;
     this.height = 20;
     this.y -= 5;
   }
 
   startSprinting(): void {
-    if (!this.isJumping && !this.isCroaching) {
+    if (!this.isJumping && !this.isDucking) {
       this.isSprinting = true;
       this.maxSpeed = 5;
       this.accelerationModifier = 10;
@@ -123,7 +130,7 @@ export default class Character extends Entity {
   }
 
   startMovingLeft(): void {
-    if (!this.isMovingRight && !this.isCroaching) {
+    if (!this.isMovingRight && !this.isDucking) {
       this.isFacingLeft = true;
       this.isMovingLeft = true;
     }
@@ -134,7 +141,7 @@ export default class Character extends Entity {
   }
 
   startMovingRight(): void {
-    if (!this.isMovingLeft && !this.isCroaching) {
+    if (!this.isMovingLeft && !this.isDucking) {
       this.isFacingLeft = false;
       this.isMovingRight = true;
     }

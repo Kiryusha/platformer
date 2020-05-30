@@ -87,9 +87,9 @@ window.addEventListener('DOMContentLoaded', async () => {
     }
 
     if (controller.down.isActive) {
-      game.world.player.startCroaching();
-    } else if (game.world.player.isCroaching) {
-      game.world.player.stopCroaching();
+      game.world.player.startDucking();
+    } else if (game.world.player.isDucking) {
+      game.world.player.stopDucking();
     }
 
     game.update();

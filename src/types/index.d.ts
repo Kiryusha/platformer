@@ -49,6 +49,7 @@ interface Entity {
 }
 
 interface Character extends Entity {
+  defaults: CharacterStats;
   jumpImpulse: number;
   maxSpeed: number;
   isJumping: boolean;
@@ -66,14 +67,14 @@ interface Character extends Entity {
   animator: {};
   isFacingLeft: boolean;
   isSprinting: boolean;
-  isCroaching: boolean;
-  isKeepCroaching: boolean;
-  croachingCounter: number;
+  isDucking: boolean;
+  isKeepDucking: boolean;
+  duckingCounter: number;
   isStuck: boolean;
   setAnimationDefaults(stats: CharacterStats, playerSpriteMap: spriteMap): void;
   updateAnimation(): void;
-  startCroaching(): void;
-  stopCroaching(): void;
+  startDucking(): void;
+  stopDucking(): void;
   startSprinting(): void;
   stopSprinting(): void;
   startMovingLeft(): void;
@@ -108,9 +109,9 @@ interface CharacterStats {
   isMovingRight: boolean;
   friction: number;
   isSprinting: boolean;
-  isCroaching: boolean;
-  isKeepCroaching: boolean;
-  croachingCounter: number;
+  isDucking: boolean;
+  isKeepDucking: boolean;
+  duckingCounter: number;
   isFacingLeft: boolean;
   spriteMap: {},
   frameWidth: number;
