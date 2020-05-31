@@ -69,7 +69,7 @@ interface Character extends Entity {
   isSprinting: boolean;
   isDucking: boolean;
   isKeepDucking: boolean;
-  duckingCounter: number;
+  duckingTimer: NodeJS.Timer;
   isStuck: boolean;
   setAnimationDefaults(stats: CharacterStats, playerSpriteMap: spriteMap): void;
   updateAnimation(): void;
@@ -111,7 +111,6 @@ interface CharacterStats {
   isSprinting: boolean;
   isDucking: boolean;
   isKeepDucking: boolean;
-  duckingCounter: number;
   isFacingLeft: boolean;
   spriteMap: {},
   frameWidth: number;

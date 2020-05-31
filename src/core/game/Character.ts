@@ -23,9 +23,9 @@ export default class Character extends Entity {
   isSprinting: boolean;
   isDucking: boolean;
   isKeepDucking: boolean;
-  duckingCounter: number;
   isStuck: boolean;
   defaults: CharacterStats;
+  duckingTimer: NodeJS.Timer;
 
   constructor(stats: CharacterStats, playerSpriteMap: spriteMap) {
     super(
@@ -55,7 +55,6 @@ export default class Character extends Entity {
     this.isSprinting = stats.isSprinting;
     this.isDucking = stats.isDucking;
     this.isKeepDucking = stats.isKeepDucking;
-    this.duckingCounter = stats.duckingCounter;
     this.isStuck = stats.isStuck;
 
     // animation stuff
@@ -96,6 +95,9 @@ export default class Character extends Entity {
     if (!this.isJumping && !this.isFalling) {
       if (!this.isDucking) {
         this.y += 5;
+        this.duckingTimer = setTimeout(() => {
+          this.isKeepDucking = true;
+        }, 1000);
       }
       this.isDucking = true;
       this.isSprinting = false;
@@ -109,7 +111,7 @@ export default class Character extends Entity {
   stopDucking(): void {
     this.isDucking = false;
     this.isKeepDucking = false;
-    this.duckingCounter = 0;
+    clearTimeout(this.duckingTimer);
     this.brakingModifier = 6;
     this.height = 20;
     this.y -= 5;

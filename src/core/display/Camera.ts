@@ -5,6 +5,9 @@ export default class {
   width: number;
   height: number;
   yDiff: number;
+  velocity: number;
+  velocityModifier: number;
+  maxVelocity: number;
 
   constructor(
     width: number,
@@ -15,6 +18,9 @@ export default class {
     this.width = width;
     this.height = height;
     this.yDiff = 0;
+    this.velocity = 0;
+    this.velocityModifier = 4;
+    this.maxVelocity = this.height / 2.5;
   }
 
   adjustCamera(
@@ -22,12 +28,22 @@ export default class {
     stageWidth: number,
     stageHeight: number,
   ): void {
-    let aimY = aim.y;
+    let aimY;
 
-    // This condition is necessary in order to keep the camera in the same place when the character
-    // begins to duck.
     if (aim.isDucking) {
-      aimY = aim.y - (aim.defaults.height - aim.height);
+      // This condition is necessary in order to keep the camera in the same place when the character
+      // begins to duck.
+      aimY = aim.y - (aim.defaults.height - aim.height) + this.velocity;
+
+      // But if the character continues ducking, gamera will smoothly moves down
+      if (aim.isKeepDucking && (this.velocity <= this.maxVelocity)) {
+        this.velocity += this.velocityModifier;
+      }
+    } else {
+      if (this.velocity) {
+        this.velocity -= this.velocityModifier;
+      }
+      aimY = aim.y + this.velocity;
     }
 
     const aimXCenter = aim.x + (aim.defaults.width / 2);

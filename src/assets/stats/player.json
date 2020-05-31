@@ -21,7 +21,6 @@
   "isSprinting": false,
   "isDucking": false,
   "isKeepDucking": false,
-  "duckingCounter": 0,
   "isStuck": false,
   "isFacingLeft": false,
   "spriteMap": {},
