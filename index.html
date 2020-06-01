@@ -6,6 +6,7 @@
     }
 
     .wrapper {
+      position: relative;
       height: 100%;
       background-color: #000;
       display: -webkit-flex;
@@ -15,11 +16,21 @@
       -ms-align-items: center;
       align-items: center;
     }
+
+    #gameGL {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      margin: auto;
+    }
   </style>
 </head>
 <body>
   <div class="wrapper">
     <canvas id="game"></canvas>
+    <canvas id="gameGL"></canvas>
   </div>
 </body>
 </html>

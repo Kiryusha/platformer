@@ -56,7 +56,10 @@ window.addEventListener('DOMContentLoaded', async () => {
     // Collisions debugging tool: to visualise collisions type window.SHOW_COLLISIONS = true
     // in browser console
     if (window.SHOW_COLLISIONS) {
-      display.drawCollisionDebugMap(game.world.collisionDebugMap);
+      display.renderer.drawTriangle([
+        0, 0, 0, 0.5, 0.7, 0,
+      ]);
+      // display.drawCollisionDebugMap(game.world.collisionDebugMap);
     }
     display.render(game.world.player, game.world.width, game.world.height);
   };
@@ -96,7 +99,12 @@ window.addEventListener('DOMContentLoaded', async () => {
   };
 
   const controller = new Controller();
-  const display = new Display(document.getElementById('game') as HTMLCanvasElement, 256, 144);
+  const display = new Display(
+    document.getElementById('game') as HTMLCanvasElement,
+    document.getElementById('gameGL') as HTMLCanvasElement,
+    256,
+    144,
+  );
   const game = new Game(map);
   const engine = new Engine(fps, render, update);
 

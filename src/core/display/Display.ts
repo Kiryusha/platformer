@@ -1,6 +1,7 @@
 // the class is responsible for all the rendering in the canvas
 import AssetsManager from './AssetsManager';
 import Camera from './Camera';
+import Renderer from './Renderer';
 
 export default class {
   buffer: CanvasRenderingContext2D;
@@ -8,17 +9,22 @@ export default class {
   mapTileset: AssetsManager;
   playerSprite: AssetsManager;
   camera: Camera;
+  renderer: Renderer;
+  contextGL: WebGLRenderingContext;
 
   constructor(
     canvas: HTMLCanvasElement,
+    canvasGL: HTMLCanvasElement,
     cameraWidth: number,
     cameraHeight: number,
   ) {
     this.buffer = document.createElement('canvas').getContext('2d');
     this.context = canvas.getContext('2d');
+    this.contextGL = canvasGL.getContext('webgl');
     this.mapTileset = new AssetsManager(8, 23);
     this.playerSprite = new AssetsManager(8, 23);
     this.camera = new Camera(cameraWidth, cameraHeight);
+    this.renderer = new Renderer(this.contextGL);
   }
 
   drawObject(
@@ -144,9 +150,13 @@ export default class {
     if (height / width > ratio) {
       this.context.canvas.height = width * ratio;
       this.context.canvas.width = width;
+      this.contextGL.canvas.height = width * ratio;
+      this.contextGL.canvas.width = width;
     } else {
       this.context.canvas.height = height;
       this.context.canvas.width = height / ratio;
+      this.contextGL.canvas.height = height;
+      this.contextGL.canvas.width = height / ratio;
     }
 
     this.context.imageSmoothingEnabled = false;
