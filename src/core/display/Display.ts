@@ -10,21 +10,20 @@ export default class {
   playerSprite: AssetsManager;
   camera: Camera;
   renderer: Renderer;
-  contextGL: WebGLRenderingContext;
+  bufferGL: WebGLRenderingContext;
 
   constructor(
     canvas: HTMLCanvasElement,
-    canvasGL: HTMLCanvasElement,
     cameraWidth: number,
     cameraHeight: number,
   ) {
     this.buffer = document.createElement('canvas').getContext('2d');
     this.context = canvas.getContext('2d');
-    this.contextGL = canvasGL.getContext('webgl');
+    this.bufferGL = document.createElement('canvas').getContext('webgl');
     this.mapTileset = new AssetsManager(8, 23);
     this.playerSprite = new AssetsManager(8, 23);
     this.camera = new Camera(cameraWidth, cameraHeight);
-    this.renderer = new Renderer(this.contextGL);
+    this.renderer = new Renderer(this.bufferGL);
   }
 
   drawObject(
@@ -51,29 +50,32 @@ export default class {
 
   drawCollisionDebugMap(map: any[]): void {
     const colorsDictionary: {
-      [sideName: string]: string
+      [sideName: string]: number[]
     } = {
-      top: 'rgba(255, 0, 0, 0.8)',
-      'top-left': 'rgba(255, 100, 0, 0.8)',
-      'top-right': 'rgba(255, 0, 136, 0.8)',
-      left: 'rgba(0, 181, 204, 0.8)',
-      right: 'rgba(145, 61, 136, 0.8)',
-      bottom: 'rgba(255, 255, 0, 0.8)',
-      'bottom-left': 'rgba(255, 255, 204, 0.8)',
-      'bottom-right': 'rgba(255, 255, 136, 0.8)',
-      full: 'rgba(255, 255, 255, 0.8)',
+      top: [255, 0, 0, 0.5],
+      'top-left': [255, 100, 0, 0.5],
+      'top-right': [255, 0, 136, 0.5],
+      left: [0, 181, 204, 0.5],
+      right: [145, 61, 136, 0.5],
+      bottom: [255, 255, 0, 0.5],
+      'bottom-left': [255, 255, 204, 0.5],
+      'bottom-right': [255, 255, 136, 0.5],
+      full: [200, 200, 200, 0.5], // for some reason white is not transparent in webgl
     };
+
+    this.renderer.clear();
 
     for (let i = 0; i < map.length; i += 1) {
       for (let k = 0; k < map[i].length; k += 1) {
         if (map[i][k].type === 'collision') {
-          this.buffer.fillStyle = colorsDictionary[map[i][k].name];
-          this.buffer.fillRect(
-            map[i][k].x,
-            map[i][k].y,
-            map[i][k].width,
-            map[i][k].height,
-          );
+          this.renderer.drawRect([
+            map[i][k].x, map[i][k].y, // upper-left corner
+            map[i][k].x + map[i][k].width, map[i][k].y,
+            map[i][k].x, map[i][k].y + map[i][k].height,
+            map[i][k].x, map[i][k].y + map[i][k].height, // bottom-right corner
+            map[i][k].x + map[i][k].width, map[i][k].y,
+            map[i][k].x + map[i][k].width, map[i][k].y + map[i][k].height, // bottom-right corner
+          ], colorsDictionary[map[i][k].name]);
         }
       }
     }
@@ -140,6 +142,19 @@ export default class {
       this.context.canvas.width,
       this.context.canvas.height,
     );
+    if (window.SHOW_COLLISIONS) {
+      this.context.drawImage(
+        this.bufferGL.canvas,
+        this.camera.x,
+        this.camera.y,
+        this.camera.width,
+        this.camera.height,
+        0,
+        0,
+        this.context.canvas.width,
+        this.context.canvas.height,
+      );
+    }
   }
 
   resize(
@@ -150,13 +165,13 @@ export default class {
     if (height / width > ratio) {
       this.context.canvas.height = width * ratio;
       this.context.canvas.width = width;
-      this.contextGL.canvas.height = width * ratio;
-      this.contextGL.canvas.width = width;
+      this.bufferGL.canvas.height = width * ratio;
+      this.bufferGL.canvas.width = width;
     } else {
       this.context.canvas.height = height;
       this.context.canvas.width = height / ratio;
-      this.contextGL.canvas.height = height;
-      this.contextGL.canvas.width = height / ratio;
+      this.bufferGL.canvas.height = height;
+      this.bufferGL.canvas.width = height / ratio;
     }
 
     this.context.imageSmoothingEnabled = false;
