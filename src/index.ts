@@ -27,27 +27,27 @@ window.addEventListener('DOMContentLoaded', async () => {
       document.documentElement.clientHeight,
       aspectRatio,
     );
-    display.render(game.world.player, game.world.width, game.world.height);
+    display.render(player, game.world.width, game.world.height);
   };
   const render = () => {
     display.drawMap(game.world.backgroundMap, game.world.columns);
     display.drawMap(game.world.middleMap, game.world.columns);
     let frame;
 
-    if (game.world.player.isFacingLeft) {
+    if (player.isFacingLeft) {
       frame =
-        game.world.player.animator.flippedSpriteMap.frames[game.world.player.animator.frameValue].frame;
+        player.animator.flippedSpriteMap.frames[player.animator.frameValue].frame;
     } else {
       frame =
-        game.world.player.animator.spriteMap.frames[game.world.player.animator.frameValue].frame;
+        player.animator.spriteMap.frames[player.animator.frameValue].frame;
     }
 
     display.drawObject(
-      game.world.player.isFacingLeft ? display.playerSprite.flippedImage : display.playerSprite.image,
+      player.isFacingLeft ? display.playerSprite.flippedImage : display.playerSprite.image,
       frame.x,
       frame.y,
-      game.world.player.x + Math.floor(game.world.player.width * 0.5 - frame.w * 0.5),
-      game.world.player.y - Math.floor(frame.h - game.world.player.height),
+      player.x + Math.floor(player.width * 0.5 - frame.w * 0.5),
+      player.y - Math.floor(frame.h - player.height),
       frame.w,
       frame.h
     );
@@ -58,38 +58,38 @@ window.addEventListener('DOMContentLoaded', async () => {
     if (window.SHOW_COLLISIONS) {
       display.drawCollisionDebugMap(game.world.collisionDebugMap);
     }
-    display.render(game.world.player, game.world.width, game.world.height);
+    display.render(player, game.world.width, game.world.height);
   };
 
   const update = () => {
     if (controller.left.isActive) {
-      game.world.player.startMovingLeft();
-    } else if (game.world.player.isMovingLeft) {
-      game.world.player.stopMovingLeft();
+      player.startMovingLeft();
+    } else if (player.isMovingLeft) {
+      player.stopMovingLeft();
     }
 
     if (controller.right.isActive) {
-      game.world.player.startMovingRight();
-    } else if (game.world.player.isMovingRight) {
-      game.world.player.stopMovingRight();
+      player.startMovingRight();
+    } else if (player.isMovingRight) {
+      player.stopMovingRight();
     }
 
     if (controller.up.isActive) {
-      game.world.player.jump(controller.up.isActive);
-    } else if (game.world.player.isJumpTriggered) {
-      game.world.player.jump(false);
+      player.jump(controller.up.isActive);
+    } else if (player.isJumpTriggered) {
+      player.jump(false);
     }
 
     if (controller.shift.isActive) {
-      game.world.player.startSprinting();
-    } else if (game.world.player.isSprinting) {
-      game.world.player.stopSprinting();
+      player.startSprinting();
+    } else if (player.isSprinting) {
+      player.stopSprinting();
     }
 
     if (controller.down.isActive) {
-      game.world.player.startDucking();
-    } else if (game.world.player.isDucking) {
-      game.world.player.stopDucking();
+      player.startDucking();
+    } else if (player.isDucking) {
+      player.stopDucking();
     }
 
     game.update();
@@ -102,6 +102,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     144,
   );
   const game = new Game(map);
+  const [player] = game.world.characters.filter(character => character.type === 'player');
   const engine = new Engine(fps, render, update);
 
   // Synchronize display buffer size with the world size

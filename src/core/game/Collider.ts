@@ -5,7 +5,7 @@ export default class {
     collision: Entity,
   ): void {
     player.isStuck = false;
-    switch (collision.name) {
+    switch (collision.type) {
       case 'top':
         this.collideFromTop(player, collision);
         break;
@@ -76,7 +76,7 @@ export default class {
   // Checks if objects are overlapping
   broadPhaseComparator(e1: Entity, e2: Entity): boolean {
     // Skips all checks not related to the player in order to save resources
-    if (e1.type !== 'character' && e2.type !== 'character') {
+    if (e1.group !== 'characters' && e2.group !== 'characters') {
       return false;
     }
 
@@ -98,9 +98,9 @@ export default class {
     e1: any,
     e2: any,
   ): void {
-    if (e1.type === 'character' && e2.type === 'collision') {
+    if (e1.group === 'characters' && e2.group === 'collisions') {
       this.processNarrowPhase(e1, e2);
-    } else if (e2.type  === 'character' && e1.type === 'collision') {
+    } else if (e2.group  === 'characters' && e1.group === 'collisions') {
       this.processNarrowPhase(e2, e1);
     }
   }

@@ -9,16 +9,19 @@ export default class implements Entity {
   width: number;
   height: number;
   type: string;
+  group: string;
 
   constructor(
     x: number,
     y: number,
     width: number,
     height: number,
+    group: string,
     type: string,
-    name: string,
+    name: string = '',
   ) {
     // types
+    this.group = group;
     this.type = type;
     this.name = name;
 

@@ -33,8 +33,8 @@ export default class Character extends Entity {
       stats.y,
       stats.width,
       stats.height,
+      stats.group,
       stats.type,
-      stats.name,
     );
     this.defaults = stats;
 

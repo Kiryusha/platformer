@@ -17,11 +17,11 @@ export default class {
   columns: number;
   rows: number;
   tileSize: number;
-  player: Character;
   collider: Collider;
   map: gameMap;
   rawLayers: any;
-  collisionObjects: any;
+  collisions: any;
+  characters: Character[];
 
   constructor (map: gameMap) {
     // Physics
@@ -34,13 +34,11 @@ export default class {
     this.width = this.columns * this.tileSize;
     this.height = this.rows * this.tileSize;
 
-
     this.processMap(map);
 
     this.height = this.tileSize * this.rows;
     this.width = this.tileSize * this.columns;
 
-    this.player = new Character(playerStats, playerSpriteMap);
     this.collider = new Collider();
   }
 
@@ -51,14 +49,28 @@ export default class {
           result[layer.name] = layer.data;
           break;
         case 'objectgroup':
-          result[layer.name] = layer.objects.map((object: mapObject) => new Entity(
-            object.x,
-            object.y,
-            object.width,
-            object.height,
-            object.type,
-            object.name,
-          ));
+          switch (layer.name) {
+            case 'collisions':
+              result[layer.name] = layer.objects.map((object: mapObject) => new Entity(
+                object.x,
+                object.y,
+                object.width,
+                object.height,
+                'collisions',
+                object.type,
+              ));
+              break;
+            case 'characters':
+              result[layer.name] = layer.objects.map((object: mapObject) => {
+                switch (object.type) {
+                  case 'player':
+                    playerStats.x = object.x;
+                    playerStats.y = object.y;
+                    return new Character(playerStats, playerSpriteMap);
+                }
+              });
+              break;
+          }
       }
 
       return result;
@@ -67,19 +79,9 @@ export default class {
     this.backgroundMap = [...this.rawLayers.background];
     this.middleMap = [...this.rawLayers.middle];
     this.frontMap = [...this.rawLayers.front];
-    this.collisionObjects = [...this.rawLayers.collisionsObjects];
+    this.collisions = [...this.rawLayers.collisions];
+    this.characters = [...this.rawLayers.characters];
     this.collisionDebugMap = [];
-  }
-
-  processCollision (): void {
-    this.processBoundariesCollision(this.player);
-    const collisions = this.collider.processBroadPhase([this.player, ...this.collisionObjects]);
-    this.collisionDebugMap = collisions;
-
-    // TODO: Fix condition, as last frame of jumping is taken for falling
-    if (!collisions.length && this.player.velocityY > 0) {
-      this.player.isFalling = true;
-    }
   }
 
   processBoundariesCollision (object: Character): void {
@@ -111,7 +113,16 @@ export default class {
   }
 
   update (): void {
-    this.player.update(this.gravity);
-    this.processCollision();
+    const collisions = this.collider.processBroadPhase([...this.characters, ...this.collisions]);
+    this.collisionDebugMap = collisions;
+
+    // TODO: Fix condition, as last frame of jumping is taken for falling
+    this.characters.forEach(character => {
+      character.update(this.gravity);
+      this.processBoundariesCollision(character);
+      if (!collisions.length && character.velocityY > 0) {
+        character.isFalling = true;
+      }
+    });
   }
 }

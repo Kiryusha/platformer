@@ -24,6 +24,7 @@ interface mapObject {
 interface Entity {
   name: string,
   type: string;
+  group: string;
   x: number;
   y: number;
   xOld: number;
@@ -88,10 +89,11 @@ interface Character extends Entity {
 }
 
 interface CharacterStats {
-  name: string,
-  type: string;
   x: number;
   y: number;
+  name: string,
+  type: string;
+  group: string;
   width: number;
   height: number;
   isStuck: boolean;
