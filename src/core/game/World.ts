@@ -113,16 +113,12 @@ export default class {
   }
 
   update (): void {
-    const collisions = this.collider.processBroadPhase([...this.characters, ...this.collisions]);
-    this.collisionDebugMap = collisions;
-
     // TODO: Fix condition, as last frame of jumping is taken for falling
     this.characters.forEach(character => {
       character.update(this.gravity);
       this.processBoundariesCollision(character);
-      if (!collisions.length && character.velocityY > 0) {
-        character.isFalling = true;
-      }
     });
+    const collisions = this.collider.processBroadPhase([...this.characters, ...this.collisions]);
+    this.collisionDebugMap = collisions;
   }
 }

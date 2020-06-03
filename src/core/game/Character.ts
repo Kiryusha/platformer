@@ -163,6 +163,10 @@ export default class Character extends Entity {
     this.adjustHorizontalMovement();
     this.adjustVerticalMovement(gravity);
     this.updateAnimation();
+
+    if (!this.isColliding && this.velocityY > 0) {
+      this.isFalling = true;
+    }
   }
 
   adjustVerticalMovement(gravity: number): void {

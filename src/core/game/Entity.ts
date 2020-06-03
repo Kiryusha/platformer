@@ -10,6 +10,7 @@ export default class implements Entity {
   height: number;
   type: string;
   group: string;
+  isColliding: boolean;
 
   constructor(
     x: number,
@@ -30,6 +31,9 @@ export default class implements Entity {
     this.y = y;
     this.xOld = x;
     this.yOld = y;
+
+    // Colliding
+    this.isColliding = false;
 
     // Appearance
     this.width = width;

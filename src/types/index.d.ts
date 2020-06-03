@@ -31,6 +31,7 @@ interface Entity {
   yOld: number;
   width: number;
   height: number;
+  isColliding: boolean;
   getTop(): number;
   getRight(): number;
   getLeft(): number;

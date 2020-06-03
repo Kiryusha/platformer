@@ -65,6 +65,12 @@ export default class {
           if (this.broadPhaseComparator(e1, e2)) {
             this.broadPhaseResolver(e1, e2);
             collisions.push([e1, e2]);
+
+            e1.isColliding = true;
+            e2.isColliding = true;
+          } else {
+            e1.isColliding = false;
+            e2.isColliding = false;
           }
         }
       }
