@@ -118,11 +118,5 @@ interface CharacterStats {
   spriteMap: {},
   frameWidth: number;
   frameHeight: number;
-  frames: {
-    idle: string[],
-    skip: string[],
-    jump: string[],
-    fall: string[],
-    duck: string[]
-  };
+  frames: {};
 }

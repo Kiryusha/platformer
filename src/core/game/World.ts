@@ -3,8 +3,9 @@ import Entity from './Entity';
 import Character from './Character';
 import Collider from './Collider';
 // Characters
-import playerSpriteMap from '../../assets/sprite-maps/player.json';
+import spriteMap from '../../assets/sprite-maps/sprites.json';
 import playerStats from '../../assets/stats/player.json';
+import slugStats from '../../assets/stats/slug.json';
 
 export default class {
   gravity: number;
@@ -58,6 +59,7 @@ export default class {
                 object.height,
                 'collisions',
                 object.type,
+                'block',
               ));
               break;
             case 'characters':
@@ -66,7 +68,14 @@ export default class {
                   case 'player':
                     playerStats.x = object.x;
                     playerStats.y = object.y;
-                    return new Character(playerStats, playerSpriteMap);
+                    return new Character(playerStats, spriteMap);
+                  case 'enemy':
+                    switch (object.name) {
+                      case 'slug':
+                        slugStats.x = object.x;
+                        slugStats.y = object.y;
+                        return new Character(slugStats, spriteMap);
+                    }
                 }
               });
               break;

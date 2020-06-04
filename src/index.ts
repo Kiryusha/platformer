@@ -4,7 +4,7 @@ import Game from './core/game/Game';
 import Engine from './core/engine/Engine';
 import map from './assets/levels/map.json';
 import tileSet from './assets/images/tileset.png';
-import playerSprite from './assets/images/player.png';
+import spriteSheet from './assets/images/sprites.png';
 
 declare global {
   interface Window {
@@ -32,25 +32,29 @@ window.addEventListener('DOMContentLoaded', async () => {
   const render = () => {
     display.drawMap(game.world.backgroundMap, game.world.columns);
     display.drawMap(game.world.middleMap, game.world.columns);
-    let frame;
 
-    if (player.isFacingLeft) {
-      frame =
-        player.animator.flippedSpriteMap.frames[player.animator.frameValue].frame;
-    } else {
-      frame =
-        player.animator.spriteMap.frames[player.animator.frameValue].frame;
-    }
+    game.world.characters.forEach(character => {
+      let frame;
 
-    display.drawObject(
-      player.isFacingLeft ? display.playerSprite.flippedImage : display.playerSprite.image,
-      frame.x,
-      frame.y,
-      player.x + Math.floor(player.width * 0.5 - frame.w * 0.5),
-      player.y - Math.floor(frame.h - player.height),
-      frame.w,
-      frame.h
-    );
+      if (character.isFacingLeft) {
+        frame =
+          character.animator.flippedSpriteMap.frames[character.animator.frameValue].frame;
+      } else {
+        frame =
+          character.animator.spriteMap.frames[character.animator.frameValue].frame;
+      }
+
+      display.drawObject(
+        character.isFacingLeft ? display.spriteSheet.flippedImage : display.spriteSheet.image,
+        frame.x,
+        frame.y,
+        character.x + Math.floor(character.width * 0.5 - frame.w * 0.5),
+        character.y - Math.floor(frame.h - character.height),
+        frame.w,
+        frame.h
+      );
+    });
+
     display.drawMap(game.world.frontMap, game.world.columns);
 
     // Collisions debugging tool: to visualise collisions type window.SHOW_COLLISIONS = true
@@ -115,7 +119,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   window.addEventListener('resize', resize);
 
   await display.mapTileset.loadAsset(tileSet);
-  await display.playerSprite.loadAsset(playerSprite, true);
+  await display.spriteSheet.loadAsset(spriteSheet, true);
 
   resize();
   engine.start();

@@ -1,0 +1,38 @@
+{
+  "x": 0,
+  "y": 0,
+  "width": 25,
+  "height": 20,
+  "type": "enemy",
+  "group": "characters",
+  "name": "slug",
+  "jumpImpulse": 221,
+  "maxSpeed": 3,
+  "maxJumpingSpeed": 9,
+  "isJumping": false,
+  "isJumpTriggered": false,
+  "isFalling": true,
+  "accelerationModifier": 6,
+  "brakingModifier": 6,
+  "velocityX": 0,
+  "velocityY": 0,
+  "isMovingLeft": false,
+  "isMovingRight": false,
+  "friction": 0.09,
+  "isSprinting": false,
+  "isDucking": false,
+  "isKeepDucking": false,
+  "isStuck": false,
+  "isFacingLeft": false,
+  "spriteMap": {},
+  "frameWidth": 32,
+  "frameHeight": 21,
+  "frames": {
+    "skip": [
+      "slug-skip-1",
+      "slug-skip-2",
+      "slug-skip-3",
+      "slug-skip-4"
+    ]
+  }
+}

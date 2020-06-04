@@ -5,7 +5,7 @@
   "height": 20,
   "type": "player",
   "group": "characters",
-  "name": "Bunny",
+  "name": "player",
   "jumpImpulse": 221,
   "maxSpeed": 3,
   "maxJumpingSpeed": 9,

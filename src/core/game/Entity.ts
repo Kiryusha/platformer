@@ -19,7 +19,7 @@ export default class implements Entity {
     height: number,
     group: string,
     type: string,
-    name: string = '',
+    name: string,
   ) {
     // types
     this.group = group;

@@ -24,12 +24,23 @@
                  "type":"player",
                  "visible":true,
                  "width":15,
-                 "x":28.5,
-                 "y":269.5
+                 "x":28,
+                 "y":270
+                }, 
+                {
+                 "height":20,
+                 "id":59,
+                 "name":"slug",
+                 "rotation":0,
+                 "type":"enemy",
+                 "visible":true,
+                 "width":25,
+                 "x":199.5,
+                 "y":241.25
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -294,7 +305,7 @@
          "name":"background",
          "opacity":1,
          "type":"tilelayer",
-         "visible":false,
+         "visible":true,
          "width":40,
          "x":0,
          "y":0
@@ -306,7 +317,7 @@
          "name":"middle",
          "opacity":1,
          "type":"tilelayer",
-         "visible":false,
+         "visible":true,
          "width":40,
          "x":0,
          "y":0
@@ -318,13 +329,13 @@
          "name":"front",
          "opacity":1,
          "type":"tilelayer",
-         "visible":false,
+         "visible":true,
          "width":40,
          "x":0,
          "y":0
         }],
  "nextlayerid":13,
- "nextobjectid":58,
+ "nextobjectid":60,
  "orientation":"orthogonal",
  "renderorder":"left-up",
  "tiledversion":"1.3.4",

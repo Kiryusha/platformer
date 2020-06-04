@@ -53,12 +53,18 @@ export default class {
   }
 
   changeFrameset(
-    frameSet: string,
+    set: string,
     mode: 'loop' | 'pause',
     delay: number = 5,
     frameIndex: number = 0,
   ): void {
-    if (!this.frames[frameSet] || (this.activeFrameSet === frameSet && this.delay === delay)) {
+    let frameSet = set;
+
+    if (!this.frames[frameSet]) {
+      frameSet = Object.keys(this.frames)[0];
+    }
+
+    if (this.activeFrameSet === frameSet && this.delay === delay) {
       return;
     }
 

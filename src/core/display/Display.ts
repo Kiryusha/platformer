@@ -7,7 +7,7 @@ export default class {
   buffer: CanvasRenderingContext2D;
   context: CanvasRenderingContext2D;
   mapTileset: AssetsManager;
-  playerSprite: AssetsManager;
+  spriteSheet: AssetsManager;
   camera: Camera;
   renderer: Renderer;
   bufferGL: WebGLRenderingContext;
@@ -21,7 +21,7 @@ export default class {
     this.context = canvas.getContext('2d');
     this.bufferGL = document.createElement('canvas').getContext('webgl');
     this.mapTileset = new AssetsManager(8, 23);
-    this.playerSprite = new AssetsManager(8, 23);
+    this.spriteSheet = new AssetsManager(8, 23);
     this.camera = new Camera(cameraWidth, cameraHeight);
     this.renderer = new Renderer(this.bufferGL);
   }
