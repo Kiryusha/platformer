@@ -2,12 +2,12 @@
   "x": 0,
   "y": 0,
   "width": 25,
-  "height": 20,
+  "height": 15,
   "type": "enemy",
   "group": "characters",
   "name": "slug",
   "jumpImpulse": 221,
-  "maxSpeed": 3,
+  "maxSpeed": 0.75,
   "maxJumpingSpeed": 9,
   "isJumping": false,
   "isJumpTriggered": false,
@@ -27,6 +27,10 @@
   "spriteMap": {},
   "frameWidth": 32,
   "frameHeight": 21,
+  "movingPattern": {
+    "type": "roaming",
+    "length": 80
+  },
   "frames": {
     "skip": [
       "slug-skip-1",

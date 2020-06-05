@@ -2,6 +2,7 @@
 import Entity from './Entity';
 import Character from './Character';
 import Collider from './Collider';
+import Brain from './Brain';
 // Characters
 import spriteMap from '../../assets/sprite-maps/sprites.json';
 import playerStats from '../../assets/stats/player.json';
@@ -23,6 +24,7 @@ export default class {
   rawLayers: any;
   collisions: any;
   characters: Character[];
+  brain: Brain;
 
   constructor (map: gameMap) {
     // Physics
@@ -34,6 +36,8 @@ export default class {
     this.tileSize = 8;
     this.width = this.columns * this.tileSize;
     this.height = this.rows * this.tileSize;
+
+    this.brain = new Brain();
 
     this.processMap(map);
 
@@ -74,7 +78,9 @@ export default class {
                       case 'slug':
                         slugStats.x = object.x;
                         slugStats.y = object.y;
-                        return new Character(slugStats, spriteMap);
+                        const character = new Character(slugStats, spriteMap);
+                        this.brain.bindCharacter(character);
+                        return character;
                     }
                 }
               });
@@ -129,5 +135,6 @@ export default class {
     });
     const collisions = this.collider.processBroadPhase([...this.characters, ...this.collisions]);
     this.collisionDebugMap = collisions;
+    this.brain.update();
   }
 }

@@ -27,6 +27,7 @@
   "spriteMap": {},
   "frameWidth": 37,
   "frameHeight": 32,
+  "movingPattern": null,
   "frames": {
     "idle": [
       "player-idle-1",
