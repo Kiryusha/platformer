@@ -1,45 +1,45 @@
 // The class is responsible for processing all the possible collisions
 export default class {
   processNarrowPhase(
-    player: Character,
+    character: Character,
     collision: Entity,
   ): void {
-    player.isStuck = false;
+    character.isStuck = false;
     switch (collision.type) {
       case 'top':
-        this.collideFromTop(player, collision);
+        this.collideFromTop(character, collision);
         break;
       case 'right':
-        this.collideFromRight(player, collision);
+        this.collideFromRight(character, collision);
         break;
       case 'bottom':
-        this.collideFromBottom(player, collision);
+        this.collideFromBottom(character, collision);
         break;
       case 'left':
-        this.collideFromLeft(player, collision);
+        this.collideFromLeft(character, collision);
         break;
       case 'top-left':
-        if (this.collideFromTop(player, collision)) return;
-        this.collideFromLeft(player, collision);
+        if (this.collideFromTop(character, collision)) return;
+        this.collideFromLeft(character, collision);
         break;
       case 'top-right':
-        if (this.collideFromTop(player, collision)) return;
-        this.collideFromRight(player, collision);
+        if (this.collideFromTop(character, collision)) return;
+        this.collideFromRight(character, collision);
         break;
       case 'bottom-right':
-        if (this.collideFromRight(player, collision)) return;
-        this.collideFromBottom(player, collision);
+        if (this.collideFromRight(character, collision)) return;
+        this.collideFromBottom(character, collision);
         break;
       case 'bottom-left':
-        if (this.collideFromLeft(player, collision)) return;
-        this.collideFromBottom(player, collision);
+        if (this.collideFromLeft(character, collision)) return;
+        this.collideFromBottom(character, collision);
         break;
       case 'full':
-        if (this.collideFromTop(player, collision)) return;
-        if (this.collideFromLeft(player, collision)) return;
-        if (this.collideFromRight(player, collision)) return;
-        if (this.collideFromBottom(player, collision)) return;
-        player.isStuck = true;
+        if (this.collideFromTop(character, collision)) return;
+        if (this.collideFromLeft(character, collision)) return;
+        if (this.collideFromRight(character, collision)) return;
+        if (this.collideFromBottom(character, collision)) return;
+        character.isStuck = true;
         break;
     }
   }
@@ -81,7 +81,7 @@ export default class {
 
   // Checks if objects are overlapping
   broadPhaseComparator(e1: Entity, e2: Entity): boolean {
-    // Skips all checks not related to the player in order to save resources
+    // Skips all checks not related to the character in order to save resources
     if (e1.group !== 'characters' && e2.group !== 'characters') {
       return false;
     }
@@ -113,52 +113,64 @@ export default class {
 
   // These are specific methods for handling various cases of collisions.
   collideFromTop(
-    player: Character,
+    character: Character,
     collision: Entity,
   ): boolean {
-    if (player.getBottom() > collision.getTop() && player.getOldBottom() <= collision.getTop()) {
-      player.setBottom(collision.getTop() - 0.01);
-      player.velocityY = 0;
-      player.isJumping = false;
-      player.isFalling = false;
+    if (character.getBottom() > collision.getTop() && character.getOldBottom() <= collision.getTop()) {
+      character.setBottom(collision.getTop() - 0.01);
+      character.velocityY = 0;
+      character.isJumping = false;
+      character.isFalling = false;
+      // specifying collision direction
+      character.collisionYDirection = 'bottom';
+      collision.collisionYDirection = 'top';
       return true;
     }
     return false;
   }
 
   collideFromRight(
-    player: Character,
+    character: Character,
     collision: Entity,
   ): boolean {
-    if (player.getLeft() < collision.getRight() && player.getOldLeft() >= collision.getRight()) {
-      player.setLeft(collision.x + collision.width);
-      player.velocityX = 0;
+    if (character.getLeft() < collision.getRight() && character.getOldLeft() >= collision.getRight()) {
+      character.setLeft(collision.x + collision.width);
+      character.velocityX = 0;
+      // specifying collision direction
+      character.collisionXDirection = 'left';
+      collision.collisionXDirection = 'right';
       return true;
     }
     return false;
   }
 
   collideFromBottom(
-    player: Character,
+    character: Character,
     collision: Entity,
   ): boolean {
-    if (player.getTop() < collision.getBottom() && player.getOldTop() >= collision.getBottom()) {
-      player.setTop(collision.y + collision.height);
-      player.velocityY = 0;
-      player.isJumping = false;
-      player.isFalling = true;
+    if (character.getTop() < collision.getBottom() && character.getOldTop() >= collision.getBottom()) {
+      character.setTop(collision.y + collision.height);
+      character.velocityY = 0;
+      character.isJumping = false;
+      character.isFalling = true;
+      // specifying collision direction
+      character.collisionYDirection = 'top';
+      collision.collisionYDirection = 'bottom';
       return true;
     }
     return false;
   }
 
   collideFromLeft(
-    player: Character,
+    character: Character,
     collision: Entity,
   ): boolean {
-    if (player.getRight() > collision.getLeft() && player.getOldRight() <= collision.getLeft()) {
-      player.setRight(collision.getLeft() - 0.01);
-      player.velocityX = 0;
+    if (character.getRight() > collision.getLeft() && character.getOldRight() <= collision.getLeft()) {
+      character.setRight(collision.getLeft() - 0.01);
+      character.velocityX = 0;
+      // specifying collision direction
+      character.collisionXDirection = 'right';
+      collision.collisionXDirection = 'left';
       return true;
     }
     return false;

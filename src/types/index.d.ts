@@ -32,6 +32,8 @@ interface Entity {
   width: number
   height: number
   isColliding: boolean
+  collisionXDirection: string
+  collisionYDirection: string
   getTop(): number
   getRight(): number
   getLeft(): number

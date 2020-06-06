@@ -11,6 +11,8 @@ export default class implements Entity {
   type: string;
   group: string;
   isColliding: boolean;
+  collisionXDirection: string;
+  collisionYDirection: string;
 
   constructor(
     x: number,
@@ -34,6 +36,8 @@ export default class implements Entity {
 
     // Colliding
     this.isColliding = false;
+    this.collisionXDirection = '';
+    this.collisionYDirection = '';
 
     // Appearance
     this.width = width;
