@@ -41,7 +41,6 @@ export default class {
     this.gl.enableVertexAttribArray(this.aPosition);
     this.gl.vertexAttribPointer(this.aPosition, 2, this.gl.FLOAT, false, 0, 0);
     this.gl.uniform2f(this.uResolution, this.gl.canvas.width, this.gl.canvas.height);
-    // console.log(color)
     this.gl.uniform4f(this.uColor, color[0] / 255, color[1] / 255, color[2] / 255, color[3]);
 
     this.gl.drawArrays(this.gl.TRIANGLES, 0, 6);

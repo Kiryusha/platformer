@@ -9,7 +9,6 @@ import spriteSheet from './assets/images/sprites.png';
 declare global {
   interface Window {
     SHOW_COLLISIONS: boolean;
-    SHOW_VELOCITY: boolean;
   }
 }
 

@@ -29,7 +29,7 @@
   "frameHeight": 21,
   "movingPattern": {
     "type": "roaming",
-    "length": 80
+    "length": 130
   },
   "frames": {
     "skip": [

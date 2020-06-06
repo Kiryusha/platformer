@@ -29,14 +29,14 @@
                 }, 
                 {
                  "height":20,
-                 "id":59,
+                 "id":61,
                  "name":"slug",
                  "rotation":0,
                  "type":"enemy",
                  "visible":true,
                  "width":25,
-                 "x":199.5,
-                 "y":241.25
+                 "x":265.25,
+                 "y":138.5
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -335,7 +335,7 @@
          "y":0
         }],
  "nextlayerid":13,
- "nextobjectid":60,
+ "nextobjectid":62,
  "orientation":"orthogonal",
  "renderorder":"left-up",
  "tiledversion":"1.3.4",

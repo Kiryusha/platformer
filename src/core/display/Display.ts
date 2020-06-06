@@ -67,7 +67,7 @@ export default class {
 
     for (let i = 0; i < map.length; i += 1) {
       for (let k = 0; k < map[i].length; k += 1) {
-        if (map[i][k].type === 'collision') {
+        if (map[i][k].group === 'collisions') {
           this.renderer.drawRect([
             map[i][k].x, map[i][k].y, // upper-left corner
             map[i][k].x + map[i][k].width, map[i][k].y,
@@ -75,7 +75,7 @@ export default class {
             map[i][k].x, map[i][k].y + map[i][k].height, // bottom-right corner
             map[i][k].x + map[i][k].width, map[i][k].y,
             map[i][k].x + map[i][k].width, map[i][k].y + map[i][k].height, // bottom-right corner
-          ], colorsDictionary[map[i][k].name]);
+          ], colorsDictionary[map[i][k].type]);
         }
       }
     }
