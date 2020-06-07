@@ -1,56 +1,129 @@
 // The class is responsible for processing all the possible collisions
 export default class {
-  processNarrowPhase(
+  // this router separates collisions of a character with a collision entity
+  private routeNarrowPhaseCharacterVsCollision(
     character: Character,
     collision: Entity,
   ): void {
     character.isStuck = false;
     switch (collision.type) {
       case 'top':
-        this.collideFromTop(character, collision);
+        if (this.isCollidingFromTop(character, collision)) {
+          this.collideCharacterVsCollisionFromTop(character, collision);
+        }
         break;
       case 'right':
-        this.collideFromRight(character, collision);
+        if (this.isCollidingFromRight(character, collision)) {
+          this.collideCharacterVsCollisionFromRight(character, collision);
+        }
         break;
       case 'bottom':
-        this.collideFromBottom(character, collision);
+        if (this.isCollidingFromBottom(character, collision)) {
+          this.collideCharacterVsCollisionFromBottom(character, collision);
+        }
         break;
       case 'left':
-        this.collideFromLeft(character, collision);
+        if (this.isCollidingFromLeft(character, collision)) {
+          this.collideCharacterVsCollisionFromLeft(character, collision);
+        }
         break;
       case 'top-left':
-        if (this.collideFromTop(character, collision)) return;
-        this.collideFromLeft(character, collision);
+        if (this.isCollidingFromTop(character, collision)) {
+          this.collideCharacterVsCollisionFromTop(character, collision);
+          return;
+        } else if (this.isCollidingFromLeft(character, collision)) {
+          this.collideCharacterVsCollisionFromLeft(character, collision);
+        }
         break;
       case 'top-right':
-        if (this.collideFromTop(character, collision)) return;
-        this.collideFromRight(character, collision);
+        if (this.isCollidingFromTop(character, collision)) {
+          this.collideCharacterVsCollisionFromTop(character, collision);
+          return;
+        } else if (this.isCollidingFromRight(character, collision)) {
+          this.collideCharacterVsCollisionFromRight(character, collision);
+        }
         break;
       case 'bottom-right':
-        if (this.collideFromRight(character, collision)) return;
-        this.collideFromBottom(character, collision);
+        if (this.isCollidingFromRight(character, collision)) {
+          this.collideCharacterVsCollisionFromRight(character, collision);
+          return;
+        } else if (this.isCollidingFromBottom(character, collision)) {
+          this.collideCharacterVsCollisionFromBottom(character, collision);
+        }
         break;
       case 'bottom-left':
-        if (this.collideFromLeft(character, collision)) return;
-        this.collideFromBottom(character, collision);
+        if (this.isCollidingFromLeft(character, collision)) {
+          this.collideCharacterVsCollisionFromLeft(character, collision);
+          return;
+        } else if (this.isCollidingFromBottom(character, collision)) {
+          this.collideCharacterVsCollisionFromBottom(character, collision);
+        }
         break;
       case 'full':
-        if (this.collideFromTop(character, collision)) return;
-        if (this.collideFromLeft(character, collision)) return;
-        if (this.collideFromRight(character, collision)) return;
-        if (this.collideFromBottom(character, collision)) return;
+        if (this.isCollidingFromTop(character, collision)) {
+          this.collideCharacterVsCollisionFromTop(character, collision);
+          return;
+        } else if (this.isCollidingFromLeft(character, collision)) {
+          this.collideCharacterVsCollisionFromLeft(character, collision);
+          return;
+        } else if (this.isCollidingFromRight(character, collision)) {
+          this.collideCharacterVsCollisionFromRight(character, collision);
+          return;
+        } else if (this.isCollidingFromBottom(character, collision)) {
+          this.collideCharacterVsCollisionFromBottom(character, collision);
+        }
         character.isStuck = true;
         break;
     }
   }
 
+  // this router separates collisions of a player with an enemy
+  routeNarrowPhasePlayerVsEnemy(
+    player: Character,
+    enemy: Character,
+  ): void {
+    if (
+      this.isCollidingFromTop(player, enemy)
+      || this.isCollidingFromBottom(enemy, player)
+    ) {
+      console.log('Player damaged enemy. Hoorah!');
+      return;
+    } else if (
+      this.isCollidingFromLeft(player, enemy)
+      || this.isCollidingFromRight(player, enemy)
+      || this.isCollidingFromBottom(player, enemy)
+      || this.isCollidingFromTop(enemy, player)
+      || this.isCollidingFromLeft(enemy, player)
+      || this.isCollidingFromRight(enemy, player)
+    ) {
+      console.log('Enemy damaged player. Ouch!');
+    }
+  }
+
+  // these methods determine the presence of a one-way collision of e1 with e2
+  private isCollidingFromTop(e1: Entity, e2: Entity): boolean {
+    return e1.getBottom() > e2.getTop() && e1.getOldBottom() <= e2.getTop();
+  }
+
+  private isCollidingFromRight(e1: Entity, e2: Entity): boolean {
+    return e1.getLeft() < e2.getRight() && e1.getOldLeft() >= e2.getRight();
+  }
+
+  private isCollidingFromBottom(e1: Entity, e2: Entity): boolean {
+    return e1.getTop() < e2.getBottom() && e1.getOldTop() >= e2.getBottom();
+  }
+
+  private isCollidingFromLeft(e1: Entity, e2: Entity): boolean {
+    return e1.getRight() > e2.getLeft() && e1.getOldRight() <= e2.getLeft();
+  }
+
   // This method exists for the future possible separation of various methods of cycling objects:
   // quad tree, spatial hash etc. For now it is just brute forcing all of them.
-  processBroadPhase(entities: Entity[]): any[] {
+  public processBroadPhase(entities: Entity[]): any[] {
     return this.bruteForce(entities);
   }
 
-  bruteForce(entities: Entity[]): any[] {
+  private bruteForce(entities: Entity[]): any[] {
     // based on https://github.com/reu/broadphase.js/blob/master/src/brute-force.js
     const length = entities.length;
     const collisions = [];
@@ -80,7 +153,7 @@ export default class {
   }
 
   // Checks if objects are overlapping
-  broadPhaseComparator(e1: Entity, e2: Entity): boolean {
+  private broadPhaseComparator(e1: Entity, e2: Entity): boolean {
     // Skips all checks not related to the character in order to save resources
     if (e1.group !== 'characters' && e2.group !== 'characters') {
       return false;
@@ -99,80 +172,69 @@ export default class {
     return false;
   }
 
-  // Prepares argument order for narrow phase
-  broadPhaseResolver(
+  // Resolves which router use for the collision
+  private broadPhaseResolver(
     e1: any,
     e2: any,
   ): void {
     if (e1.group === 'characters' && e2.group === 'collisions') {
-      this.processNarrowPhase(e1, e2);
+      this.routeNarrowPhaseCharacterVsCollision(e1, e2);
     } else if (e2.group  === 'characters' && e1.group === 'collisions') {
-      this.processNarrowPhase(e2, e1);
+      this.routeNarrowPhaseCharacterVsCollision(e2, e1);
+    } else if (e1.group === 'characters' && e2.group === 'characters') {
+      this.routeNarrowPhasePlayerVsEnemy(
+        e1.type === 'player' ? e1 : e2,
+        e2.type === 'player' ? e1 : e2,
+      );
     }
   }
 
   // These are specific methods for handling various cases of collisions.
-  collideFromTop(
+  private collideCharacterVsCollisionFromTop(
     character: Character,
     collision: Entity,
-  ): boolean {
-    if (character.getBottom() > collision.getTop() && character.getOldBottom() <= collision.getTop()) {
-      character.setBottom(collision.getTop() - 0.01);
-      character.velocityY = 0;
-      character.isJumping = false;
-      character.isFalling = false;
-      // specifying collision direction
-      character.collisionYDirection = 'bottom';
-      collision.collisionYDirection = 'top';
-      return true;
-    }
-    return false;
+  ): void {
+    character.setBottom(collision.getTop() - 0.01);
+    character.velocityY = 0;
+    character.isJumping = false;
+    character.isFalling = false;
+    // specifying collision direction
+    character.collisionYDirection = 'bottom';
+    collision.collisionYDirection = 'top';
   }
 
-  collideFromRight(
+  private collideCharacterVsCollisionFromRight(
     character: Character,
     collision: Entity,
-  ): boolean {
-    if (character.getLeft() < collision.getRight() && character.getOldLeft() >= collision.getRight()) {
-      character.setLeft(collision.x + collision.width);
-      character.velocityX = 0;
-      // specifying collision direction
-      character.collisionXDirection = 'left';
-      collision.collisionXDirection = 'right';
-      return true;
-    }
-    return false;
+  ): void {
+    character.setLeft(collision.x + collision.width);
+    character.velocityX = 0;
+    // specifying collision direction
+    character.collisionXDirection = 'left';
+    collision.collisionXDirection = 'right';
   }
 
-  collideFromBottom(
+  private collideCharacterVsCollisionFromBottom(
     character: Character,
     collision: Entity,
-  ): boolean {
-    if (character.getTop() < collision.getBottom() && character.getOldTop() >= collision.getBottom()) {
-      character.setTop(collision.y + collision.height);
-      character.velocityY = 0;
-      character.isJumping = false;
-      character.isFalling = true;
-      // specifying collision direction
-      character.collisionYDirection = 'top';
-      collision.collisionYDirection = 'bottom';
-      return true;
-    }
-    return false;
+  ): void {
+    character.setTop(collision.y + collision.height);
+    character.velocityY = 0;
+    character.isJumping = false;
+    character.isFalling = true;
+    // specifying collision direction
+    character.collisionYDirection = 'top';
+    collision.collisionYDirection = 'bottom';
   }
 
-  collideFromLeft(
+  private collideCharacterVsCollisionFromLeft(
     character: Character,
     collision: Entity,
-  ): boolean {
-    if (character.getRight() > collision.getLeft() && character.getOldRight() <= collision.getLeft()) {
-      character.setRight(collision.getLeft() - 0.01);
-      character.velocityX = 0;
-      // specifying collision direction
-      character.collisionXDirection = 'right';
-      collision.collisionXDirection = 'left';
-      return true;
-    }
-    return false;
+  ): void {
+    character.setRight(collision.getLeft() - 0.01);
+    character.velocityX = 0;
+    // specifying collision direction
+    character.collisionXDirection = 'right';
+    collision.collisionXDirection = 'left';
   }
 }
