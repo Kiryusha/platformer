@@ -6,6 +6,8 @@ export default class {
     this.characters = [];
   }
 
+  // this method adds the character to the pool of controlled characters.
+  // Their behavior will be adjusted during the update method.
   public bindCharacter(character: Character): void {
     this.characters.push({
       character,
@@ -18,19 +20,17 @@ export default class {
     });
   }
 
-  update(): void {
+  // the method to be called during the update of each frame.
+  public update(): void {
     this.checkBroadPhase();
   }
 
+  // Broadphase of the Brain class: determines which roaming pattern to choose.
   private checkBroadPhase(): void {
     for (let i = 0; i < this.characters.length; i += 1) {
       if (this.characters[i].character.movingPattern) {
         switch (this.characters[i].character.movingPattern.type) {
           case 'roaming':
-            // console.log(
-            //   character.x, character.movingPattern.length + startingPoint.x, startingPoint.x - character.movingPattern.length
-            //
-            // )
             this.processRoaming(i);
             break;
         }
@@ -42,7 +42,7 @@ export default class {
     // There is a starting point around which the character moves. If it goes to the left
     // to an allowable maximum, then it turns around and reaches an allowable maximum of
     // the right side and then turns around. And so it is repeated.
-    // If during movement, he stumbles upon a wall, which does not allow to reach the maximum of
+    // If during movement, it stumbles upon a wall, which does not allow to reach the maximum of
     // one of the sides, then it believes that it has already reached the maximum of this side.
     let {
       character,
