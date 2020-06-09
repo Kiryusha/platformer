@@ -34,6 +34,15 @@ export default class {
     width: number,
     height: number,
   ): void {
+    const margin = this.mapTileset.tileSize * 2;
+
+    if (
+      destinationY > this.camera.y + this.camera.height + margin
+      || destinationY < this.camera.y - margin
+      || destinationX > this.camera.x + this.camera.width + margin
+      || destinationX < this.camera.x - margin
+    ) return;
+
     this.renderer.drawImage(
       isFlipped ? asset.flippedTexture : asset.texture,
       asset.image.width,
