@@ -29,6 +29,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     display.render(player, game.world.width, game.world.height);
   };
   const render = () => {
+    display.renderer.clear();
     display.drawMap(game.world.backgroundMap, game.world.columns);
     display.drawMap(game.world.middleMap, game.world.columns);
 
@@ -44,7 +45,8 @@ window.addEventListener('DOMContentLoaded', async () => {
       }
 
       display.drawObject(
-        character.isFacingLeft ? display.spriteSheet.flippedImage : display.spriteSheet.image,
+        character.isFacingLeft,
+        display.spriteSheet,
         frame.x,
         frame.y,
         character.x + Math.floor(character.width * 0.5 - frame.w * 0.5),

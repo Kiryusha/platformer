@@ -4,30 +4,29 @@ import Camera from './Camera';
 import Renderer from './Renderer';
 
 export default class {
-  buffer: CanvasRenderingContext2D;
   context: CanvasRenderingContext2D;
   mapTileset: AssetsManager;
   spriteSheet: AssetsManager;
   camera: Camera;
   renderer: Renderer;
-  bufferGL: WebGLRenderingContext;
+  buffer: WebGLRenderingContext;
 
   constructor(
     canvas: HTMLCanvasElement,
     cameraWidth: number,
     cameraHeight: number,
   ) {
-    this.buffer = document.createElement('canvas').getContext('2d');
     this.context = canvas.getContext('2d');
-    this.bufferGL = document.createElement('canvas').getContext('webgl');
-    this.mapTileset = new AssetsManager(8, 23);
-    this.spriteSheet = new AssetsManager(8, 23);
+    this.buffer = document.createElement('canvas').getContext('webgl');
+    this.mapTileset = new AssetsManager(this.buffer, 8, 23);
+    this.spriteSheet = new AssetsManager(this.buffer);
     this.camera = new Camera(cameraWidth, cameraHeight);
-    this.renderer = new Renderer(this.bufferGL);
+    this.renderer = new Renderer(this.buffer);
   }
 
   drawObject(
-    image: CanvasImageSource,
+    isFlipped: boolean,
+    asset: AssetsManager,
     sourceX: number,
     sourceY: number,
     destinationX: number,
@@ -35,8 +34,10 @@ export default class {
     width: number,
     height: number,
   ): void {
-    this.buffer.drawImage(
-      image,
+    this.renderer.drawImage(
+      isFlipped ? asset.flippedTexture : asset.texture,
+      asset.image.width,
+      asset.image.height,
       sourceX,
       sourceY,
       width,
@@ -62,8 +63,6 @@ export default class {
       'bottom-right': [255, 255, 136, 0.5],
       full: [200, 200, 200, 0.5], // for some reason white is not transparent in webgl
     };
-
-    this.renderer.clear();
 
     for (let i = 0; i < map.length; i += 1) {
       for (let k = 0; k < map[i].length; k += 1) {
@@ -111,8 +110,10 @@ export default class {
         || mapX < this.camera.x - margin
       ) continue;
 
-      this.buffer.drawImage(
-        this.mapTileset.image,
+      this.renderer.drawImage(
+        this.mapTileset.texture,
+        this.mapTileset.image.width,
+        this.mapTileset.image.height,
         sourceX,
         sourceY,
         this.mapTileset.tileSize,
@@ -142,19 +143,6 @@ export default class {
       this.context.canvas.width,
       this.context.canvas.height,
     );
-    if (window.SHOW_COLLISIONS) {
-      this.context.drawImage(
-        this.bufferGL.canvas,
-        this.camera.x,
-        this.camera.y,
-        this.camera.width,
-        this.camera.height,
-        0,
-        0,
-        this.context.canvas.width,
-        this.context.canvas.height,
-      );
-    }
   }
 
   resize(
@@ -165,13 +153,9 @@ export default class {
     if (height / width > ratio) {
       this.context.canvas.height = width * ratio;
       this.context.canvas.width = width;
-      this.bufferGL.canvas.height = width * ratio;
-      this.bufferGL.canvas.width = width;
     } else {
       this.context.canvas.height = height;
       this.context.canvas.width = height / ratio;
-      this.bufferGL.canvas.height = height;
-      this.bufferGL.canvas.width = height / ratio;
     }
 
     this.context.imageSmoothingEnabled = false;
