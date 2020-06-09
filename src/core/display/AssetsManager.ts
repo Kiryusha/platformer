@@ -4,22 +4,57 @@ export default class {
   tileSize: number;
   columns: number;
   flippedImage: CanvasImageSource;
+  gl: WebGLRenderingContext;
+  texture: WebGLTexture;
+  flippedTexture: WebGLTexture;
 
-  constructor(tileSize: number, columns: number) {
+  constructor(
+    gl: WebGLRenderingContext,
+    tileSize?: number,
+    columns?: number,
+  ) {
+    this.gl = gl;
     this.image = new Image();
     this.tileSize = tileSize;
     this.columns = columns;
   }
 
-  loadAsset(url: string, makeFlipped: boolean = false): any {
+  async loadAsset(
+    url: string,
+    makeFlipped: boolean = false,
+  ): Promise<any> {
     if (makeFlipped) {
-      return Promise.all([
+      await Promise.all([
         this.loadImage(url),
         this.flipImage(url),
       ]);
+      this.texture = this.createTexture(this.image);
+      this.flippedTexture = this.createTexture(this.flippedImage);
     } else {
-      return this.loadImage(url);
+      await this.loadImage(url);
+      this.texture = this.createTexture(this.image);
     }
+  }
+
+  createTexture(image: any): WebGLTexture {
+    const texture = this.gl.createTexture();
+
+    this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
+
+    this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_S, this.gl.CLAMP_TO_EDGE);
+    this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_T, this.gl.CLAMP_TO_EDGE);
+    this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.LINEAR);
+
+    this.gl.texImage2D(
+      this.gl.TEXTURE_2D,
+      0,
+      this.gl.RGBA,
+      this.gl.RGBA,
+      this.gl.UNSIGNED_BYTE,
+      image,
+    );
+
+    return texture;
   }
 
   loadImage(url: string) {
