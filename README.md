@@ -3,7 +3,8 @@ Rabbit-girl platformer
 
 ## Demo:
 
-- https://kiryusha.github.io/platformer/dist/
+- https://kiryusha.github.io/platformer/dist_canvas/ (old version made only by CanvasRenderingContext2D)
+- https://kiryusha.github.io/platformer/dist/ (mix with WebGL and CanvasRenderingContext2D)
 
 ## Assets used:
 
