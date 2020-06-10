@@ -8,6 +8,8 @@ export default {
     uniform vec2 uRotation;
     uniform vec2 uScale;
 
+    uniform mat4 uTextureMatrix;
+
     varying vec2 vTextureCoord;
 
     void main() {
@@ -28,7 +30,7 @@ export default {
 
       gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);
 
-      vTextureCoord = aTextureCoord;
+      vTextureCoord = (uTextureMatrix * vec4(aTextureCoord, 0, 1)).xy;
     }
   `,
   fragmentShaderSource: `

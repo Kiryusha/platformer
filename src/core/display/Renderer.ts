@@ -109,26 +109,6 @@ export default class {
       dstHeight = srcHeight;
     }
 
-    const u0 = srcX / width;
-    const v0 = srcY / height;
-
-    const u1 = (srcX + srcWidth) / width;
-    const v1 = (srcY + srcHeight) / height;
-
-    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.imageProgram.textureCoordBuffer);
-    this.gl.bufferData(
-      this.gl.ARRAY_BUFFER,
-      new Float32Array([
-        u0,  v0,
-        u1,  v0,
-        u0,  v1,
-        u0,  v1,
-        u1,  v0,
-        u1,  v1,
-      ]),
-      this.gl.STREAM_DRAW
-    );
-
     this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
 
     // Tell WebGL to use our shader program pair
@@ -151,11 +131,71 @@ export default class {
     // Set the scale.
     this.gl.uniform2f(this.imageProgram.uScale, dstWidth, dstHeight);
 
+    let texMatrix = this.translation(srcX / width, srcY / height, 0);
+    texMatrix = this.scale(texMatrix, srcWidth / width, srcHeight / height, 1);
+
+    // Set the matrix.
+    this.gl.uniformMatrix4fv(this.imageProgram.uTextureMatrix, false, texMatrix);
+
     // Tell the shader to get the texture from texture unit 0
     this.gl.uniform1i(this.imageProgram.uTexture, 0);
 
     // draw the quad (2 triangles, 6 vertices)
     this.gl.drawArrays(this.gl.TRIANGLES, 0, 6);
+  }
+
+  private translation(tx: number, ty: number, tz: number) {
+    let dst = new Float32Array(16);
+
+    dst[ 0] = 1;
+    dst[ 1] = 0;
+    dst[ 2] = 0;
+    dst[ 3] = 0;
+    dst[ 4] = 0;
+    dst[ 5] = 1;
+    dst[ 6] = 0;
+    dst[ 7] = 0;
+    dst[ 8] = 0;
+    dst[ 9] = 0;
+    dst[10] = 1;
+    dst[11] = 0;
+    dst[12] = tx;
+    dst[13] = ty;
+    dst[14] = tz;
+    dst[15] = 1;
+
+    return dst;
+  }
+
+  private scale(
+    m: Float32Array,
+    sx: number,
+    sy: number,
+    sz: number,
+  ) {
+    const dst = new Float32Array(16);
+
+    dst[0] = sx * m[0 * 4 + 0];
+    dst[1] = sx * m[0 * 4 + 1];
+    dst[2] = sx * m[0 * 4 + 2];
+    dst[3] = sx * m[0 * 4 + 3];
+    dst[4] = sy * m[1 * 4 + 0];
+    dst[5] = sy * m[1 * 4 + 1];
+    dst[6] = sy * m[1 * 4 + 2];
+    dst[7] = sy * m[1 * 4 + 3];
+    dst[8] = sz * m[2 * 4 + 0];
+    dst[9] = sz * m[2 * 4 + 1];
+    dst[10] = sz * m[2 * 4 + 2];
+    dst[11] = sz * m[2 * 4 + 3];
+
+    if (m !== dst) {
+      dst[12] = m[12];
+      dst[13] = m[13];
+      dst[14] = m[14];
+      dst[15] = m[15];
+    }
+
+    return dst;
   }
 
   public clear(): void {

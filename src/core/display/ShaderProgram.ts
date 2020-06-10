@@ -13,6 +13,10 @@ export default class {
   uTexture: WebGLUniformLocation;
   positionBuffer: WebGLBuffer;
   textureCoordBuffer: WebGLBuffer;
+  uTextureStart: WebGLUniformLocation;
+  uTextureEnd: WebGLUniformLocation;
+  uTextureMatrix: WebGLUniformLocation;
+    uMatrix: WebGLUniformLocation;
 
   constructor(
     gl: WebGLRenderingContext,
@@ -40,6 +44,7 @@ export default class {
         this.uRotation = gl.getUniformLocation(this.program, 'uRotation');
         this.uScale = gl.getUniformLocation(this.program, 'uScale');
         this.uTexture = gl.getUniformLocation(this.program, 'uTexture');
+        this.uTextureMatrix = gl.getUniformLocation(this.program, 'uTextureMatrix');
 
         this.positionBuffer = gl.createBuffer();
         this.textureCoordBuffer = gl.createBuffer();
@@ -56,6 +61,20 @@ export default class {
             1,  1,
           ]),
           gl.STATIC_DRAW,
+        );
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.textureCoordBuffer);
+        gl.bufferData(
+          gl.ARRAY_BUFFER,
+          new Float32Array([
+            0,  0,
+            1,  0,
+            0,  1,
+            0,  1,
+            1,  0,
+            1,  1,
+          ]),
+          gl.STREAM_DRAW
         );
     }
   }
