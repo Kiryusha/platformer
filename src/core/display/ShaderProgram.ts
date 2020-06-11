@@ -8,15 +8,11 @@ export default class {
   uResolution: WebGLUniformLocation;
   uColor: WebGLUniformLocation;
   uTranslation: WebGLUniformLocation;
-  uRotation: WebGLUniformLocation;
   uScale: WebGLUniformLocation;
   uTexture: WebGLUniformLocation;
   positionBuffer: WebGLBuffer;
   textureCoordBuffer: WebGLBuffer;
-  uTextureStart: WebGLUniformLocation;
-  uTextureEnd: WebGLUniformLocation;
   uTextureMatrix: WebGLUniformLocation;
-    uMatrix: WebGLUniformLocation;
 
   constructor(
     gl: WebGLRenderingContext,
@@ -41,9 +37,7 @@ export default class {
 
         this.uResolution = gl.getUniformLocation(this.program, 'uResolution');
         this.uTranslation = gl.getUniformLocation(this.program, 'uTranslation');
-        this.uRotation = gl.getUniformLocation(this.program, 'uRotation');
         this.uScale = gl.getUniformLocation(this.program, 'uScale');
-        this.uTexture = gl.getUniformLocation(this.program, 'uTexture');
         this.uTextureMatrix = gl.getUniformLocation(this.program, 'uTextureMatrix');
 
         this.positionBuffer = gl.createBuffer();

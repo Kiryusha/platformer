@@ -25,7 +25,7 @@ export default class {
     this.checkBroadPhase();
   }
 
-  // Broadphase of the Brain class: determines which roaming pattern to choose.
+  // Broadphase of the Brain class: determines which moving pattern to choose.
   private checkBroadPhase(): void {
     for (let i = 0; i < this.characters.length; i += 1) {
       if (this.characters[i].character.movingPattern) {

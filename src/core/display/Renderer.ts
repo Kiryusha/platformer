@@ -126,16 +126,14 @@ export default class {
     this.gl.uniform2f(this.imageProgram.uResolution, this.gl.canvas.width, this.gl.canvas.height);
     // Set the translation.
     this.gl.uniform2f(this.imageProgram.uTranslation, dstX, dstY);
-    // Set the rotation.
-    this.gl.uniform2f(this.imageProgram.uRotation, Math.sin(0), Math.cos(0));
     // Set the scale.
     this.gl.uniform2f(this.imageProgram.uScale, dstWidth, dstHeight);
 
-    let texMatrix = this.translation(srcX / width, srcY / height, 0);
-    texMatrix = this.scale(texMatrix, srcWidth / width, srcHeight / height, 1);
+    let texMatrix = this.translation(srcX / width, srcY / height);
+    texMatrix = this.scale(texMatrix, srcWidth / width, srcHeight / height);
 
     // Set the matrix.
-    this.gl.uniformMatrix4fv(this.imageProgram.uTextureMatrix, false, texMatrix);
+    this.gl.uniformMatrix3fv(this.imageProgram.uTextureMatrix, false, texMatrix);
 
     // Tell the shader to get the texture from texture unit 0
     this.gl.uniform1i(this.imageProgram.uTexture, 0);
@@ -144,25 +142,18 @@ export default class {
     this.gl.drawArrays(this.gl.TRIANGLES, 0, 6);
   }
 
-  private translation(tx: number, ty: number, tz: number) {
-    let dst = new Float32Array(16);
+  private translation(tx: number, ty: number) {
+    let dst = new Float32Array(9);
 
-    dst[ 0] = 1;
-    dst[ 1] = 0;
-    dst[ 2] = 0;
-    dst[ 3] = 0;
-    dst[ 4] = 0;
-    dst[ 5] = 1;
-    dst[ 6] = 0;
-    dst[ 7] = 0;
-    dst[ 8] = 0;
-    dst[ 9] = 0;
-    dst[10] = 1;
-    dst[11] = 0;
-    dst[12] = tx;
-    dst[13] = ty;
-    dst[14] = tz;
-    dst[15] = 1;
+    dst[0] = 1;
+    dst[1] = 0;
+    dst[2] = 0;
+    dst[3] = 0;
+    dst[4] = 1;
+    dst[5] = 0;
+    dst[6] = tx;
+    dst[7] = ty;
+    dst[8] = 1;
 
     return dst;
   }
@@ -171,29 +162,18 @@ export default class {
     m: Float32Array,
     sx: number,
     sy: number,
-    sz: number,
   ) {
-    const dst = new Float32Array(16);
+    const dst = new Float32Array(9);
 
-    dst[0] = sx * m[0 * 4 + 0];
-    dst[1] = sx * m[0 * 4 + 1];
-    dst[2] = sx * m[0 * 4 + 2];
-    dst[3] = sx * m[0 * 4 + 3];
-    dst[4] = sy * m[1 * 4 + 0];
-    dst[5] = sy * m[1 * 4 + 1];
-    dst[6] = sy * m[1 * 4 + 2];
-    dst[7] = sy * m[1 * 4 + 3];
-    dst[8] = sz * m[2 * 4 + 0];
-    dst[9] = sz * m[2 * 4 + 1];
-    dst[10] = sz * m[2 * 4 + 2];
-    dst[11] = sz * m[2 * 4 + 3];
-
-    if (m !== dst) {
-      dst[12] = m[12];
-      dst[13] = m[13];
-      dst[14] = m[14];
-      dst[15] = m[15];
-    }
+    dst[0] = sx * m[0];
+    dst[1] = sx * m[1];
+    dst[2] = sx * m[2];
+    dst[3] = sy * m[3];
+    dst[4] = sy * m[4];
+    dst[5] = sy * m[5];
+    dst[6] = m[6];
+    dst[7] = m[7];
+    dst[8] = m[8];
 
     return dst;
   }

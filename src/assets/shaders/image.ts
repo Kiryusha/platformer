@@ -5,10 +5,9 @@ export default {
 
     uniform vec2 uResolution;
     uniform vec2 uTranslation;
-    uniform vec2 uRotation;
     uniform vec2 uScale;
 
-    uniform mat4 uTextureMatrix;
+    uniform mat3 uTextureMatrix;
 
     varying vec2 vTextureCoord;
 
@@ -16,21 +15,15 @@ export default {
       // Scale the position
       vec2 scaledPosition = aPosition * uScale;
 
-      // Rotate the position
-      vec2 rotatedPosition = vec2(
-        scaledPosition.x * uRotation.y + scaledPosition.y * uRotation.x,
-        scaledPosition.y * uRotation.y - scaledPosition.x * uRotation.x
-      );
-
       // Add in the translation.
-      vec2 position = rotatedPosition + uTranslation;
+      vec2 position = scaledPosition + uTranslation;
 
       // convert the position from pixels to clipspace
       vec2 clipSpace = ((position / uResolution) * 2.0) - 1.0;
 
       gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);
 
-      vTextureCoord = (uTextureMatrix * vec4(aTextureCoord, 0, 1)).xy;
+      vTextureCoord = (uTextureMatrix * vec3(aTextureCoord, 1)).xy;
     }
   `,
   fragmentShaderSource: `
