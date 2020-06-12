@@ -41,9 +41,6 @@ export default class {
 
     this.processMap(map);
 
-    this.height = this.tileSize * this.rows;
-    this.width = this.tileSize * this.columns;
-
     this.collider = new Collider();
   }
 

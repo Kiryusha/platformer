@@ -23,9 +23,11 @@ export default class Character extends Entity {
   isSprinting: boolean;
   isDucking: boolean;
   isKeepDucking: boolean;
+  isKeepJumping: boolean;
   isStuck: boolean;
   defaults: CharacterStats;
   duckingTimer: NodeJS.Timer;
+  jumpingTimer: NodeJS.Timer;
   movingPattern: {};
 
   constructor(stats: CharacterStats, playerSpriteMap: spriteMap) {
@@ -156,10 +158,21 @@ export default class Character extends Entity {
     this.isMovingRight = false;
   }
 
-  jump(value: boolean): void {
+  startJumping(): void {
     if (!this.isStuck) {
-      this.isJumpTriggered = value;
+      if (!this.isJumping) {
+        this.jumpingTimer = setTimeout(() => {
+          this.isKeepJumping = true;
+        }, 150);
+      }
+      this.isJumpTriggered = true;
     }
+  }
+
+  stopJumping(): void {
+    clearTimeout(this.jumpingTimer);
+    this.isJumpTriggered = false;
+    this.isKeepJumping = false;
   }
 
   update(gravity: number): void {
@@ -172,16 +185,26 @@ export default class Character extends Entity {
     }
   }
 
-  adjustVerticalMovement(gravity: number): void {
-    this.velocityYModifier = gravity;
+  adjustVerticalMovement(rawGravity: number): void {
+    let gravity = rawGravity;
     this.yOld = this.y;
+
+    // if the player continues to press the jump key, then gravity will be halved until
+    // the character reaches the top point of the jump.
+    if (this.isKeepJumping && this.velocityY < 0) {
+      gravity *= 0.5;
+    } else {
+      this.isKeepJumping = false;
+    }
+
+    this.velocityYModifier = gravity;
 
     // trigger jumping calculation only if:
     // 1) the corresponding button has been pressed and
     // 2) we are not in a jump already
     // 3) we are not in a fall.
     if (this.isJumpTriggered && !this.isJumping && !this.isFalling) {
-      this.velocityYModifier = this.velocityYModifier - this.jumpImpulse; // an instant big force impulse
+      this.velocityYModifier -= this.jumpImpulse;
       this.isJumping = true;
     }
 

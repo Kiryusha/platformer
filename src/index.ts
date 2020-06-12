@@ -80,9 +80,9 @@ window.addEventListener('DOMContentLoaded', async () => {
     }
 
     if (controller.up.isActive) {
-      player.jump(controller.up.isActive);
+      player.startJumping();
     } else if (player.isJumpTriggered) {
-      player.jump(false);
+      player.stopJumping();
     }
 
     if (controller.shift.isActive) {

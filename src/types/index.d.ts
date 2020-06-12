@@ -86,7 +86,8 @@ interface Character extends Entity {
   stopMovingLeft(): void
   startMovingRight(): void
   stopMovingRight(): void
-  jump(value: boolean): void
+  startJumping(): void
+  stopJumping(): void
   update(gravity: number): void
   adjustVerticalMovement(gravity: number): void
   adjustHorizontalMovement(): void
