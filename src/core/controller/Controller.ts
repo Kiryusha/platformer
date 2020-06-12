@@ -20,22 +20,21 @@ export default class {
     type: string,
     keyCode: number
   ): void {
-    const isDown = type === 'keydown';
     switch (keyCode) {
       case 37:
-        this.left.getInput(isDown);
+        this.left.getInput(type);
         break;
       case 38:
-        this.up.getInput(isDown);
+        this.up.getInput(type);
         break;
       case 39:
-        this.right.getInput(isDown);
+        this.right.getInput(type);
         break;
       case 16:
-        this.shift.getInput(isDown);
+        this.shift.getInput(type);
         break;
       case 40:
-        this.down.getInput(isDown);
+        this.down.getInput(type);
         break;
     }
   }

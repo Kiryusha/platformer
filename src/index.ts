@@ -79,7 +79,7 @@ window.addEventListener('DOMContentLoaded', async () => {
       player.stopMovingRight();
     }
 
-    if (controller.up.isActive) {
+    if (controller.up.isActive && !controller.up.isHold) {
       player.startJumping();
     } else if (player.isJumpTriggered) {
       player.stopJumping();
