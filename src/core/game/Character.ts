@@ -192,7 +192,7 @@ export default class Character extends Entity {
     // if the player continues to press the jump key, then gravity will be halved until
     // the character reaches the top point of the jump.
     if (this.isKeepJumping && this.velocityY < 0) {
-      gravity *= 0.4;
+      gravity *= 0.6;
     } else {
       this.isKeepJumping = false;
     }

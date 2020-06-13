@@ -2,8 +2,8 @@ import Controller from './core/controller/Controller';
 import Display from './core/display/Display';
 import Game from './core/game/Game';
 import Engine from './core/engine/Engine';
-import map from './assets/levels/map.json';
-import tileSet from './assets/images/tileset.png';
+import map from './assets/levels/zone00.json';
+import tileSet from './assets/images/default.png';
 import spriteSheet from './assets/images/sprites.png';
 
 declare global {
@@ -31,7 +31,13 @@ window.addEventListener('DOMContentLoaded', async () => {
   const render = () => {
     display.renderer.clear();
     display.drawMap(game.world.backgroundMap, game.world.columns);
+    if (game.world.middleBackgroundMap.length) {
+      display.drawMap(game.world.middleBackgroundMap, game.world.columns);
+    }
     display.drawMap(game.world.middleMap, game.world.columns);
+    if (game.world.middleFrontMap.length) {
+      display.drawMap(game.world.middleFrontMap, game.world.columns);
+    }
 
     game.world.characters.forEach(character => {
       let frame;

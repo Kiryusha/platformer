@@ -10,6 +10,7 @@ Rabbit-girl platformer
 
 - https://trixelized.itch.io/nightfield
 - https://ansimuz.itch.io/sunnyland-forest
+- https://aamatniekss.itch.io/free-pixelart-platformer-tileset
 
 ## Programs used:
 

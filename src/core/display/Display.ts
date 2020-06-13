@@ -95,15 +95,24 @@ export default class {
 
       const id = map[i];
       const position = i;
+      const remainder = id % this.mapTileset.columns;
 
-      const sourceRow = Math.floor(id / this.mapTileset.columns);
-      const sourceColumn = id % this.mapTileset.columns - 1;
+      let sourceRow = remainder
+        ? Math.floor(id / this.mapTileset.columns)
+        : (id / this.mapTileset.columns) - 1;
+      let sourceColumn = remainder
+        ? remainder - 1
+        : this.mapTileset.columns - 1;
 
       const mapRow = Math.floor(position / mapColumns);
       const mapColumn = position % mapColumns;
 
       const sourceX = this.mapTileset.tileSize * sourceColumn;
       const sourceY = this.mapTileset.tileSize * sourceRow;
+
+      // if (id === 30) {
+      //   console.log(id / this.mapTileset.columns, Math.floor(id / this.mapTileset.columns))
+      // }
 
       const mapX = this.mapTileset.tileSize * mapColumn;
       const mapY = this.mapTileset.tileSize * mapRow;

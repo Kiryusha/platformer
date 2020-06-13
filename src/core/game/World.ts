@@ -13,6 +13,8 @@ export default class {
   height: number;
   width: number;
   backgroundMap: number[];
+  middleBackgroundMap: any[];
+  middleFrontMap: any[];
   middleMap: number[];
   frontMap: number[];
   collisionDebugMap: (number | string)[];
@@ -89,7 +91,9 @@ export default class {
     }, {});
 
     this.backgroundMap = [...this.rawLayers.background];
+    this.middleBackgroundMap = [...this.rawLayers['middle-background']];
     this.middleMap = [...this.rawLayers.middle];
+    this.middleFrontMap = [...this.rawLayers['middle-front']];
     this.frontMap = [...this.rawLayers.front];
     this.collisions = [...this.rawLayers.collisions];
     this.characters = [...this.rawLayers.characters];
