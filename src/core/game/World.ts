@@ -47,44 +47,46 @@ export default class {
   }
 
   processMap(map: gameMap) {
-    this.rawLayers = map.layers.reduce((result, layer) => {
-      switch (layer.type) {
-        case 'tilelayer':
-          result[layer.name] = layer.data;
+    this.rawLayers = map.layers.reduce((result, group) => {
+      switch (group.name) {
+        case 'tiles':
+          group.layers.forEach((layer: gameLayer) => result[layer.name] = layer.data);
           break;
-        case 'objectgroup':
-          switch (layer.name) {
-            case 'collisions':
-              result[layer.name] = layer.objects.map((object: mapObject) => new Entity(
-                object.x,
-                object.y,
-                object.width,
-                object.height,
-                'collisions',
-                object.type,
-                'block',
-              ));
-              break;
-            case 'characters':
-              result[layer.name] = layer.objects.map((object: mapObject) => {
-                switch (object.type) {
-                  case 'player':
-                    playerStats.x = object.x;
-                    playerStats.y = object.y;
-                    return new Character(playerStats, spriteMap);
-                  case 'enemy':
-                    switch (object.name) {
-                      case 'slug':
-                        slugStats.x = object.x;
-                        slugStats.y = object.y;
-                        const character = new Character(slugStats, spriteMap);
-                        this.brain.bindCharacter(character);
-                        return character;
-                    }
-                }
-              });
-              break;
-          }
+        case 'objects':
+          group.layers.forEach((layer: gameLayer) => {
+            switch (layer.name) {
+              case 'collisions':
+                result[layer.name] = layer.objects.map((object: mapObject) => new Entity(
+                  object.x,
+                  object.y,
+                  object.width,
+                  object.height,
+                  'collisions',
+                  object.type,
+                  'block',
+                ));
+                break;
+              case 'characters':
+                result[layer.name] = layer.objects.map((object: mapObject) => {
+                  switch (object.type) {
+                    case 'player':
+                      playerStats.x = object.x;
+                      playerStats.y = object.y;
+                      return new Character(playerStats, spriteMap);
+                    case 'enemy':
+                      switch (object.name) {
+                        case 'slug':
+                          slugStats.x = object.x;
+                          slugStats.y = object.y;
+                          const character = new Character(slugStats, spriteMap);
+                          this.brain.bindCharacter(character);
+                          return character;
+                      }
+                  }
+                });
+                break;
+            }
+          });
       }
 
       return result;

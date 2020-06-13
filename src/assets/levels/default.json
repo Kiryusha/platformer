@@ -314,7 +314,7 @@
                 {
                  "id":9,
                  "image":"..\/images\/default\/clouds-back.png",
-                 "name":"cloudsBack",
+                 "name":"clouds-back",
                  "opacity":1,
                  "type":"imagelayer",
                  "visible":true,
@@ -324,7 +324,7 @@
                 {
                  "id":11,
                  "image":"..\/images\/default\/clouds-front.png",
-                 "name":"cloudsFront",
+                 "name":"clouds-front",
                  "opacity":1,
                  "type":"imagelayer",
                  "visible":true,
@@ -334,7 +334,7 @@
                 {
                  "id":12,
                  "image":"..\/images\/default\/bg-back.png",
-                 "name":"bgBack",
+                 "name":"bg-back",
                  "opacity":1,
                  "type":"imagelayer",
                  "visible":true,
@@ -344,7 +344,7 @@
                 {
                  "id":13,
                  "image":"..\/images\/default\/bg-front.png",
-                 "name":"bgFront",
+                 "name":"bg-front",
                  "opacity":1,
                  "type":"imagelayer",
                  "visible":true,

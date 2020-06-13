@@ -2,9 +2,15 @@ import Controller from './core/controller/Controller';
 import Display from './core/display/Display';
 import Game from './core/game/Game';
 import Engine from './core/engine/Engine';
-import map from './assets/levels/zone00.json';
-import tileSet from './assets/images/default.png';
+import AssetsManager from './core/display/AssetsManager';
 import spriteSheet from './assets/images/sprites.png';
+// default zone set
+import defaultMap from './assets/levels/default.json';
+import cloudsBack from './assets/images/default/background/clouds-back.png';
+import cloudsFront from './assets/images/default/background/clouds-front.png';
+import bgBack from './assets/images/default/background/bg-back.png';
+import bgFront from './assets/images/default/background/bg-front.png';
+import defaultTileSet from './assets/images/default/tileset.png';
 
 declare global {
   interface Window {
@@ -15,6 +21,20 @@ declare global {
 window.addEventListener('DOMContentLoaded', async () => {
   const aspectRatio = 9 / 16;
   const fps = 1000 / 30;
+
+  const zones = {
+    '00': {
+      config: defaultMap,
+      tileset: defaultTileSet,
+      backgrounds: {
+        cloudsBack,
+        cloudsFront,
+        bgBack,
+        bgFront,
+      },
+    },
+  };
+  const activeZone = '00';
 
   const handleKeyEvent = (event: { type: string; keyCode: number; }) => {
     controller.handleKeyEvent(event.type, event.keyCode);
@@ -30,6 +50,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   };
   const render = () => {
     display.renderer.clear();
+    display.drawBackgrounds();
     display.drawMap(game.world.backgroundMap, game.world.columns);
     if (game.world.middleBackgroundMap.length) {
       display.drawMap(game.world.middleBackgroundMap, game.world.columns);
@@ -112,7 +133,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     256,
     144,
   );
-  const game = new Game(map);
+  const game = new Game(zones[activeZone].config);
   const [player] = game.world.characters.filter(character => character.type === 'player');
   const engine = new Engine(fps, render, update);
 
@@ -125,13 +146,25 @@ window.addEventListener('DOMContentLoaded', async () => {
   window.addEventListener('keyup', handleKeyEvent);
   window.addEventListener('resize', resize);
 
-  await display.mapTileset.loadAsset(
-    tileSet,
-    false,
-    map.tilesets[0].tilewidth,
-    map.tilesets[0].columns,
-  );
-  await display.spriteSheet.loadAsset(spriteSheet, true);
+  const backgrounds: backgrounds = zones[activeZone].backgrounds;
+
+  Object.keys(backgrounds).forEach(() => {
+    display.backgrounds.push(new AssetsManager(display.buffer));
+  });
+
+  await Promise.all([
+    display.mapTileset.loadAsset(
+      zones[activeZone].tileset,
+      false,
+      zones[activeZone].config.tilesets[0].tilewidth,
+      zones[activeZone].config.tilesets[0].columns,
+    ),
+    display.spriteSheet.loadAsset(spriteSheet, true),
+    ...Object.keys(backgrounds)
+      .map((background: keyof backgrounds, i) =>
+        display.backgrounds[i]
+          .loadAsset(backgrounds[background]))
+  ]);
 
   resize();
   engine.start();

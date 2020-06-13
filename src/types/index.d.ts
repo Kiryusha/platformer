@@ -3,11 +3,21 @@ declare module '*.png'{
    export = value;
 }
 
+interface backgrounds {
+  [key: string]: HTMLImageElement
+}
+
 interface gameMap {
-  tilewidth: number;
-  width: number;
-  height: number;
+  tilewidth: number
+  width: number
+  height: number
   layers: any[]
+}
+
+interface gameLayer {
+  data?: any[]
+  objects?: any[]
+  name: string
 }
 
 interface spriteMap {

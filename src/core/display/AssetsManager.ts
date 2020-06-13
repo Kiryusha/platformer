@@ -16,7 +16,7 @@ export default class {
   }
 
   async loadAsset(
-    url: string,
+    url: any,
     makeFlipped: boolean = false,
     tileSize?: number,
     columns?: number,
@@ -57,7 +57,7 @@ export default class {
     return texture;
   }
 
-  loadImage(url: string) {
+  loadImage(url: any) {
     return new Promise((resolve, reject) => {
       this.image.addEventListener('load', () => resolve());
       this.image.addEventListener('error', err => reject(err));
@@ -65,7 +65,7 @@ export default class {
     });
   }
 
-  flipImage(url: string): any {
+  flipImage(url: any): any {
     return new Promise((resolve, reject) => {
       const buffer = document.createElement('canvas').getContext('2d');
       const image = new Image();

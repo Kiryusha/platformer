@@ -10,6 +10,7 @@ export default class {
   camera: Camera;
   renderer: Renderer;
   buffer: WebGLRenderingContext;
+  backgrounds: AssetsManager[];
 
   constructor(
     canvas: HTMLCanvasElement,
@@ -20,6 +21,7 @@ export default class {
     this.buffer = document.createElement('canvas').getContext('webgl');
     this.mapTileset = new AssetsManager(this.buffer);
     this.spriteSheet = new AssetsManager(this.buffer);
+    this.backgrounds = [];
     this.camera = new Camera(cameraWidth, cameraHeight);
     this.renderer = new Renderer(this.buffer);
   }
@@ -56,6 +58,21 @@ export default class {
       width,
       height,
     );
+  }
+
+  drawBackgrounds(): void {
+    for (let i = 0; i < this.backgrounds.length; i += 1) {
+      // console.log(this.backgrounds[i].image)
+      this.renderer.drawImage(
+        this.backgrounds[i].texture,
+        this.backgrounds[i].image.width,
+        this.backgrounds[i].image.height,
+        0,
+        0,
+        this.backgrounds[i].image.width,
+        this.backgrounds[i].image.height,
+      );
+    }
   }
 
   drawCollisionDebugMap(map: any[]): void {
