@@ -4,6 +4,9 @@ declare module '*.png'{
 }
 
 interface gameMap {
+  tilewidth: number;
+  width: number;
+  height: number;
   layers: any[]
 }
 

@@ -119,7 +119,12 @@ window.addEventListener('DOMContentLoaded', async () => {
   window.addEventListener('keyup', handleKeyEvent);
   window.addEventListener('resize', resize);
 
-  await display.mapTileset.loadAsset(tileSet);
+  await display.mapTileset.loadAsset(
+    tileSet,
+    false,
+    map.tilesets[0].tilewidth,
+    map.tilesets[0].columns,
+  );
   await display.spriteSheet.loadAsset(spriteSheet, true);
 
   resize();

@@ -31,9 +31,9 @@ export default class {
     this.gravity = 10;
 
     // Appearance
-    this.columns = 40;
-    this.rows = 40;
-    this.tileSize = 8;
+    this.columns = map.width;
+    this.rows = map.height;
+    this.tileSize = map.tilewidth;
     this.width = this.columns * this.tileSize;
     this.height = this.rows * this.tileSize;
 

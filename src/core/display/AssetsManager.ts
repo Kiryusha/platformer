@@ -10,19 +10,19 @@ export default class {
 
   constructor(
     gl: WebGLRenderingContext,
-    tileSize?: number,
-    columns?: number,
   ) {
     this.gl = gl;
     this.image = new Image();
-    this.tileSize = tileSize;
-    this.columns = columns;
   }
 
   async loadAsset(
     url: string,
     makeFlipped: boolean = false,
+    tileSize?: number,
+    columns?: number,
   ): Promise<any> {
+    this.tileSize = tileSize;
+    this.columns = columns;
     if (makeFlipped) {
       await Promise.all([
         this.loadImage(url),
