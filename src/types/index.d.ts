@@ -25,6 +25,12 @@ interface spriteMap {
   meta: any
 }
 
+interface tileset {
+  firstgid: number
+  tiles: any[]
+  name: string
+}
+
 interface mapObject {
   name: string
   type: string

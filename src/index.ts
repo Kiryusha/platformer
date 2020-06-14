@@ -11,6 +11,8 @@ import cloudsFront from './assets/images/default/background/clouds-front.png';
 import bgBack from './assets/images/default/background/bg-back.png';
 import bgFront from './assets/images/default/background/bg-front.png';
 import defaultTileSet from './assets/images/default/tileset.png';
+import defaultImages from './assets/images/default/images.png';
+import defaultImagesMap from './assets/sprite-maps/default/images.json';
 
 declare global {
   interface Window {
@@ -32,6 +34,10 @@ window.addEventListener('DOMContentLoaded', async () => {
         bgBack,
         bgFront,
       },
+      images: {
+        spriteSheet: defaultImages,
+        spriteMap: defaultImagesMap,
+      }
     },
   };
   const activeZone = '00';
@@ -130,6 +136,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   const controller = new Controller();
   const display = new Display(
     document.getElementById('game') as HTMLCanvasElement,
+    zones[activeZone].config.tilesets,
     256,
     144,
   );
@@ -159,12 +166,15 @@ window.addEventListener('DOMContentLoaded', async () => {
       zones[activeZone].config.tilesets[0].tilewidth,
       zones[activeZone].config.tilesets[0].columns,
     ),
+    display.images.loadAsset(zones[activeZone].images.spriteSheet),
     display.spriteSheet.loadAsset(spriteSheet, true),
     ...Object.keys(backgrounds)
       .map((background: keyof backgrounds, i) =>
         display.backgrounds[i]
-          .loadAsset(backgrounds[background]))
+          .loadAsset(backgrounds[background])),
   ]);
+
+  display.imagesMap = zones[activeZone].images.spriteMap;
 
   resize();
   engine.start();

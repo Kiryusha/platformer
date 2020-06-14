@@ -7,13 +7,17 @@ export default class {
   context: CanvasRenderingContext2D;
   mapTileset: AssetsManager;
   spriteSheet: AssetsManager;
+  images: AssetsManager;
   camera: Camera;
   renderer: Renderer;
   buffer: WebGLRenderingContext;
   backgrounds: AssetsManager[];
+  imagesMap: spriteMap;
+  imagesTilesData: tileset;
 
   constructor(
     canvas: HTMLCanvasElement,
+    tilesetsData: any[],
     cameraWidth: number,
     cameraHeight: number,
   ) {
@@ -22,6 +26,8 @@ export default class {
     this.mapTileset = new AssetsManager(this.buffer);
     this.spriteSheet = new AssetsManager(this.buffer);
     this.backgrounds = [];
+    this.imagesTilesData = tilesetsData.filter(tileset => tileset.name === 'images')[0];
+    this.images = new AssetsManager(this.buffer);
     this.camera = new Camera(cameraWidth, cameraHeight);
     this.renderer = new Renderer(this.buffer);
   }
@@ -36,28 +42,53 @@ export default class {
     width: number,
     height: number,
   ): void {
-    const margin = this.mapTileset.tileSize * 2;
+    if (this.isObjectWithinCamera(destinationX, destinationY)) {
+      this.renderer.drawImage(
+        isFlipped ? asset.flippedTexture : asset.texture,
+        asset.image.width,
+        asset.image.height,
+        sourceX,
+        sourceY,
+        width,
+        height,
+        Math.round(destinationX),
+        Math.round(destinationY),
+        width,
+        height,
+      );
+    }
+  }
 
-    if (
-      destinationY > this.camera.y + this.camera.height + margin
-      || destinationY < this.camera.y - margin
-      || destinationX > this.camera.x + this.camera.width + margin
-      || destinationX < this.camera.x - margin
-    ) return;
+  drawLargeTiles(
+    tileId: number,
+    mapX: number,
+    mapY: number,
+  ): void {
+    const tile = this.imagesTilesData.tiles[tileId - this.imagesTilesData.firstgid];
+    const source = this.imagesMap.frames[tile.type];
+    const destinationX = mapX;
+    const destinationY = mapY - (source.frame.h - this.mapTileset.tileSize);
 
-    this.renderer.drawImage(
-      isFlipped ? asset.flippedTexture : asset.texture,
-      asset.image.width,
-      asset.image.height,
-      sourceX,
-      sourceY,
-      width,
-      height,
-      Math.round(destinationX),
-      Math.round(destinationY),
-      width,
-      height,
-    );
+    if (this.isObjectWithinCamera(
+      destinationX,
+      destinationY,
+      destinationX + source.frame.w,
+      destinationY + source.frame.h,
+    )) {
+      this.renderer.drawImage(
+        this.images.texture,
+        this.images.image.width,
+        this.images.image.height,
+        source.frame.x,
+        source.frame.y,
+        source.frame.w,
+        source.frame.h,
+        destinationX,
+        destinationY,
+        source.frame.w,
+        source.frame.h,
+      );
+    }
   }
 
   drawBackgrounds(): void {
@@ -161,38 +192,49 @@ export default class {
       const sourceX = this.mapTileset.tileSize * sourceColumn;
       const sourceY = this.mapTileset.tileSize * sourceRow;
 
-      // if (id === 30) {
-      //   console.log(id / this.mapTileset.columns, Math.floor(id / this.mapTileset.columns))
-      // }
-
       const mapX = this.mapTileset.tileSize * mapColumn;
       const mapY = this.mapTileset.tileSize * mapRow;
 
-      // Do not draw what does not get into the camera right now, plus a margin of two tiles.
-      // Margin is needed in order to avoid glitches during fast movement
-      const margin = this.mapTileset.tileSize * 2;
+      if (id >= this.imagesTilesData.firstgid) {
+        this.drawLargeTiles(id, mapX, mapY);
+      }
 
-      if (
-        mapY > this.camera.y + this.camera.height + margin
-        || mapY < this.camera.y - margin
-        || mapX > this.camera.x + this.camera.width + margin
-        || mapX < this.camera.x - margin
-      ) continue;
-
-      this.renderer.drawImage(
-        this.mapTileset.texture,
-        this.mapTileset.image.width,
-        this.mapTileset.image.height,
-        sourceX,
-        sourceY,
-        this.mapTileset.tileSize,
-        this.mapTileset.tileSize,
-        mapX,
-        mapY,
-        this.mapTileset.tileSize,
-        this.mapTileset.tileSize,
-      );
+      if (this.isObjectWithinCamera(mapX, mapY)) {
+        this.renderer.drawImage(
+          this.mapTileset.texture,
+          this.mapTileset.image.width,
+          this.mapTileset.image.height,
+          sourceX,
+          sourceY,
+          this.mapTileset.tileSize,
+          this.mapTileset.tileSize,
+          mapX,
+          mapY,
+          this.mapTileset.tileSize,
+          this.mapTileset.tileSize,
+        );
+      }
     }
+  }
+
+  isObjectWithinCamera(
+    x: number,
+    y: number,
+    w?: number,
+    h?: number,
+  ): boolean {
+    if (w === undefined) w = x;
+
+    if (h === undefined) h = y;
+
+    // Do not draw what does not get into the camera right now, plus a margin of two tiles.
+    // Margin is needed in order to avoid glitches during fast movement
+    const margin = this.mapTileset.tileSize * 2;
+
+    return !(y > this.camera.y + this.camera.height + margin
+      || h < this.camera.y - margin
+      || x > this.camera.x + this.camera.width + margin
+      || w < this.camera.x - margin);
   }
 
   render(
