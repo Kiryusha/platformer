@@ -62,7 +62,16 @@ export default class {
 
   drawBackgrounds(): void {
     for (let i = 0; i < this.backgrounds.length; i += 1) {
-      // console.log(this.backgrounds[i].image)
+      let destinationX = 0;
+      let destinationY = 0;
+      const modifier = i + 1;
+
+      // creating parallax according to aspect ratio - 9/16
+      // each subsequent layer will be slower
+      destinationX += this.camera.x / (6 * modifier);
+      destinationY += this.camera.y / (10.66 * modifier);
+
+      // first background rendering
       this.renderer.drawImage(
         this.backgrounds[i].texture,
         this.backgrounds[i].image.width,
@@ -71,7 +80,32 @@ export default class {
         0,
         this.backgrounds[i].image.width,
         this.backgrounds[i].image.height,
+        destinationX,
+        destinationY,
+        this.backgrounds[i].image.width,
+        this.backgrounds[i].image.height,
       );
+
+      // additional background rendering in case the background is very narrow
+      // and does not fit in the camera
+      while (
+        (destinationX + this.backgrounds[i].image.width) <= (this.camera.x + this.camera.width)
+      ) {
+        destinationX += this.backgrounds[i].image.width;
+        this.renderer.drawImage(
+          this.backgrounds[i].texture,
+          this.backgrounds[i].image.width,
+          this.backgrounds[i].image.height,
+          0,
+          0,
+          this.backgrounds[i].image.width,
+          this.backgrounds[i].image.height,
+          destinationX,
+          destinationY,
+          this.backgrounds[i].image.width,
+          this.backgrounds[i].image.height,
+        );
+      }
     }
   }
 
