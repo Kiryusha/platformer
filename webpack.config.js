@@ -45,7 +45,7 @@ module.exports = {
   devServer: {},
 
   plugins: [
-    new CleanWebpackPlugin(),
+    ...process.env.NODE_ENV === 'production' ? [new CleanWebpackPlugin()] : [],
     new HtmlWebpackPlugin({
       template: 'index.html'
     }),
