@@ -1,6 +1,6 @@
 // The class is responsible toggling player animations
 export default class {
-  spriteMap: spriteMap;
+  spriteMap: SpriteMap;
   frameWidth: number;
   frameHeight: number;
   frames: any;
@@ -10,10 +10,10 @@ export default class {
   activeFrameSet: string;
   frameIndex: number;
   frameValue: string;
-  flippedSpriteMap: spriteMap;
+  flippedSpriteMap: SpriteMap;
 
   constructor(
-    spriteMap: spriteMap,
+    spriteMap: SpriteMap,
     frameWidth: number,
     frameHeight: number,
     frames: {},

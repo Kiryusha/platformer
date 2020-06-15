@@ -12,12 +12,12 @@ export default class {
   renderer: Renderer;
   buffer: WebGLRenderingContext;
   backgrounds: AssetsManager[];
-  imagesMap: spriteMap;
-  imagesTilesData: tileset;
+  imagesMap: SpriteMap;
+  imagesTilesData: Tileset;
 
   constructor(
     canvas: HTMLCanvasElement,
-    tilesetsData: any[],
+    tilesetsData: Tileset[],
     cameraWidth: number,
     cameraHeight: number,
   ) {

@@ -30,7 +30,7 @@ export default class Character extends Entity {
   jumpingTimer: NodeJS.Timer;
   movingPattern: {};
 
-  constructor(stats: CharacterStats, playerSpriteMap: spriteMap) {
+  constructor(stats: CharacterStats, playerSpriteMap: SpriteMap) {
     super(
       stats.x,
       stats.y,
@@ -67,7 +67,7 @@ export default class Character extends Entity {
     this.setAnimationDefaults(stats, playerSpriteMap);
   }
 
-  setAnimationDefaults(stats: CharacterStats, playerSpriteMap: spriteMap): void {
+  setAnimationDefaults(stats: CharacterStats, playerSpriteMap: SpriteMap): void {
     this.animator = new Animator(
       playerSpriteMap,
       stats.frameWidth,

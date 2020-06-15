@@ -22,13 +22,14 @@ export default class {
   rows: number;
   tileSize: number;
   collider: Collider;
-  map: gameMap;
+  map: GameMap;
   rawLayers: any;
   collisions: any;
   characters: Character[];
   brain: Brain;
+  activeZone: keyof zones;
 
-  constructor (map: gameMap) {
+  constructor (map: GameMap) {
     // Physics
     this.gravity = 10;
 
@@ -46,17 +47,17 @@ export default class {
     this.collider = new Collider();
   }
 
-  processMap(map: gameMap) {
+  processMap(map: GameMap) {
     this.rawLayers = map.layers.reduce((result, group) => {
       switch (group.name) {
         case 'tiles':
-          group.layers.forEach((layer: gameLayer) => result[layer.name] = layer.data);
+          group.layers.forEach((layer: GameLayer) => result[layer.name] = layer.data);
           break;
         case 'objects':
-          group.layers.forEach((layer: gameLayer) => {
+          group.layers.forEach((layer: GameLayer) => {
             switch (layer.name) {
               case 'collisions':
-                result[layer.name] = layer.objects.map((object: mapObject) => new Entity(
+                result[layer.name] = layer.objects.map((object: MapObject) => new Entity(
                   object.x,
                   object.y,
                   object.width,
@@ -67,7 +68,7 @@ export default class {
                 ));
                 break;
               case 'characters':
-                result[layer.name] = layer.objects.map((object: mapObject) => {
+                result[layer.name] = layer.objects.map((object: MapObject) => {
                   switch (object.type) {
                     case 'player':
                       playerStats.x = object.x;

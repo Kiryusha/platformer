@@ -4,8 +4,9 @@ import World from './World';
 export default class {
   world: World;
 
-  constructor(map: gameMap) {
-    this.world = new World(map);
+  constructor(zones: zones, startingZone: string) {
+    this.world = new World(zones[startingZone].config);
+    this.world.activeZone = startingZone;
   }
 
   update(): void {

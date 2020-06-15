@@ -7,31 +7,46 @@ interface backgrounds {
   [key: string]: HTMLImageElement
 }
 
-interface gameMap {
+interface zones {
+  [key: string]: {
+    config: GameMap
+    tileset: string
+    backgrounds: {}
+    images: {
+      spriteSheet: string
+      spriteMap: SpriteMap
+    }
+  }
+}
+
+interface GameMap {
   tilewidth: number
   width: number
   height: number
   layers: any[]
+  tilesets: Tileset[]
 }
 
-interface gameLayer {
+interface GameLayer {
   data?: any[]
   objects?: any[]
   name: string
 }
 
-interface spriteMap {
+interface SpriteMap {
   frames: any
   meta: any
 }
 
-interface tileset {
+interface Tileset {
   firstgid: number
   tiles: any[]
   name: string
+  columns: number
+  tilewidth: number
 }
 
-interface mapObject {
+interface MapObject {
   name: string
   type: string
   x: number
@@ -71,6 +86,20 @@ interface Entity {
   setOldBottom(y: number): void
 }
 
+interface Animator {
+  spriteMap: SpriteMap;
+  frameWidth: number;
+  frameHeight: number;
+  frames: any;
+  count: number;
+  delay: number;
+  mode: string;
+  activeFrameSet: string;
+  frameIndex: number;
+  frameValue: string;
+  flippedSpriteMap: SpriteMap;
+}
+
 interface Character extends Entity {
   movingPattern: any
   defaults: CharacterStats
@@ -88,14 +117,14 @@ interface Character extends Entity {
   isJumpTriggered: boolean
   maxJumpingSpeed: number
   friction: number
-  animator: {}
+  animator: Animator
   isFacingLeft: boolean
   isSprinting: boolean
   isDucking: boolean
   isKeepDucking: boolean
   duckingTimer: NodeJS.Timer
   isStuck: boolean
-  setAnimationDefaults(stats: CharacterStats, playerSpriteMap: spriteMap): void
+  setAnimationDefaults(stats: CharacterStats, playerSpriteMap: SpriteMap): void
   updateAnimation(): void
   startDucking(): void
   stopDucking(): void

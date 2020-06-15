@@ -25,7 +25,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   const aspectRatio = 9 / 16;
   const fps = 1000 / 30;
 
-  const zones = {
+  const zones: zones = {
     'A0': {
       config: zoneA0,
       tileset: defaultTileSet,
@@ -53,7 +53,8 @@ window.addEventListener('DOMContentLoaded', async () => {
       }
     },
   };
-  const activeZone = 'A1';
+
+  const startingZone: string = 'A1'
 
   const handleKeyEvent = (event: { type: string; keyCode: number; }) => {
     controller.handleKeyEvent(event.type, event.keyCode);
@@ -79,7 +80,7 @@ window.addEventListener('DOMContentLoaded', async () => {
       display.drawMap(game.world.middleFrontMap, game.world.columns);
     }
 
-    game.world.characters.forEach(character => {
+    game.world.characters.forEach((character: Character) => {
       let frame;
 
       if (character.isFacingLeft) {
@@ -147,14 +148,14 @@ window.addEventListener('DOMContentLoaded', async () => {
   };
 
   const controller = new Controller();
+  const game = new Game(zones, startingZone);
   const display = new Display(
     document.getElementById('game') as HTMLCanvasElement,
-    zones[activeZone].config.tilesets,
+    zones[game.world.activeZone].config.tilesets,
     256,
     144,
   );
-  const game = new Game(zones[activeZone].config);
-  const [player] = game.world.characters.filter(character => character.type === 'player');
+  const [player] = game.world.characters.filter((character: Character) => character.type === 'player');
   const engine = new Engine(fps, render, update);
 
   // Synchronize display buffer size with the world size
@@ -166,7 +167,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   window.addEventListener('keyup', handleKeyEvent);
   window.addEventListener('resize', resize);
 
-  const backgrounds: backgrounds = zones[activeZone].backgrounds;
+  const backgrounds: backgrounds = zones[game.world.activeZone].backgrounds;
 
   Object.keys(backgrounds).forEach(() => {
     display.backgrounds.push(new AssetsManager(display.buffer));
@@ -174,12 +175,12 @@ window.addEventListener('DOMContentLoaded', async () => {
 
   await Promise.all([
     display.mapTileset.loadAsset(
-      zones[activeZone].tileset,
+      zones[game.world.activeZone].tileset,
       false,
-      zones[activeZone].config.tilesets[0].tilewidth,
-      zones[activeZone].config.tilesets[0].columns,
+      zones[game.world.activeZone].config.tilesets[0].tilewidth,
+      zones[game.world.activeZone].config.tilesets[0].columns,
     ),
-    display.images.loadAsset(zones[activeZone].images.spriteSheet),
+    display.images.loadAsset(zones[game.world.activeZone].images.spriteSheet),
     display.spriteSheet.loadAsset(spriteSheet, true),
     ...Object.keys(backgrounds)
       .map((background: keyof backgrounds, i) =>
@@ -187,7 +188,7 @@ window.addEventListener('DOMContentLoaded', async () => {
           .loadAsset(backgrounds[background])),
   ]);
 
-  display.imagesMap = zones[activeZone].images.spriteMap;
+  display.imagesMap = zones[game.world.activeZone].images.spriteMap;
 
   resize();
   engine.start();
