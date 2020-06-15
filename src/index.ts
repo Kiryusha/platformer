@@ -5,7 +5,8 @@ import Engine from './core/engine/Engine';
 import AssetsManager from './core/display/AssetsManager';
 import spriteSheet from './assets/images/sprites.png';
 // default zone set
-import defaultMap from './assets/levels/default.json';
+import zoneA0 from './assets/levels/zoneA0.json';
+import zoneA1 from './assets/levels/zoneA1.json';
 import cloudsBack from './assets/images/default/background/clouds-back.png';
 import cloudsFront from './assets/images/default/background/clouds-front.png';
 import bgBack from './assets/images/default/background/bg-back.png';
@@ -25,8 +26,8 @@ window.addEventListener('DOMContentLoaded', async () => {
   const fps = 1000 / 30;
 
   const zones = {
-    '00': {
-      config: defaultMap,
+    'A0': {
+      config: zoneA0,
       tileset: defaultTileSet,
       backgrounds: {
         cloudsBack,
@@ -39,8 +40,20 @@ window.addEventListener('DOMContentLoaded', async () => {
         spriteMap: defaultImagesMap,
       }
     },
+    'A1': {
+      config: zoneA1,
+      tileset: defaultTileSet,
+      backgrounds: {
+        cloudsBack,
+        cloudsFront,
+      },
+      images: {
+        spriteSheet: defaultImages,
+        spriteMap: defaultImagesMap,
+      }
+    },
   };
-  const activeZone = '00';
+  const activeZone = 'A1';
 
   const handleKeyEvent = (event: { type: string; keyCode: number; }) => {
     controller.handleKeyEvent(event.type, event.keyCode);

@@ -4,7 +4,7 @@
      "export":
         {
          "format":"json",
-         "target":"default.json"
+         "target":"zoneA1.json"
         }
     },
  "height":20,
