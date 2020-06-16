@@ -100,6 +100,29 @@ export default class {
     }
   }
 
+  routeNarrowPhaseCharacterVsDoor(character: Character, door: Entity): void {
+    const isVertical = door.height > door.width;
+
+    switch (character.type) {
+      case 'player':
+          if (isVertical) {
+            if (this.isCollidingFromLeft(character, door)) {
+              character.x = 0;
+            } else {
+              character.x = character.width;
+            }
+          } else {
+            if (this.isCollidingFromTop(character, door)) {
+              character.y = 0;
+            } else {
+              character.y = character.height;
+            }
+          }
+          character.zoneToGo = door.type;
+        break;
+    }
+  }
+
   // these methods determine the presence of a one-way collision of e1 with e2
   private isCollidingFromTop(e1: Entity, e2: Entity): boolean {
     return e1.getBottom() > e2.getTop() && e1.getOldBottom() <= e2.getTop();
@@ -185,6 +208,14 @@ export default class {
       this.routeNarrowPhasePlayerVsEnemy(
         e1.type === 'player' ? e1 : e2,
         e2.type === 'player' ? e1 : e2,
+      );
+    } else if (
+      (e1.group === 'characters' && e2.group === 'doors')
+      || (e2.group === 'characters' && e1.group === 'doors')
+    ) {
+      this.routeNarrowPhaseCharacterVsDoor(
+        e1.group === 'characters' ? e1 : e2,
+        e2.group === 'characters' ? e1 : e2,
       );
     }
   }

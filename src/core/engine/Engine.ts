@@ -27,7 +27,8 @@ export default class {
     this.isUpdated = false;
   }
 
-  run(timestamp: number): void {
+  async run(timestamp: number) {
+    this.animationFrame = window.requestAnimationFrame(this.handleRun);
     this.accumulatedTime += timestamp - this.previousTime;
     this.previousTime = timestamp;
 
@@ -37,7 +38,7 @@ export default class {
 
     while (this.accumulatedTime >= this.timeStep) {
       this.accumulatedTime -= this.timeStep;
-      this.update(this.timeStep);
+      await this.update(this.timeStep);
       this.isUpdated = true;
     }
 
@@ -45,8 +46,6 @@ export default class {
       this.isUpdated = false;
       this.render();
     }
-
-    this.animationFrame = window.requestAnimationFrame(this.handleRun);
   }
 
   start(): void {

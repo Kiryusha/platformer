@@ -29,6 +29,7 @@ export default class Character extends Entity {
   duckingTimer: NodeJS.Timer;
   jumpingTimer: NodeJS.Timer;
   movingPattern: {};
+  zoneToGo: string;
 
   constructor(stats: CharacterStats, playerSpriteMap: SpriteMap) {
     super(

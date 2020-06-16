@@ -124,6 +124,7 @@ interface Character extends Entity {
   isKeepDucking: boolean
   duckingTimer: NodeJS.Timer
   isStuck: boolean
+  zoneToGo: string
   setAnimationDefaults(stats: CharacterStats, playerSpriteMap: SpriteMap): void
   updateAnimation(): void
   startDucking(): void
