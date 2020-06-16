@@ -13,11 +13,9 @@ export default class {
   buffer: WebGLRenderingContext;
   backgrounds: AssetsManager[];
   imagesMap: SpriteMap;
-  imagesTilesData: Tileset;
 
   constructor(
     canvas: HTMLCanvasElement,
-    tilesetsData: Tileset[],
     cameraWidth: number,
     cameraHeight: number,
   ) {
@@ -26,7 +24,6 @@ export default class {
     this.mapTileset = new AssetsManager(this.buffer);
     this.spriteSheet = new AssetsManager(this.buffer);
     this.backgrounds = [];
-    this.imagesTilesData = tilesetsData.filter(tileset => tileset.name === 'images')[0];
     this.images = new AssetsManager(this.buffer);
     this.camera = new Camera(cameraWidth, cameraHeight);
     this.renderer = new Renderer(this.buffer);
@@ -60,11 +57,12 @@ export default class {
   }
 
   drawLargeTiles(
+    imagesTilesData: Tileset,
     tileId: number,
     mapX: number,
     mapY: number,
   ): void {
-    const tile = this.imagesTilesData.tiles[tileId - this.imagesTilesData.firstgid];
+    const tile = imagesTilesData.tiles[tileId - imagesTilesData.firstgid];
     const source = this.imagesMap.frames[tile.type];
     const destinationX = mapX;
     const destinationY = mapY - (source.frame.h - this.mapTileset.tileSize);
@@ -171,7 +169,11 @@ export default class {
     }
   }
 
-  drawMap(map: number[], mapColumns: number): void {
+  drawMap(
+    map: number[],
+    mapColumns: number,
+    imagesTilesData: Tileset,
+  ): void {
     for (let i: number = 0; i < map.length; i += 1) {
       if (!map[i]) continue;
 
@@ -195,8 +197,8 @@ export default class {
       const mapX = this.mapTileset.tileSize * mapColumn;
       const mapY = this.mapTileset.tileSize * mapRow;
 
-      if (id >= this.imagesTilesData.firstgid) {
-        this.drawLargeTiles(id, mapX, mapY);
+      if (id >= imagesTilesData.firstgid) {
+        this.drawLargeTiles(imagesTilesData, id, mapX, mapY);
       }
 
       if (this.isObjectWithinCamera(mapX, mapY)) {
