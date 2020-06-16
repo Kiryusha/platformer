@@ -5,7 +5,6 @@ import Collider from './Collider';
 import Brain from './Brain';
 // Characters
 import spriteMap from '../../assets/sprite-maps/sprites.json';
-import playerStats from '../../assets/stats/player.json';
 import slugStats from '../../assets/stats/slug.json';
 
 export default class {
@@ -24,12 +23,17 @@ export default class {
   collider: Collider;
   map: GameMap;
   rawLayers: any;
-  collisions: any;
+  collisions: Entity[];
   characters: Character[];
   brain: Brain;
   activeZone: keyof zones;
+  doors: Entity[];
+  player: Character;
 
-  constructor (map: GameMap) {
+  constructor (
+    map: GameMap,
+    player: Character,
+  ) {
     // Physics
     this.gravity = 10;
 
@@ -39,6 +43,8 @@ export default class {
     this.tileSize = map.tilewidth;
     this.width = this.columns * this.tileSize;
     this.height = this.rows * this.tileSize;
+
+    this.player = player;
 
     this.brain = new Brain();
 
@@ -56,6 +62,17 @@ export default class {
         case 'objects':
           group.layers.forEach((layer: GameLayer) => {
             switch (layer.name) {
+              case 'doors':
+                result[layer.name] = layer.objects.map((object: MapObject) => new Entity(
+                  object.x,
+                  object.y,
+                  object.width,
+                  object.height,
+                  'doors',
+                  object.type,
+                  'door',
+                ));
+                break;
               case 'collisions':
                 result[layer.name] = layer.objects.map((object: MapObject) => new Entity(
                   object.x,
@@ -71,9 +88,12 @@ export default class {
                 result[layer.name] = layer.objects.map((object: MapObject) => {
                   switch (object.type) {
                     case 'player':
-                      playerStats.x = object.x;
-                      playerStats.y = object.y;
-                      return new Character(playerStats, spriteMap);
+                      if (!this.player.zoneToGo) {
+                        this.player.x = object.x;
+                        this.player.y = object.y;
+                      }
+
+                      return this.player;
                     case 'enemy':
                       switch (object.name) {
                         case 'slug':
@@ -100,6 +120,7 @@ export default class {
     this.frontMap = [...this.rawLayers.front];
     this.collisions = [...this.rawLayers.collisions];
     this.characters = [...this.rawLayers.characters];
+    this.doors = [...this.rawLayers.doors];
     this.collisionDebugMap = [];
   }
 
@@ -137,7 +158,11 @@ export default class {
       character.update(this.gravity);
       this.processBoundariesCollision(character);
     });
-    const collisions = this.collider.processBroadPhase([...this.characters, ...this.collisions]);
+    const collisions = this.collider.processBroadPhase([
+      ...this.characters,
+      ...this.collisions,
+      ...this.doors,
+    ]);
     this.collisionDebugMap = collisions;
     this.brain.update();
   }
