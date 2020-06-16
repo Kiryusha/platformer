@@ -13,6 +13,7 @@ export default class implements Entity {
   isColliding: boolean;
   collisionXDirection: string;
   collisionYDirection: string;
+  properties: {};
 
   constructor(
     x: number,
@@ -22,6 +23,7 @@ export default class implements Entity {
     group: string,
     type: string,
     name: string,
+    properties?: {},
   ) {
     // types
     this.group = group;
@@ -42,6 +44,9 @@ export default class implements Entity {
     // Appearance
     this.width = width;
     this.height = height;
+
+    // custom
+    this.properties = properties;
   }
 
   getTop(): number {

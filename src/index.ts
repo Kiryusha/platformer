@@ -148,6 +148,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     }
 
     if (player.zoneToGo) {
+      display.renderer.clear();
       engine.stop();
       game.loadZone(player.zoneToGo);
       player.zoneToGo = null;

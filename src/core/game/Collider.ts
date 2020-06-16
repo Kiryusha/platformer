@@ -101,24 +101,31 @@ export default class {
   }
 
   routeNarrowPhaseCharacterVsDoor(character: Character, door: Entity): void {
-    const isVertical = door.height > door.width;
+    const { target } = door.properties;
+    const offset = parseInt(door.properties.offset);
+    const destinationX = door.properties.destinationX
+      ? parseInt(door.properties.destinationX) : null;
+    const destinationY = door.properties.destinationY
+      ? parseInt(door.properties.destinationY) : null;
 
     switch (character.type) {
       case 'player':
-          if (isVertical) {
+          if (door.type === 'vertical') {
             if (this.isCollidingFromLeft(character, door)) {
-              character.x = 0;
+              character.x = destinationX;
             } else {
-              character.x = character.width;
+              character.x = destinationX - character.width;
             }
+            character.y += offset;
           } else {
             if (this.isCollidingFromTop(character, door)) {
-              character.y = 0;
+              character.y = destinationY;
             } else {
-              character.y = character.height;
+              character.y = destinationY - character.height;
             }
+            character.x += offset;
           }
-          character.zoneToGo = door.type;
+          character.zoneToGo = target;
         break;
     }
   }

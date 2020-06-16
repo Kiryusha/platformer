@@ -143,8 +143,24 @@
                          "height":81,
                          "id":30,
                          "name":"zoneA0",
+                         "properties":[
+                                {
+                                 "name":"destinationX",
+                                 "type":"string",
+                                 "value":"319"
+                                }, 
+                                {
+                                 "name":"offset",
+                                 "type":"string",
+                                 "value":"112"
+                                }, 
+                                {
+                                 "name":"target",
+                                 "type":"string",
+                                 "value":"zoneA0"
+                                }],
                          "rotation":0,
-                         "type":"zoneA0",
+                         "type":"vertical",
                          "visible":true,
                          "width":1,
                          "x":0,

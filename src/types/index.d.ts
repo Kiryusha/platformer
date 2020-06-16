@@ -53,6 +53,7 @@ interface MapObject {
   y: number
   width: number
   height: number
+  properties?: any[]
 }
 
 interface Entity {
@@ -68,6 +69,12 @@ interface Entity {
   isColliding: boolean
   collisionXDirection: string
   collisionYDirection: string
+  properties: {
+    target?: string
+    offset?: string
+    destinationX?: string
+    destinationY?: string
+  };
   getTop(): number
   getRight(): number
   getLeft(): number

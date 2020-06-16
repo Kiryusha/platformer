@@ -71,6 +71,10 @@ export default class {
                   'doors',
                   object.type,
                   'door',
+                  object.properties.reduce((obj, prop) => {
+                    obj[prop.name] = prop.value;
+                    return obj;
+                  }, {}),
                 ));
                 break;
               case 'collisions':
