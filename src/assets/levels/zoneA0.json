@@ -131,7 +131,7 @@
                          "type":"zoneA1",
                          "visible":true,
                          "width":1,
-                         "x":320,
+                         "x":319,
                          "y":0
                         }],
                  "opacity":1,
@@ -154,8 +154,8 @@
                          "type":"player",
                          "visible":true,
                          "width":15,
-                         "x":207.39673550966,
-                         "y":171.766822118588
+                         "x":207.397,
+                         "y":171.767
                         }],
                  "opacity":1,
                  "type":"objectgroup",
@@ -221,7 +221,7 @@
                          "type":"full",
                          "visible":true,
                          "width":22,
-                         "x":26.0306462358428,
+                         "x":26.0306,
                          "y":0
                         }, 
                         {

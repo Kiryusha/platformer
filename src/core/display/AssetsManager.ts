@@ -7,6 +7,7 @@ export default class {
   gl: WebGLRenderingContext;
   texture: WebGLTexture;
   flippedTexture: WebGLTexture;
+  url: any;
 
   constructor(
     gl: WebGLRenderingContext,
@@ -23,6 +24,7 @@ export default class {
   ): Promise<any> {
     this.tileSize = tileSize;
     this.columns = columns;
+    this.url = url;
     if (makeFlipped) {
       await Promise.all([
         this.loadImage(url),

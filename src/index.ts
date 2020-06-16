@@ -178,32 +178,58 @@ window.addEventListener('DOMContentLoaded', async () => {
   window.addEventListener('resize', resize);
 
   const updateZoneAssets = async () => {
+    const promises = [];
     const backgrounds: backgrounds = zones[game.world.activeZone].backgrounds;
 
-    display.backgrounds = [];
-    Object.keys(backgrounds).forEach(() => {
-      display.backgrounds.push(new AssetsManager(display.buffer));
-    });
+    // check if new backgrounds are among already processed backgrounds
+    const areNewBackgroundsAmongOld = Object.keys(backgrounds).every(url =>
+      display.backgrounds.some(asset => asset.url === url));
 
-    await Promise.all([
-      display.mapTileset.loadAsset(
-        zones[game.world.activeZone].tileset,
-        false,
-        zones[game.world.activeZone].config.tilesets[0].tilewidth,
-        zones[game.world.activeZone].config.tilesets[0].columns,
-      ),
-      display.images.loadAsset(zones[game.world.activeZone].images.spriteSheet),
-      display.spriteSheet.loadAsset(spriteSheet, true),
-      ...Object.keys(backgrounds)
-        .map((background: keyof backgrounds, i) =>
-          display.backgrounds[i]
-            .loadAsset(backgrounds[background])),
-    ]);
+    // check if the same assets is used in new zone
+    if (display.mapTileset.url !== zones[game.world.activeZone].tileset) {
+      promises.push(
+        display.mapTileset.loadAsset(
+          zones[game.world.activeZone].tileset,
+          false,
+          zones[game.world.activeZone].config.tilesets[0].tilewidth,
+          zones[game.world.activeZone].config.tilesets[0].columns,
+        ),
+      );
+    }
+
+    if (display.images.url !== zones[game.world.activeZone].images) {
+      promises.push(
+        display.images.loadAsset(zones[game.world.activeZone].images.spriteSheet)
+      );
+    }
+
+    if (!areNewBackgroundsAmongOld) {
+      display.backgrounds = [];
+
+      Object.keys(backgrounds).forEach(() => {
+        display.backgrounds.push(new AssetsManager(display.buffer));
+      });
+
+      promises.push(
+        ...Object.keys(backgrounds)
+          .map((background: keyof backgrounds, i) =>
+            display.backgrounds[i]
+              .loadAsset(backgrounds[background])),
+      );
+    }
+
+    await Promise.all(promises);
 
     display.imagesMap = zones[game.world.activeZone].images.spriteMap;
   };
 
-  await updateZoneAssets();
+  await Promise.all([
+    // characters sprites are always the same
+    display.spriteSheet.loadAsset(spriteSheet, true),
+
+    // initial asset setup
+    updateZoneAssets(),
+  ]);
 
   resize();
   engine.start();
