@@ -66,7 +66,8 @@ window.addEventListener('DOMContentLoaded', async () => {
       document.documentElement.clientHeight,
       aspectRatio,
     );
-    display.render(player, game.world.width, game.world.height);
+    display.render();
+    display.camera.adjustCamera(player, game.world.width, game.world.height);
   };
   const render = () => {
     const imagesTilesData =
@@ -113,7 +114,8 @@ window.addEventListener('DOMContentLoaded', async () => {
     if (window.SHOW_COLLISIONS) {
       display.drawCollisionDebugMap(game.world.collisionDebugMap);
     }
-    display.render(player, game.world.width, game.world.height);
+    display.render();
+    display.camera.adjustCamera(player, game.world.width, game.world.height);
   };
 
   const update = async () => {
@@ -147,11 +149,10 @@ window.addEventListener('DOMContentLoaded', async () => {
       player.stopDucking();
     }
 
-    if (player.zoneToGo) {
-      display.renderer.clear();
+    if (player.destination.name.length) {
       engine.stop();
-      game.loadZone(player.zoneToGo);
-      player.zoneToGo = null;
+      game.loadZone(player.destination.name);
+      player.destination.name = '';
       await updateZoneAssets();
       engine.start();
     }

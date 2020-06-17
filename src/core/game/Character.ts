@@ -29,7 +29,11 @@ export default class Character extends Entity {
   duckingTimer: NodeJS.Timer;
   jumpingTimer: NodeJS.Timer;
   movingPattern: {};
-  zoneToGo: string;
+  destination: {
+    name: string
+    x: number
+    y: number
+  };
 
   constructor(stats: CharacterStats, playerSpriteMap: SpriteMap) {
     super(
@@ -62,6 +66,12 @@ export default class Character extends Entity {
     this.isKeepDucking = stats.isKeepDucking;
     this.isStuck = stats.isStuck;
     this.movingPattern = stats.movingPattern;
+
+    this.destination = {
+      name: '',
+      x: 0,
+      y: 0,
+    };
 
     // animation stuff
     this.isFacingLeft = stats.isFacingLeft;

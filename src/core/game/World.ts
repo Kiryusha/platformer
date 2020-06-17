@@ -92,7 +92,10 @@ export default class {
                 result[layer.name] = layer.objects.map((object: MapObject) => {
                   switch (object.type) {
                     case 'player':
-                      if (!this.player.zoneToGo) {
+                      if (this.player.destination.name.length) {
+                        this.player.x = this.player.destination.x;
+                        this.player.y = this.player.destination.y;
+                      } else {
                         this.player.x = object.x;
                         this.player.y = object.y;
                       }

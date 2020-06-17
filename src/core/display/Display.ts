@@ -239,12 +239,7 @@ export default class {
       || w < this.camera.x - margin);
   }
 
-  render(
-    player: Character,
-    stageWidth: number,
-    stageHeight: number,
-  ): void {
-    this.camera.adjustCamera(player, stageWidth, stageHeight);
+  render(): void {
     this.context.drawImage(
       this.buffer.canvas,
       this.camera.x,

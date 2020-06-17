@@ -112,20 +112,20 @@ export default class {
       case 'player':
           if (door.type === 'vertical') {
             if (this.isCollidingFromLeft(character, door)) {
-              character.x = destinationX;
+              character.destination.x = destinationX;
             } else {
-              character.x = destinationX - character.width;
+              character.destination.x = destinationX - character.width;
             }
-            character.y += offset;
+            character.destination.y = character.y + offset;
           } else {
             if (this.isCollidingFromTop(character, door)) {
-              character.y = destinationY;
+              character.destination.y = destinationY;
             } else {
-              character.y = destinationY - character.height;
+              character.destination.y = destinationY - character.height;
             }
-            character.x += offset;
+            character.destination.x = character.x + offset;
           }
-          character.zoneToGo = target;
+          character.destination.name = target;
         break;
     }
   }
