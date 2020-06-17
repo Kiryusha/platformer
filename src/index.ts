@@ -149,11 +149,20 @@ window.addEventListener('DOMContentLoaded', async () => {
       player.stopDucking();
     }
 
+    // The zone changes only if the player collided with the door and the collider recorded data
+    // about the new zone in the corresponding property of the player's character.
     if (player.destination.name.length) {
+      // We should stop the engine, as loading new assets may take some time
       engine.stop();
+      // load new zone schemes
       game.loadZone(player.destination.name);
+      // position the camera in advance to prevent one frame flicking since it has not yet had
+      // time to position itself in the new zone
+      display.camera.adjustCamera(player, game.world.width, game.world.height);
       player.destination.name = '';
+      // update only assets that are not yet loaded by comparing urls
       await updateZoneAssets();
+      // now we can start engine again
       engine.start();
     }
 
