@@ -15,12 +15,12 @@ export default class {
     gl: WebGLRenderingContext
   ) {
     this.gl = gl;
-    // this.rectangleProgram = new ShaderProgram(
-    //   this.gl,
-    //   rectangleShaders.vertexShaderSource,
-    //   rectangleShaders.fragmentShaderSource,
-    //   'rectangle'
-    // );
+    this.rectangleProgram = new ShaderProgram(
+      this.gl,
+      rectangleShaders.vertexShaderSource,
+      rectangleShaders.fragmentShaderSource,
+      'rectangle'
+    );
 
     this.imageProgram = new ShaderProgram(
       this.gl,
@@ -34,42 +34,37 @@ export default class {
     positions: number[] | Iterable<number>,
     color: number[],
   ): void {
-    // this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.gl.createBuffer());
-    // this.gl.bufferData(
-    //   this.gl.ARRAY_BUFFER,
-    //   new Float32Array(positions),
-    //   this.gl.DYNAMIC_DRAW
-    // );
-    // this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
-    //
-    // this.gl.clearColor(0, 0, 0, 0);
-    // this.gl.clear(this.gl.COLOR_BUFFER_BIT);
-    //
-    // this.gl.useProgram(this.rectangleProgram.program);
-    //
-    // this.gl.enableVertexAttribArray(this.rectangleProgram.aPosition);
-    // this.gl.vertexAttribPointer(
-    //   this.rectangleProgram.aPosition,
-    //   2,
-    //   this.gl.FLOAT,
-    //   false,
-    //   0,
-    //   0
-    // );
-    // this.gl.uniform2f(
-    //   this.rectangleProgram.uResolution,
-    //   this.gl.canvas.width,
-    //   this.gl.canvas.height
-    // );
-    // this.gl.uniform4f(
-    //   this.rectangleProgram.uColor,
-    //   color[0] / 255,
-    //   color[1] / 255,
-    //   color[2] / 255,
-    //   color[3]
-    // );
-    //
-    // this.gl.drawArrays(this.gl.TRIANGLES, 0, 6);
+    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.gl.createBuffer());
+    this.gl.bufferData(
+      this.gl.ARRAY_BUFFER,
+      new Float32Array(positions),
+      this.gl.DYNAMIC_DRAW
+    );
+    this.gl.useProgram(this.rectangleProgram.program);
+
+    this.gl.enableVertexAttribArray(this.rectangleProgram.aPosition);
+    this.gl.vertexAttribPointer(
+      this.rectangleProgram.aPosition,
+      2,
+      this.gl.FLOAT,
+      false,
+      0,
+      0
+    );
+    this.gl.uniform2f(
+      this.rectangleProgram.uResolution,
+      this.gl.canvas.width,
+      this.gl.canvas.height
+    );
+    this.gl.uniform4f(
+      this.rectangleProgram.uColor,
+      color[0] / 255,
+      color[1] / 255,
+      color[2] / 255,
+      color[3]
+    );
+
+    this.gl.drawArrays(this.gl.TRIANGLES, 0, 6);
   }
 
   drawImage(
