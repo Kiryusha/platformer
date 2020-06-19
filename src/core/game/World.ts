@@ -121,9 +121,13 @@ export default class {
     }, {});
 
     this.backgroundMap = [...this.rawLayers.background];
-    this.middleBackgroundMap = [...this.rawLayers['middle-background']];
+    if (this.rawLayers['middle-background']) {
+      this.middleBackgroundMap = [...this.rawLayers['middle-background']];
+    }
     this.middleMap = [...this.rawLayers.middle];
-    this.middleFrontMap = [...this.rawLayers['middle-front']];
+    if (this.rawLayers['middle-front']) {
+      this.middleFrontMap = [...this.rawLayers['middle-front']];
+    }
     this.frontMap = [...this.rawLayers.front];
     this.collisions = [...this.rawLayers.collisions];
     this.characters = [...this.rawLayers.characters];

@@ -7,11 +7,13 @@ import spriteSheet from './assets/images/sprites.png';
 // default zone set
 import zoneA0 from './assets/levels/zoneA0.json';
 import zoneA1 from './assets/levels/zoneA1.json';
+import zoneB2 from './assets/levels/zoneB2.json';
 import cloudsBack from './assets/images/default/background/clouds-back.png';
 import cloudsFront from './assets/images/default/background/clouds-front.png';
 import bgBack from './assets/images/default/background/bg-back.png';
 import bgFront from './assets/images/default/background/bg-front.png';
-import defaultTileSet from './assets/images/default/tileset.png';
+import defaultTileSet from './assets/images/default/default-tileset.png';
+import sunnyLandTileSet from './assets/images/sunny-land/sunny-land-tileset.png';
 import defaultImages from './assets/images/default/images.png';
 import defaultImagesMap from './assets/sprite-maps/default/images.json';
 
@@ -52,6 +54,12 @@ window.addEventListener('DOMContentLoaded', async () => {
         spriteMap: defaultImagesMap,
       }
     },
+    'zoneB2': {
+      config: zoneB2,
+      tileset: sunnyLandTileSet,
+      backgrounds: {},
+      images: {},
+    },
   };
 
   const startingZone: string = 'zoneA1';
@@ -76,11 +84,11 @@ window.addEventListener('DOMContentLoaded', async () => {
     display.renderer.clear();
     display.drawBackgrounds();
     display.drawMap(game.world.backgroundMap, game.world.columns, imagesTilesData);
-    if (game.world.middleBackgroundMap.length) {
+    if (game.world.middleBackgroundMap) {
       display.drawMap(game.world.middleBackgroundMap, game.world.columns, imagesTilesData);
     }
     display.drawMap(game.world.middleMap, game.world.columns, imagesTilesData);
-    if (game.world.middleFrontMap.length) {
+    if (game.world.middleFrontMap) {
       display.drawMap(game.world.middleFrontMap, game.world.columns, imagesTilesData);
     }
 
@@ -208,7 +216,10 @@ window.addEventListener('DOMContentLoaded', async () => {
       );
     }
 
-    if (display.images.url !== zones[game.world.activeZone].images) {
+    if (
+      zones[game.world.activeZone].images.spriteSheet &&
+      (display.images.url !== zones[game.world.activeZone].images)
+    ) {
       promises.push(
         display.images.loadAsset(zones[game.world.activeZone].images.spriteSheet)
       );

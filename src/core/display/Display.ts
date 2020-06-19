@@ -197,7 +197,7 @@ export default class {
       const mapX = this.mapTileset.tileSize * mapColumn;
       const mapY = this.mapTileset.tileSize * mapRow;
 
-      if (id >= imagesTilesData.firstgid) {
+      if (imagesTilesData && (id >= imagesTilesData.firstgid)) {
         this.drawLargeTiles(imagesTilesData, id, mapX, mapY);
       }
 

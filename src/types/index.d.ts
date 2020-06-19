@@ -13,8 +13,8 @@ interface zones {
     tileset: string
     backgrounds: {}
     images: {
-      spriteSheet: string
-      spriteMap: SpriteMap
+      spriteSheet?: string
+      spriteMap?: SpriteMap
     }
   }
 }
