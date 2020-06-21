@@ -122,6 +122,8 @@ export default class {
               character.destination.y = destinationY;
             } else {
               character.destination.y = destinationY - character.height;
+              // add small velocity boost when jumping out of the pit
+              character.velocityY -= 7;
             }
             character.destination.x = character.x + offset;
           }

@@ -7,6 +7,7 @@ import spriteSheet from './assets/images/sprites.png';
 // default zone set
 import zoneA0 from './assets/levels/zoneA0.json';
 import zoneA1 from './assets/levels/zoneA1.json';
+import zoneB0 from './assets/levels/zoneB0.json';
 import zoneB1 from './assets/levels/zoneB1.json';
 import zoneB2 from './assets/levels/zoneB2.json';
 import cloudsBack from './assets/images/default/background/clouds-back.png';
@@ -54,6 +55,12 @@ window.addEventListener('DOMContentLoaded', async () => {
         spriteSheet: defaultImages,
         spriteMap: defaultImagesMap,
       }
+    },
+    'zoneB0': {
+      config: zoneB0,
+      tileset: sunnyLandTileSet,
+      backgrounds: {},
+      images: {},
     },
     'zoneB1': {
       config: zoneB1,
