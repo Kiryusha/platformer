@@ -91,6 +91,33 @@
                          "width":112,
                          "x":896,
                          "y":0
+                        }, 
+                        {
+                         "height":96,
+                         "id":27,
+                         "name":"zoneB1",
+                         "properties":[
+                                {
+                                 "name":"destinationX",
+                                 "type":"string",
+                                 "value":"319"
+                                }, 
+                                {
+                                 "name":"offset",
+                                 "type":"string",
+                                 "value":"320"
+                                }, 
+                                {
+                                 "name":"target",
+                                 "type":"string",
+                                 "value":"zoneB1"
+                                }],
+                         "rotation":0,
+                         "type":"vertical",
+                         "visible":true,
+                         "width":1,
+                         "x":0,
+                         "y":64
                         }],
                  "opacity":1,
                  "type":"objectgroup",
@@ -135,7 +162,7 @@
                          "visible":true,
                          "width":25,
                          "x":547.5,
-                         "y":137.333333333333
+                         "y":137.333
                         }, 
                         {
                          "height":20,
@@ -146,17 +173,6 @@
                          "visible":true,
                          "width":25,
                          "x":227.5,
-                         "y":136
-                        }, 
-                        {
-                         "height":20,
-                         "id":26,
-                         "name":"slug",
-                         "rotation":0,
-                         "type":"enemy",
-                         "visible":true,
-                         "width":25,
-                         "x":92.1666666666666,
                          "y":136
                         }],
                  "opacity":1,
@@ -316,7 +332,7 @@
          "y":0
         }],
  "nextlayerid":10,
- "nextobjectid":27,
+ "nextobjectid":28,
  "orientation":"orthogonal",
  "renderorder":"left-up",
  "tiledversion":"1.3.4",

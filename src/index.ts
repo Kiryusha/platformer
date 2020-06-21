@@ -7,6 +7,7 @@ import spriteSheet from './assets/images/sprites.png';
 // default zone set
 import zoneA0 from './assets/levels/zoneA0.json';
 import zoneA1 from './assets/levels/zoneA1.json';
+import zoneB1 from './assets/levels/zoneB1.json';
 import zoneB2 from './assets/levels/zoneB2.json';
 import cloudsBack from './assets/images/default/background/clouds-back.png';
 import cloudsFront from './assets/images/default/background/clouds-front.png';
@@ -54,6 +55,12 @@ window.addEventListener('DOMContentLoaded', async () => {
         spriteMap: defaultImagesMap,
       }
     },
+    'zoneB1': {
+      config: zoneB1,
+      tileset: sunnyLandTileSet,
+      backgrounds: {},
+      images: {},
+    },
     'zoneB2': {
       config: zoneB2,
       tileset: sunnyLandTileSet,
@@ -62,7 +69,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     },
   };
 
-  const startingZone: string = 'zoneA1';
+  const startingZone: string = 'zoneB1';
 
   const handleKeyEvent = (event: { type: string; keyCode: number; }) => {
     controller.handleKeyEvent(event.type, event.keyCode);
