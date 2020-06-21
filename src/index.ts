@@ -69,7 +69,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     },
   };
 
-  const startingZone: string = 'zoneB1';
+  const startingZone: string = 'zoneA1';
 
   const handleKeyEvent = (event: { type: string; keyCode: number; }) => {
     controller.handleKeyEvent(event.type, event.keyCode);

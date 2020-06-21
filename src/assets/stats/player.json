@@ -6,7 +6,7 @@
   "type": "player",
   "group": "characters",
   "name": "player",
-  "jumpImpulse": 90,
+  "jumpImpulse": 100,
   "maxSpeed": 3,
   "maxJumpingSpeed": 9,
   "isJumping": false,
