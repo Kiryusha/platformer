@@ -243,6 +243,9 @@ window.addEventListener('DOMContentLoaded', async () => {
     await Promise.all(promises);
 
     display.imagesMap = zones[game.world.activeZone].images.spriteMap;
+    // By default, the size of the buffer canvas is equal to the size of the first zone, so we need
+    // to update it when changing the zone, so its size may not be enough for the new zone
+    display.adjustBufferCanvasSize(game.world.width, game.world.height);
   };
 
   await Promise.all([

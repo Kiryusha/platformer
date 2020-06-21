@@ -29,34 +29,27 @@ export default class {
     this.renderer = new Renderer(this.buffer);
   }
 
-  drawObject(
-    isFlipped: boolean,
-    asset: AssetsManager,
-    sourceX: number,
-    sourceY: number,
-    destinationX: number,
-    destinationY: number,
-    width: number,
-    height: number,
-  ): void {
-    if (this.isObjectWithinCamera(destinationX, destinationY)) {
-      this.renderer.drawImage(
-        isFlipped ? asset.flippedTexture : asset.texture,
-        asset.image.width,
-        asset.image.height,
-        sourceX,
-        sourceY,
-        width,
-        height,
-        Math.round(destinationX),
-        Math.round(destinationY),
-        width,
-        height,
-      );
-    }
+  private isObjectWithinCamera(
+    x: number,
+    y: number,
+    w?: number,
+    h?: number,
+  ): boolean {
+    if (w === undefined) w = x;
+
+    if (h === undefined) h = y;
+
+    // Do not draw what does not get into the camera right now, plus a margin of two tiles.
+    // Margin is needed in order to avoid glitches during fast movement
+    const margin = this.mapTileset.tileSize * 2;
+
+    return !(y > this.camera.y + this.camera.height + margin
+      || h < this.camera.y - margin
+      || x > this.camera.x + this.camera.width + margin
+      || w < this.camera.x - margin);
   }
 
-  drawLargeTiles(
+  private drawLargeTiles(
     imagesTilesData: Tileset,
     tileId: number,
     mapX: number,
@@ -89,7 +82,39 @@ export default class {
     }
   }
 
-  drawBackgrounds(): void {
+  public adjustBufferCanvasSize(stageWidth: number, stageHeight: number): void {
+    this.buffer.canvas.width = stageWidth;
+    this.buffer.canvas.height = stageHeight;
+  }
+
+  public drawObject(
+    isFlipped: boolean,
+    asset: AssetsManager,
+    sourceX: number,
+    sourceY: number,
+    destinationX: number,
+    destinationY: number,
+    width: number,
+    height: number,
+  ): void {
+    if (this.isObjectWithinCamera(destinationX, destinationY)) {
+      this.renderer.drawImage(
+        isFlipped ? asset.flippedTexture : asset.texture,
+        asset.image.width,
+        asset.image.height,
+        sourceX,
+        sourceY,
+        width,
+        height,
+        Math.round(destinationX),
+        Math.round(destinationY),
+        width,
+        height,
+      );
+    }
+  }
+
+  public drawBackgrounds(): void {
     for (let i = 0; i < this.backgrounds.length; i += 1) {
       let destinationX = 0;
       let destinationY = 0;
@@ -138,7 +163,7 @@ export default class {
     }
   }
 
-  drawCollisionDebugMap(map: any[]): void {
+  public drawCollisionDebugMap(map: any[]): void {
     const colorsDictionary: {
       [sideName: string]: number[]
     } = {
@@ -169,7 +194,7 @@ export default class {
     }
   }
 
-  drawMap(
+  public drawMap(
     map: number[],
     mapColumns: number,
     imagesTilesData: Tileset,
@@ -219,27 +244,7 @@ export default class {
     }
   }
 
-  isObjectWithinCamera(
-    x: number,
-    y: number,
-    w?: number,
-    h?: number,
-  ): boolean {
-    if (w === undefined) w = x;
-
-    if (h === undefined) h = y;
-
-    // Do not draw what does not get into the camera right now, plus a margin of two tiles.
-    // Margin is needed in order to avoid glitches during fast movement
-    const margin = this.mapTileset.tileSize * 2;
-
-    return !(y > this.camera.y + this.camera.height + margin
-      || h < this.camera.y - margin
-      || x > this.camera.x + this.camera.width + margin
-      || w < this.camera.x - margin);
-  }
-
-  render(): void {
+  public render(): void {
     this.context.drawImage(
       this.buffer.canvas,
       this.camera.x,
@@ -253,7 +258,7 @@ export default class {
     );
   }
 
-  resize(
+  public resize(
     width: number,
     height: number,
     ratio: number,
