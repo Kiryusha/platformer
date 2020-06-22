@@ -60,37 +60,25 @@ interface Entity {
   name: string
   type: string
   group: string
-  x: number
-  y: number
-  xOld: number
-  yOld: number
   width: number
   height: number
   isColliding: boolean
   collisionXDirection: string
   collisionYDirection: string
-  properties: {
+  properties?: {
     target?: string
     offset?: string
     destinationX?: string
     destinationY?: string
   };
-  getTop(): number
-  getRight(): number
-  getLeft(): number
-  getBottom(): number
-  getOldTop(): number
-  getOldRight(): number
-  getOldLeft(): number
-  getOldBottom(): number
-  setTop(y: number): void
-  setRight(x: number): void
-  setLeft(x: number): void
-  setBottom(y: number): void
-  setOldTop(y: number): void
-  setOldRight(x: number): void
-  setOldLeft(x: number): void
-  setOldBottom(y: number): void
+  top: number;
+  right: number;
+  bottom: number;
+  left:number;
+  oldTop: number;
+  oldRight: number;
+  oldBottom: number;
+  oldLeft:number;
 }
 
 interface Animator {

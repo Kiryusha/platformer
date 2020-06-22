@@ -58,7 +58,7 @@ export default class Entity implements Entity {
   }
 
   public get bottom(): number {
-    return this.y + this.height
+    return this.y + this.height;
   }
 
   public set bottom(value) {

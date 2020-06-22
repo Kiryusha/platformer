@@ -122,8 +122,8 @@ window.addEventListener('DOMContentLoaded', async () => {
         display.spriteSheet,
         frame.x,
         frame.y,
-        character.x + Math.floor(character.width * 0.5 - frame.w * 0.5),
-        character.y - Math.floor(frame.h - character.height),
+        character.left + Math.floor(character.width * 0.5 - frame.w * 0.5),
+        character.top - Math.floor(frame.h - character.height),
         frame.w,
         frame.h
       );
@@ -198,7 +198,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     256,
     144,
   );
-  const { player } = game;
+  const player: Character = game.player;
   const engine = new Engine(fps, render, update);
 
   // Synchronize display buffer size with the world size

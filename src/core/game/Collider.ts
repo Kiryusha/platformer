@@ -116,7 +116,7 @@ export default class {
             } else {
               character.destination.x = destinationX - character.width;
             }
-            character.destination.y = character.y + offset;
+            character.destination.y = character.top + offset;
           } else {
             if (this.isCollidingFromTop(character, door)) {
               character.destination.y = destinationY;
@@ -125,7 +125,7 @@ export default class {
               // add small velocity boost when jumping out of the pit
               character.velocityY -= 7;
             }
-            character.destination.x = character.x + offset;
+            character.destination.x = character.left + offset;
           }
           character.destination.name = target;
         break;
@@ -134,19 +134,19 @@ export default class {
 
   // these methods determine the presence of a one-way collision of e1 with e2
   private isCollidingFromTop(e1: Entity, e2: Entity): boolean {
-    return e1.getBottom() > e2.getTop() && e1.getOldBottom() <= e2.getTop();
+    return e1.bottom > e2.top && e1.oldBottom <= e2.top;
   }
 
   private isCollidingFromRight(e1: Entity, e2: Entity): boolean {
-    return e1.getLeft() < e2.getRight() && e1.getOldLeft() >= e2.getRight();
+    return e1.left < e2.right && e1.oldLeft >= e2.right;
   }
 
   private isCollidingFromBottom(e1: Entity, e2: Entity): boolean {
-    return e1.getTop() < e2.getBottom() && e1.getOldTop() >= e2.getBottom();
+    return e1.top < e2.bottom && e1.oldTop >= e2.bottom;
   }
 
   private isCollidingFromLeft(e1: Entity, e2: Entity): boolean {
-    return e1.getRight() > e2.getLeft() && e1.getOldRight() <= e2.getLeft();
+    return e1.right > e2.left && e1.oldRight <= e2.left;
   }
 
   // This method exists for the future possible separation of various methods of cycling objects:
@@ -193,10 +193,10 @@ export default class {
 
     // TODO: develop to complete Separating Axis Theorem
     if (
-      e1.getLeft() < e2.getRight() &&
-      e2.getLeft() < e1.getRight() &&
-      e1.getTop() < e2.getBottom() &&
-      e2.getTop() < e1.getBottom()
+      e1.left < e2.right &&
+      e2.left < e1.right &&
+      e1.top < e2.bottom &&
+      e2.top < e1.bottom
     ) {
       return true;
     }
@@ -234,7 +234,7 @@ export default class {
     character: Character,
     collision: Entity,
   ): void {
-    character.setBottom(collision.getTop() - 0.01);
+    character.bottom = collision.top - 0.01;
     character.velocityY = 0;
     character.isJumping = false;
     character.isFalling = false;
@@ -247,7 +247,7 @@ export default class {
     character: Character,
     collision: Entity,
   ): void {
-    character.setLeft(collision.x + collision.width);
+    character.left = collision.right;
     character.velocityX = 0;
     // specifying collision direction
     character.collisionXDirection = 'left';
@@ -258,7 +258,7 @@ export default class {
     character: Character,
     collision: Entity,
   ): void {
-    character.setTop(collision.y + collision.height);
+    character.top = collision.bottom;
     character.velocityY = 0;
     character.isJumping = false;
     character.isFalling = true;
@@ -271,7 +271,7 @@ export default class {
     character: Character,
     collision: Entity,
   ): void {
-    character.setRight(collision.getLeft() - 0.01);
+    character.right = collision.left - 0.01;
     character.velocityX = 0;
     // specifying collision direction
     character.collisionXDirection = 'right';

@@ -33,7 +33,7 @@ export default class {
     if (aim.isDucking) {
       // This condition is necessary in order to keep the camera in the same place when the character
       // begins to duck.
-      aimY = aim.y - (aim.defaults.height - aim.height) + this.velocity;
+      aimY = aim.top - (aim.defaults.height - aim.height) + this.velocity;
 
       // But if the character continues ducking, gamera will smoothly moves down
       if (aim.isKeepDucking && (this.velocity <= this.maxVelocity)) {
@@ -43,10 +43,10 @@ export default class {
       if (this.velocity) {
         this.velocity -= this.velocityModifier;
       }
-      aimY = aim.y + this.velocity;
+      aimY = aim.top + this.velocity;
     }
 
-    const aimXCenter = aim.x + (aim.defaults.width / 2);
+    const aimXCenter = aim.left + (aim.defaults.width / 2);
     const aimYCenter = aimY + (aim.defaults.height / 2);
 
     let positionX = aimXCenter - (this.width / 2);

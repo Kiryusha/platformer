@@ -12,8 +12,8 @@ export default class {
     this.characters.push({
       character,
       startingPoint: {
-        x: character.x,
-        y: character.y,
+        x: character.left,
+        y: character.top,
       },
       reachedLeftBorder: false,
       reachedRightBorder: false,
@@ -53,9 +53,9 @@ export default class {
 
     // cases when a character doesn't leave its habitat
     const withinHabitatFromTheLeftSide =
-      character.x > startingPoint.x - character.movingPattern.length;
+      character.left > startingPoint.x - character.movingPattern.length;
     const withinHabitatFromTheRightSide =
-      character.x < character.movingPattern.length + startingPoint.x;
+      character.left < character.movingPattern.length + startingPoint.x;
 
     // cases when a character stumbles upon a wall on its way
     const notStumbleUponAWallInTheLeftSide =
@@ -65,9 +65,9 @@ export default class {
 
     // cases when character leaves its habitat for some reason
     const outOfHabitatFromTheLeftSide =
-      character.x < startingPoint.x - character.movingPattern.length;
+      character.left < startingPoint.x - character.movingPattern.length;
     const outOfHabitatFromTheRightSide =
-      character.x > character.movingPattern.length + startingPoint.x;
+      character.left > character.movingPattern.length + startingPoint.x;
 
     // character has just appeared or has already reached the border on the right
     if (
