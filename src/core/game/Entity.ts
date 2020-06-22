@@ -1,29 +1,21 @@
 // The class is responsible for processing all world objects
 // Entity has everything related to positioning: directly obtaining coordinates or setting them
-export default class implements Entity {
-  name: string;
-  x: number;
-  y: number;
+export default class Entity implements Entity {
   xOld: number;
   yOld: number;
-  width: number;
-  height: number;
-  type: string;
-  group: string;
   isColliding: boolean;
   collisionXDirection: string;
   collisionYDirection: string;
-  properties: {};
 
   constructor(
-    x: number,
-    y: number,
-    width: number,
-    height: number,
-    group: string,
-    type: string,
-    name: string,
-    properties?: {},
+    public x: number,
+    public y: number,
+    public width: number,
+    public height: number,
+    public group: string,
+    public type: string,
+    public name: string,
+    public properties?: {},
   ) {
     // types
     this.group = group;
