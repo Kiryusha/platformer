@@ -110,7 +110,7 @@ export default class Character extends Entity {
   startDucking(): void {
     if (!this.isJumping && !this.isFalling) {
       if (!this.isDucking) {
-        this.y += 5;
+        this.top += 5;
         this.duckingTimer = setTimeout(() => {
           this.isKeepDucking = true;
         }, 1000);
@@ -130,7 +130,7 @@ export default class Character extends Entity {
     clearTimeout(this.duckingTimer);
     this.brakingModifier = 6;
     this.height = 20;
-    this.y -= 5;
+    this.top -= 5;
   }
 
   startSprinting(): void {
@@ -198,7 +198,7 @@ export default class Character extends Entity {
 
   adjustVerticalMovement(rawGravity: number): void {
     let gravity = rawGravity;
-    this.yOld = this.y;
+    this.oldTop = this.top;
 
     // if the player continues to press the jump key, then gravity will be halved until
     // the character reaches the top point of the jump.
@@ -225,11 +225,11 @@ export default class Character extends Entity {
       this.maxJumpingSpeed,
     );
 
-    this.y += this.velocityY + (this.friction * this.velocityY);
+    this.top += this.velocityY + (this.friction * this.velocityY);
   }
 
   adjustHorizontalMovement(): void {
-    this.xOld = this.x;
+    this.oldLeft = this.left;
     // If we move to the left,
     if (this.isMovingLeft) {
       // then we will reach maximum speed for as many frames as specified in the modifier.
@@ -268,6 +268,6 @@ export default class Character extends Entity {
       }
     }
 
-    this.x += this.velocityX;
+    this.left += this.velocityX;
   }
 }

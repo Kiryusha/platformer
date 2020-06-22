@@ -93,11 +93,11 @@ export default class {
                   switch (object.type) {
                     case 'player':
                       if (this.player.destination.name.length) {
-                        this.player.x = this.player.destination.x;
-                        this.player.y = this.player.destination.y;
+                        this.player.left = this.player.destination.x;
+                        this.player.top = this.player.destination.y;
                       } else {
-                        this.player.x = object.x;
-                        this.player.y = object.y;
+                        this.player.left = object.x;
+                        this.player.top = object.y;
                       }
 
                       return this.player;
@@ -138,27 +138,27 @@ export default class {
   processBoundariesCollision (object: Character): void {
     // collisions with the world boundaries
     // left
-    if (object.x < 0) {
-      object.x = 0;
+    if (object.left < 0) {
+      object.left = 0;
       object.velocityX = 0;
     }
 
     // right
-    if (object.x + object.width > this.width) {
-      object.x = this.width - object.width;
+    if (object.left + object.width > this.width) {
+      object.left = this.width - object.width;
       object.velocityX = 0;
     }
 
     // top
-    if (object.y < 0) {
-      object.y = 0;
+    if (object.top < 0) {
+      object.top = 0;
       object.velocityY = 0;
     }
 
     // bottom
-    if (object.y + object.height > this.height) {
+    if (object.top + object.height > this.height) {
       object.isJumping = false;
-      object.y = this.height - object.height;
+      object.top = this.height - object.height;
       object.velocityY = 0;
     }
   }

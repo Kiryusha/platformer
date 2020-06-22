@@ -1,15 +1,15 @@
 // The class is responsible for processing all world objects
 // Entity has everything related to positioning: directly obtaining coordinates or setting them
 export default class Entity implements Entity {
-  xOld: number;
-  yOld: number;
-  isColliding: boolean;
-  collisionXDirection: string;
-  collisionYDirection: string;
+  private xOld: number;
+  private yOld: number;
+  public isColliding: boolean;
+  public collisionXDirection: string;
+  public collisionYDirection: string;
 
   constructor(
-    public x: number,
-    public y: number,
+    private x: number,
+    private y: number,
     public width: number,
     public height: number,
     public group: string,
@@ -41,67 +41,67 @@ export default class Entity implements Entity {
     this.properties = properties;
   }
 
-  getTop(): number {
+  public get top(): number {
     return this.y;
   }
 
-  getRight(): number {
+  public set top(value) {
+    this.y = value;
+  }
+
+  public get right(): number {
     return this.x + this.width;
   }
 
-  getLeft(): number {
+  public set right(value) {
+    this.x = value - this.width;
+  }
+
+  public get bottom(): number {
+    return this.y + this.height
+  }
+
+  public set bottom(value) {
+    this.y = value - this.height;
+  }
+
+  public get left(): number {
     return this.x;
   }
 
-  getBottom(): number {
-    return this.y + this.height;
+  public set left(value) {
+    this.x = value;
   }
 
-  getOldTop(): number {
+  public get oldTop(): number {
     return this.yOld;
   }
 
-  getOldRight(): number {
+  public set oldTop(value) {
+    this.yOld = value;
+  }
+
+  public get oldRight(): number {
     return this.xOld + this.width;
   }
 
-  getOldLeft(): number {
-    return this.xOld;
+  public set oldRight(value) {
+    this.xOld = value - this.width;
   }
 
-  getOldBottom(): number {
+  public get oldBottom(): number {
     return this.yOld + this.height;
   }
 
-  setTop(y: number): void {
-    this.y = y;
+  public set oldBottom(value) {
+    this.yOld = value - this.height;
   }
 
-  setRight(x: number): void {
-    this.x = x - this.width;
+  public get oldLeft(): number {
+    return this.xOld;
   }
 
-  setLeft(x: number): void {
-    this.x = x;
-  }
-
-  setBottom(y: number): void {
-    this.y = y - this.height;
-  }
-
-  setOldTop(y: number): void {
-    this.yOld = y;
-  }
-
-  setOldRight(x: number): void {
-    this.xOld = x - this.width;
-  }
-
-  setOldLeft(x: number): void {
-    this.xOld = x;
-  }
-
-  setOldBottom(y: number): void {
-    this.yOld = y - this.height;
+  public set oldLeft(value) {
+    this.xOld = value;
   }
 }
