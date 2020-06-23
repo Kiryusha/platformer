@@ -3,91 +3,164 @@ import Entity from './Entity';
 import Animator from './Animator';
 import { bound } from '../../util';
 
-export default class Character extends Entity {
-  jumpImpulse: number;
-  maxSpeed: number;
-  isJumping: boolean;
-  velocityX: number;
-  velocityY: number;
-  isMovingLeft: boolean;
-  isMovingRight: boolean;
-  accelerationModifier: number;
-  brakingModifier: number;
-  isFalling: boolean;
-  velocityYModifier: number;
-  isJumpTriggered: boolean;
-  maxJumpingSpeed: number;
-  friction: number;
-  animator: Animator;
-  isFacingLeft: boolean;
-  isSprinting: boolean;
-  isDucking: boolean;
-  isKeepDucking: boolean;
-  isKeepJumping: boolean;
-  isStuck: boolean;
-  defaults: CharacterStats;
-  duckingTimer: NodeJS.Timer;
-  jumpingTimer: NodeJS.Timer;
-  movingPattern: {};
-  destination: {
-    name: string
-    x: number
-    y: number
+export default class Character extends Entity implements Character {
+  public isMovingLeft: boolean;
+  public isMovingRight: boolean;
+  public isJumpTriggered: boolean;
+  public isJumping: boolean;
+  public isFalling: boolean;
+  public isSprinting: boolean;
+  public isDucking: boolean;
+  public isKeepDucking: boolean;
+  public isFacingLeft: boolean;
+  public isStuck: boolean;
+  public velocityX: number;
+  public velocityY: number;
+  public animator: Animator;
+  public movingPattern: {};
+  public destination: {
+    name: string;
+    x: number;
+    y: number;
+  } = {
+    name: '',
+    x: 0,
+    y: 0,
   };
+  private jumpImpulse: number;
+  private maxSpeed: number;
+  private accelerationModifier: number;
+  private brakingModifier: number;
+  private velocityYModifier: number;
+  private maxJumpingSpeed: number;
+  private friction: number;
+  private isKeepJumping: boolean;
+  private duckingTimer: NodeJS.Timer;
+  private jumpingTimer: NodeJS.Timer;
 
-  constructor(stats: CharacterStats, playerSpriteMap: SpriteMap) {
-    super(
-      stats.x,
-      stats.y,
-      stats.width,
-      stats.height,
-      stats.group,
-      stats.type,
-      stats.name
-    );
-    this.defaults = stats;
+  constructor(
+    {
+      entity,
+      main,
+      animation: {
+        frameWidth,
+        frameHeight,
+        frames
+      },
+    }: CharacterConfig,
+    playerSpriteMap: SpriteMap,
+  ) {
+    super(entity);
 
-    // Physics
-    this.jumpImpulse = stats.jumpImpulse;
-    this.maxSpeed = stats.maxSpeed;
-    this.maxJumpingSpeed = stats.maxJumpingSpeed;
-    this.isJumping = stats.isJumping;
-    this.isJumpTriggered = stats.isJumpTriggered;
-    this.isFalling = stats.isFalling;
-    this.accelerationModifier = stats.accelerationModifier;
-    this.brakingModifier = stats.brakingModifier;
-    this.velocityX = stats.velocityX;
-    this.velocityY = stats.velocityY;
-    this.isMovingLeft = stats.isMovingLeft;
-    this.isMovingRight = stats.isMovingRight;
-    this.friction = stats.friction;
-    this.isSprinting = stats.isSprinting;
-    this.isDucking = stats.isDucking;
-    this.isKeepDucking = stats.isKeepDucking;
-    this.isStuck = stats.isStuck;
-    this.movingPattern = stats.movingPattern;
+    Object.assign(this, main);
 
-    this.destination = {
-      name: '',
-      x: 0,
-      y: 0,
-    };
-
-    // animation stuff
-    this.isFacingLeft = stats.isFacingLeft;
-    this.setAnimationDefaults(stats, playerSpriteMap);
+    this.setAnimationDefaults(frameWidth, frameHeight, frames, playerSpriteMap);
   }
 
-  setAnimationDefaults(stats: CharacterStats, playerSpriteMap: SpriteMap): void {
+  public startMovingLeft(): void {
+    if (!this.isMovingRight && !this.isDucking) {
+      this.isFacingLeft = true;
+      this.isMovingLeft = true;
+    }
+  }
+
+  public stopMovingLeft(): void {
+    this.isMovingLeft = false;
+  }
+
+  public startMovingRight(): void {
+    if (!this.isMovingLeft && !this.isDucking) {
+      this.isFacingLeft = false;
+      this.isMovingRight = true;
+    }
+  }
+
+  public stopMovingRight(): void {
+    this.isMovingRight = false;
+  }
+
+  public startJumping(): void {
+    if (!this.isStuck) {
+      if (!this.isJumping) {
+        this.jumpingTimer = setTimeout(() => {
+          this.isKeepJumping = true;
+        }, 100);
+      }
+      this.isJumpTriggered = true;
+    }
+  }
+
+  public stopJumping(): void {
+    clearTimeout(this.jumpingTimer);
+    this.isJumpTriggered = false;
+    this.isKeepJumping = false;
+  }
+
+  public startDucking(): void {
+    if (!this.isJumping && !this.isFalling) {
+      if (!this.isDucking) {
+        this.top += 5;
+        this.duckingTimer = setTimeout(() => {
+          this.isKeepDucking = true;
+        }, 1000);
+      }
+      this.isDucking = true;
+      this.isSprinting = false;
+      this.isMovingLeft = false;
+      this.isMovingRight = false;
+      this.brakingModifier = 24;
+      this.height = 15;
+    }
+  }
+
+  public stopDucking(): void {
+    this.isDucking = false;
+    this.isKeepDucking = false;
+    clearTimeout(this.duckingTimer);
+    this.brakingModifier = 6;
+    this.height = 20;
+    this.top -= 5;
+  }
+
+  public startSprinting(): void {
+    if (!this.isJumping && !this.isDucking) {
+      this.isSprinting = true;
+      this.maxSpeed = 5;
+      this.accelerationModifier = 10;
+    }
+  }
+
+  public stopSprinting(): void {
+    this.isSprinting = false;
+    this.maxSpeed = 3;
+    this.accelerationModifier = 6;
+  }
+
+  public update(gravity: number): void {
+    this.adjustHorizontalMovement();
+    this.adjustVerticalMovement(gravity);
+    this.updateAnimation();
+
+    if (!this.isColliding && this.velocityY > 0) {
+      this.isFalling = true;
+    }
+  }
+
+  private setAnimationDefaults(
+    frameWidth: number,
+    frameHeight: number,
+    frames: {},
+    playerSpriteMap: SpriteMap,
+  ): void {
     this.animator = new Animator(
       playerSpriteMap,
-      stats.frameWidth,
-      stats.frameHeight,
-      stats.frames,
+      frameWidth,
+      frameHeight,
+      frames,
     );
   }
 
-  updateAnimation(): void {
+  private updateAnimation(): void {
     if ((this.isMovingLeft || this.isMovingRight) && !this.isJumping && !this.isFalling) {
       if (this.isSprinting) {
         this.animator.changeFrameset('skip', 'loop', 1.33);
@@ -107,96 +180,7 @@ export default class Character extends Entity {
     this.animator.animate();
   }
 
-  startDucking(): void {
-    if (!this.isJumping && !this.isFalling) {
-      if (!this.isDucking) {
-        this.top += 5;
-        this.duckingTimer = setTimeout(() => {
-          this.isKeepDucking = true;
-        }, 1000);
-      }
-      this.isDucking = true;
-      this.isSprinting = false;
-      this.isMovingLeft = false;
-      this.isMovingRight = false;
-      this.brakingModifier = 24;
-      this.height = 15;
-    }
-  }
-
-  stopDucking(): void {
-    this.isDucking = false;
-    this.isKeepDucking = false;
-    clearTimeout(this.duckingTimer);
-    this.brakingModifier = 6;
-    this.height = 20;
-    this.top -= 5;
-  }
-
-  startSprinting(): void {
-    if (!this.isJumping && !this.isDucking) {
-      this.isSprinting = true;
-      this.maxSpeed = 5;
-      this.accelerationModifier = 10;
-    }
-  }
-
-  stopSprinting(): void {
-    this.isSprinting = false;
-    this.maxSpeed = 3;
-    this.accelerationModifier = 6;
-  }
-
-  startMovingLeft(): void {
-    if (!this.isMovingRight && !this.isDucking) {
-      this.isFacingLeft = true;
-      this.isMovingLeft = true;
-    }
-  }
-
-  stopMovingLeft(): void {
-    this.isMovingLeft = false;
-  }
-
-  startMovingRight(): void {
-    if (!this.isMovingLeft && !this.isDucking) {
-      this.isFacingLeft = false;
-      this.isMovingRight = true;
-    }
-  }
-
-  stopMovingRight(): void {
-    this.isMovingRight = false;
-  }
-
-  startJumping(): void {
-    if (!this.isStuck) {
-      if (!this.isJumping) {
-        this.jumpingTimer = setTimeout(() => {
-          this.isKeepJumping = true;
-        }, 100);
-      }
-      this.isJumpTriggered = true;
-    }
-  }
-
-  stopJumping(): void {
-    clearTimeout(this.jumpingTimer);
-    this.isJumpTriggered = false;
-    this.isKeepJumping = false;
-  }
-
-  update(gravity: number): void {
-    this.adjustHorizontalMovement();
-    this.adjustVerticalMovement(gravity);
-    this.updateAnimation();
-
-    if (!this.isColliding && this.velocityY > 0) {
-      this.isFalling = true;
-    }
-  }
-
-  adjustVerticalMovement(rawGravity: number): void {
+  private adjustVerticalMovement(rawGravity: number): void {
     let gravity = rawGravity;
     this.oldTop = this.top;
 
@@ -228,7 +212,7 @@ export default class Character extends Entity {
     this.top += this.velocityY + (this.friction * this.velocityY);
   }
 
-  adjustHorizontalMovement(): void {
+  private adjustHorizontalMovement(): void {
     this.oldLeft = this.left;
     // If we move to the left,
     if (this.isMovingLeft) {

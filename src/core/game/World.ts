@@ -5,7 +5,7 @@ import Collider from './Collider';
 import Brain from './Brain';
 // Characters
 import spriteMap from '../../assets/sprite-maps/sprites.json';
-import slugStats from '../../assets/stats/slug.json';
+import slugStats from '../../assets/configs/slug.json';
 
 export default class {
   gravity: number;
@@ -63,30 +63,30 @@ export default class {
           group.layers.forEach((layer: GameLayer) => {
             switch (layer.name) {
               case 'doors':
-                result[layer.name] = layer.objects.map((object: MapObject) => new Entity(
-                  object.x,
-                  object.y,
-                  object.width,
-                  object.height,
-                  'doors',
-                  object.type,
-                  'door',
-                  object.properties.reduce((obj, prop) => {
+                result[layer.name] = layer.objects.map((object: MapObject) => new Entity({
+                  x: object.x,
+                  y: object.y,
+                  width: object.width,
+                  height: object.height,
+                  group: 'doors',
+                  type: object.type,
+                  name: 'door',
+                  properties: object.properties.reduce((obj, prop) => {
                     obj[prop.name] = prop.value;
                     return obj;
                   }, {}),
-                ));
+                }));
                 break;
               case 'collisions':
-                result[layer.name] = layer.objects.map((object: MapObject) => new Entity(
-                  object.x,
-                  object.y,
-                  object.width,
-                  object.height,
-                  'collisions',
-                  object.type,
-                  'block',
-                ));
+                result[layer.name] = layer.objects.map((object: MapObject) => new Entity({
+                  x: object.x,
+                  y: object.y,
+                  width: object.width,
+                  height: object.height,
+                  group: 'collisions',
+                  type: object.type,
+                  name: 'block',
+                }));
                 break;
               case 'characters':
                 result[layer.name] = layer.objects.map((object: MapObject) => {
@@ -104,8 +104,8 @@ export default class {
                     case 'enemy':
                       switch (object.name) {
                         case 'slug':
-                          slugStats.x = object.x;
-                          slugStats.y = object.y;
+                          slugStats.entity.x = object.x;
+                          slugStats.entity.y = object.y;
                           const character = new Character(slugStats, spriteMap);
                           this.brain.bindCharacter(character);
                           return character;

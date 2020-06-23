@@ -1,46 +1,43 @@
 // The class is responsible for processing all world objects
-// Entity has everything related to positioning: directly obtaining coordinates or setting them
+// Entity has everything related to positioning: obtaining coordinates or setting them
 export default class Entity implements Entity {
+  // Cataloging entities
+  // Current use: Collider processing
+  public group: string;
+  public type: string;
+  // Is the entity in collision right now
+  // Current use: setting isFalling status for the Character
+  public isColliding: boolean = false;
+  // Last collisions for left and right directions
+  // Current use: Brain processing of moving patterns
+  public collisionXDirection: string = '';
+  public collisionYDirection: string = '';
+  // Property for the future, not used now
+  public name: string;
+  // Storage of any custom properties
+  // Current use: Doors custom properties
+  public properties?: {};
+  // Storage of initial values.
+  // Current use: adjusting Camera position
+  public readonly defaults: EntityConfig;
+  // Size in the axis
+  public width: number;
+  public height: number;
+  // Position on the axis: the current frame and the previous one
+  private x: number;
+  private y: number;
   private xOld: number;
   private yOld: number;
-  public isColliding: boolean;
-  public collisionXDirection: string;
-  public collisionYDirection: string;
 
-  constructor(
-    private x: number,
-    private y: number,
-    public width: number,
-    public height: number,
-    public group: string,
-    public type: string,
-    public name: string,
-    public properties?: {},
-  ) {
-    // types
-    this.group = group;
-    this.type = type;
-    this.name = name;
+  constructor(config: EntityConfig) {
+    Object.assign(this, config);
 
-    // Position
-    this.x = x;
-    this.y = y;
-    this.xOld = x;
-    this.yOld = y;
-
-    // Colliding
-    this.isColliding = false;
-    this.collisionXDirection = '';
-    this.collisionYDirection = '';
-
-    // Appearance
-    this.width = width;
-    this.height = height;
-
-    // custom
-    this.properties = properties;
+    this.defaults = config;
+    this.xOld = config.x;
+    this.yOld = config.y;
   }
 
+  // Shortcuts for getting / setting Entity positions in the current or previous frame
   public get top(): number {
     return this.y;
   }

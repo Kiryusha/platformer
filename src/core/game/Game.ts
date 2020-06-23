@@ -2,7 +2,7 @@
 import World from './World';
 import Character from './Character';
 import spriteMap from '../../assets/sprite-maps/sprites.json';
-import playerStats from '../../assets/stats/player.json';
+import playerStats from '../../assets/configs/player.json';
 
 export default class {
   world: World;
