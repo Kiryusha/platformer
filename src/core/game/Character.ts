@@ -4,20 +4,35 @@ import Animator from './Animator';
 import { bound } from '../../util';
 
 export default class Character extends Entity implements Character {
+  // Flags indicating that the character is moving in a certain x direction.
+  // Used during horizontal movement adjusting
   public isMovingLeft: boolean;
   public isMovingRight: boolean;
+  // Flag used to set the initial jump momentum. Sets the isJumping status flag.
+  // Used during vertical movement adjusting
   public isJumpTriggered: boolean;
+  // Status indication flags. Mostly used for preventing various actions and for changing animation.
   public isJumping: boolean;
   public isFalling: boolean;
   public isSprinting: boolean;
   public isDucking: boolean;
+  // Flag used during camera movement adjusting. If camera aim (player) keeps ducking,
+  // camera smoothly moves down.
   public isKeepDucking: boolean;
+  // Property for indicating that the character is facing left side.
+  // Used to select a reflected texture.
   public isFacingLeft: boolean;
+  // Property for storing the flag indicating that the character is stuck in a collision object.
+  // Filled during collision processing. So far, only prohibits jumping.
   public isStuck: boolean;
+  // Properties for storing velocity values for each axis.
   public velocityX: number;
   public velocityY: number;
+  // Animator storage property
   public animator: Animator;
-  public movingPattern: {};
+  // Property used when character moves between zones. It is filled during a collision with a door
+  // and read during the general update cycle. It stores the name and coordinates for the
+  // character (only for the player for now)
   public destination: {
     name: string;
     x: number;
@@ -27,14 +42,30 @@ export default class Character extends Entity implements Character {
     x: 0,
     y: 0,
   };
-  private jumpImpulse: number;
+  // Property possessed only by the NPC. Stores the name of the movement pattern and its values.
+  // Used by the Brain class
+  public movingPattern?: {
+    type: string;
+    length: number;
+  };
+  // Max running speed
   private maxSpeed: number;
+  // Run acceleration modifier: maxSpeed is divided into it and given to velocityX
   private accelerationModifier: number;
+  // Running braking modifier: maxSpeed is divided into it and subtracted from the velocityX
   private brakingModifier: number;
+  // Jump start momentum value
+  private jumpImpulse: number;
+  // General modifier of velocityY: used during the jump
   private velocityYModifier: number;
+  // VelocityYModifier ceiling
   private maxJumpingSpeed: number;
+  // Modifier used to adjust jump acceleration. Not really needed.
+  // Must be removed after jump reworking
   private friction: number;
+  // Flag used to indicate that the jump button has been pressed for longer than 100 ms.
   private isKeepJumping: boolean;
+  // Timer storage properties
   private duckingTimer: NodeJS.Timer;
   private jumpingTimer: NodeJS.Timer;
 

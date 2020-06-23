@@ -68,7 +68,10 @@ interface Animator {
 }
 
 interface Character extends Entity {
-  movingPattern: any
+  movingPattern?: {
+    type: string;
+    length: number;
+  }
   isJumping: boolean
   velocityX: number
   velocityY: number
