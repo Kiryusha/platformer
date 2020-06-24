@@ -166,6 +166,9 @@ export default class {
   update (): void {
     // TODO: Fix condition, as last frame of jumping is taken for falling
     this.characters.forEach(character => {
+      if (character.isDead) {
+        return;
+      }
       character.update(this.gravity);
       this.processBoundariesCollision(character);
     });

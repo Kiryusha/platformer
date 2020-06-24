@@ -71,36 +71,38 @@ interface Character extends Entity {
   movingPattern?: {
     type: string;
     length: number;
-  }
-  isJumping: boolean
-  velocityX: number
-  velocityY: number
-  isMovingLeft: boolean
-  isMovingRight: boolean
-  isFalling: boolean
-  isJumpTriggered: boolean
-  animator: Animator
-  isFacingLeft: boolean
-  isSprinting: boolean
-  isDucking: boolean
-  isKeepDucking: boolean
-  isStuck: boolean
+  };
+  isJumping: boolean;
+  velocityX: number;
+  velocityY: number;
+  isMovingLeft: boolean;
+  isMovingRight: boolean;
+  isFalling: boolean;
+  isJumpTriggered: boolean;
+  isDeathTriggered: boolean;
+  isDead: boolean;
+  animator: Animator;
+  isFacingLeft: boolean;
+  isSprinting: boolean;
+  isDucking: boolean;
+  isKeepDucking: boolean;
+  isStuck: boolean;
   destination: {
-    name: string
-    x: number
-    y: number
+    name: string;
+    x: number;
+    y: number;
   }
-  startDucking(): void
-  stopDucking(): void
-  startSprinting(): void
-  stopSprinting(): void
-  startMovingLeft(): void
-  stopMovingLeft(): void
-  startMovingRight(): void
-  stopMovingRight(): void
-  startJumping(): void
-  stopJumping(): void
-  update(gravity: number): void
+  startDucking(): void;
+  stopDucking(): void;
+  startSprinting(): void;
+  stopSprinting(): void;
+  startMovingLeft(): void;
+  stopMovingLeft(): void;
+  startMovingRight(): void;
+  stopMovingRight(): void;
+  startJumping(): void;
+  stopJumping(): void;
+  update(gravity: number): void;
 }
 
 interface EntityConfig {

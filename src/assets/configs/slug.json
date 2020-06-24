@@ -41,6 +41,14 @@
         "slug-skip-2",
         "slug-skip-3",
         "slug-skip-4"
+      ],
+      "death": [
+        "enemy-death-1",
+        "enemy-death-2",
+        "enemy-death-3",
+        "enemy-death-4",
+        "enemy-death-5",
+        "enemy-death-6"
       ]
     }
   }

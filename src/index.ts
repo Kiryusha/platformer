@@ -107,6 +107,10 @@ window.addEventListener('DOMContentLoaded', async () => {
     }
 
     game.world.characters.forEach((character: Character) => {
+      if (character.isDead) {
+        return;
+      }
+
       let frame;
 
       if (character.isFacingLeft) {

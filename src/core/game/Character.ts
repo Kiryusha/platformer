@@ -16,6 +16,9 @@ export default class Character extends Entity implements Character {
   public isFalling: boolean;
   public isSprinting: boolean;
   public isDucking: boolean;
+
+  public isDeathTriggered: boolean = false;
+  public isDead: boolean;
   // Flag used during camera movement adjusting. If camera aim (player) keeps ducking,
   // camera smoothly moves down.
   public isKeepDucking: boolean;
@@ -175,6 +178,12 @@ export default class Character extends Entity implements Character {
     if (!this.isColliding && this.velocityY > 0) {
       this.isFalling = true;
     }
+
+    if (this.isDeathTriggered) {
+      setTimeout(() => {
+        this.isDead = true;
+      }, 350);
+    }
   }
 
   private setAnimationDefaults(
@@ -192,7 +201,13 @@ export default class Character extends Entity implements Character {
   }
 
   private updateAnimation(): void {
-    if ((this.isMovingLeft || this.isMovingRight) && !this.isJumping && !this.isFalling) {
+    if (this.isDeathTriggered && !this.isDead) {
+      this.animator.changeFrameset('death', 'loop', 2);
+    } else if (
+      (this.isMovingLeft || this.isMovingRight)
+      && !this.isJumping
+      && !this.isFalling
+    ) {
       if (this.isSprinting) {
         this.animator.changeFrameset('skip', 'loop', 1.33);
       } else {

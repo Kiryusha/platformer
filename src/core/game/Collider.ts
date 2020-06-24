@@ -86,6 +86,7 @@ export default class {
       this.isCollidingFromTop(player, enemy)
       || this.isCollidingFromBottom(enemy, player)
     ) {
+      enemy.isDeathTriggered = true;
       console.log('Player damaged enemy. Hoorah!');
       return;
     } else if (
