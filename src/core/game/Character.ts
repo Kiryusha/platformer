@@ -51,6 +51,9 @@ export default class Character extends Entity implements Character {
     type: string;
     length: number;
   };
+  // Property indicates that "up" button is hold. It is used during throwing up after attacking
+  // enemy.
+  public isUpActive: boolean;
   // Max running speed
   private maxSpeed: number;
   // Run acceleration modifier: maxSpeed is divided into it and given to velocityX
@@ -170,6 +173,13 @@ export default class Character extends Entity implements Character {
     this.accelerationModifier = 6;
   }
 
+  public throwUp(): void {
+    this.velocityY -= 50;
+    if (this.isUpActive) {
+      this.isKeepJumping = true;
+    }
+  }
+
   public update(gravity: number): void {
     this.adjustHorizontalMovement();
     this.adjustVerticalMovement(gravity);
@@ -227,6 +237,10 @@ export default class Character extends Entity implements Character {
   }
 
   private adjustVerticalMovement(rawGravity: number): void {
+    if (this.isDeathTriggered) {
+      return;
+    }
+
     let gravity = rawGravity;
     this.oldTop = this.top;
 
@@ -259,6 +273,10 @@ export default class Character extends Entity implements Character {
   }
 
   private adjustHorizontalMovement(): void {
+    if (this.isDeathTriggered) {
+      return;
+    }
+
     this.oldLeft = this.left;
     // If we move to the left,
     if (this.isMovingLeft) {

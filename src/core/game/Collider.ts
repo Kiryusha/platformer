@@ -82,12 +82,15 @@ export default class {
     player: Character,
     enemy: Character,
   ): void {
+    if (enemy.isDead) {
+      return;
+    }
     if (
       this.isCollidingFromTop(player, enemy)
       || this.isCollidingFromBottom(enemy, player)
     ) {
       enemy.isDeathTriggered = true;
-      console.log('Player damaged enemy. Hoorah!');
+      player.throwUp();
       return;
     } else if (
       this.isCollidingFromLeft(player, enemy)

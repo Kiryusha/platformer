@@ -29,11 +29,6 @@ export default class {
   private checkBroadPhase(): void {
     for (let i = 0; i < this.characters.length; i += 1) {
       if (this.characters[i].character.movingPattern) {
-        if (this.characters[i].character.isDeathTriggered) {
-          this.characters[i].character.stopMovingRight();
-          this.characters[i].character.stopMovingLeft();
-          return;
-        }
         switch (this.characters[i].character.movingPattern.type) {
           case 'roaming':
             this.processRoaming(i);

@@ -92,6 +92,7 @@ interface Character extends Entity {
     x: number;
     y: number;
   }
+  isUpActive: boolean;
   startDucking(): void;
   stopDucking(): void;
   startSprinting(): void;
@@ -102,6 +103,7 @@ interface Character extends Entity {
   stopMovingRight(): void;
   startJumping(): void;
   stopJumping(): void;
+  throwUp(): void;
   update(gravity: number): void;
 }
 
