@@ -79,7 +79,7 @@ export default class {
 
   // this router separates collisions of a player with an enemy
   routeNarrowPhasePlayerVsEnemy(
-    player: Character,
+    player: Player,
     enemy: Character,
   ): void {
     if (enemy.isDead) {
@@ -93,18 +93,31 @@ export default class {
       player.throwUp();
       return;
     } else if (
-      this.isCollidingFromLeft(player, enemy)
-      || this.isCollidingFromRight(player, enemy)
+      this.isCollidingFromRight(player, enemy)
       || this.isCollidingFromBottom(player, enemy)
       || this.isCollidingFromTop(enemy, player)
       || this.isCollidingFromLeft(enemy, player)
+    ) {
+      player.throwUp('right');
+      player.isHurt = true;
+      player.currentHealth -= 1;
+      setTimeout(() => {
+        player.isHurt = false;
+      }, 1000);
+    } else if (
+      this.isCollidingFromLeft(player, enemy)
       || this.isCollidingFromRight(enemy, player)
     ) {
-      console.log('Enemy damaged player. Ouch!');
+      player.throwUp('left');
+      player.isHurt = true;
+      player.currentHealth -= 1;
+      setTimeout(() => {
+        player.isHurt = false;
+      }, 1000);
     }
   }
 
-  routeNarrowPhaseCharacterVsDoor(character: Character, door: Entity): void {
+  routeNarrowPhaseCharacterVsDoor(player: Player, door: Entity): void {
     const { target } = door.properties;
     const offset = parseInt(door.properties.offset);
     const destinationX = door.properties.destinationX
@@ -112,28 +125,24 @@ export default class {
     const destinationY = door.properties.destinationY
       ? parseInt(door.properties.destinationY) : null;
 
-    switch (character.type) {
-      case 'player':
-          if (door.type === 'vertical') {
-            if (this.isCollidingFromLeft(character, door)) {
-              character.destination.x = destinationX;
-            } else {
-              character.destination.x = destinationX - character.width;
-            }
-            character.destination.y = character.top + offset;
-          } else {
-            if (this.isCollidingFromTop(character, door)) {
-              character.destination.y = destinationY;
-            } else {
-              character.destination.y = destinationY - character.height;
-              // add small velocity boost when jumping out of the pit
-              character.velocityY -= 7;
-            }
-            character.destination.x = character.left + offset;
-          }
-          character.destination.name = target;
-        break;
+    if (door.type === 'vertical') {
+      if (this.isCollidingFromLeft(player, door)) {
+        player.destination.x = destinationX;
+      } else {
+        player.destination.x = destinationX - player.width;
+      }
+      player.destination.y = player.top + offset;
+    } else {
+      if (this.isCollidingFromTop(player, door)) {
+        player.destination.y = destinationY;
+      } else {
+        player.destination.y = destinationY - player.height;
+        // add small velocity boost when jumping out of the pit
+        player.velocityY -= 7;
+      }
+      player.destination.x = player.left + offset;
     }
+    player.destination.name = target;
   }
 
   // these methods determine the presence of a one-way collision of e1 with e2
@@ -239,7 +248,6 @@ export default class {
     collision: Entity,
   ): void {
     character.bottom = collision.top - 0.01;
-    character.velocityY = 0;
     character.isJumping = false;
     character.isFalling = false;
     // specifying collision direction

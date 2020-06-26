@@ -1,4 +1,4 @@
-// The class is responsible for keeping and processing the player object
+// The class is responsible for keeping and processing the character object
 import Entity from './Entity';
 import Animator from './Animator';
 import { bound } from '../../util';
@@ -16,7 +16,8 @@ export default class Character extends Entity implements Character {
   public isFalling: boolean;
   public isSprinting: boolean;
   public isDucking: boolean;
-
+  public isHurt: boolean;
+  // Flags for processing death of the character: start of animation and actual status
   public isDeathTriggered: boolean = false;
   public isDead: boolean;
   // Flag used during camera movement adjusting. If camera aim (player) keeps ducking,
@@ -33,18 +34,6 @@ export default class Character extends Entity implements Character {
   public velocityY: number;
   // Animator storage property
   public animator: Animator;
-  // Property used when character moves between zones. It is filled during a collision with a door
-  // and read during the general update cycle. It stores the name and coordinates for the
-  // character (only for the player for now)
-  public destination: {
-    name: string;
-    x: number;
-    y: number;
-  } = {
-    name: '',
-    x: 0,
-    y: 0,
-  };
   // Property possessed only by the NPC. Stores the name of the movement pattern and its values.
   // Used by the Brain class
   public movingPattern?: {
@@ -95,7 +84,7 @@ export default class Character extends Entity implements Character {
   }
 
   public startMovingLeft(): void {
-    if (!this.isMovingRight && !this.isDucking) {
+    if (!this.isMovingRight && !this.isDucking && !this.isHurt) {
       this.isFacingLeft = true;
       this.isMovingLeft = true;
     }
@@ -106,7 +95,7 @@ export default class Character extends Entity implements Character {
   }
 
   public startMovingRight(): void {
-    if (!this.isMovingLeft && !this.isDucking) {
+    if (!this.isMovingLeft && !this.isDucking && !this.isHurt) {
       this.isFacingLeft = false;
       this.isMovingRight = true;
     }
@@ -134,7 +123,7 @@ export default class Character extends Entity implements Character {
   }
 
   public startDucking(): void {
-    if (!this.isJumping && !this.isFalling) {
+    if (!this.isJumping && !this.isFalling && !this.isHurt) {
       if (!this.isDucking) {
         this.top += 5;
         this.duckingTimer = setTimeout(() => {
@@ -160,7 +149,7 @@ export default class Character extends Entity implements Character {
   }
 
   public startSprinting(): void {
-    if (!this.isJumping && !this.isDucking) {
+    if (!this.isJumping && !this.isDucking && !this.isHurt) {
       this.isSprinting = true;
       this.maxSpeed = 5;
       this.accelerationModifier = 10;
@@ -173,26 +162,41 @@ export default class Character extends Entity implements Character {
     this.accelerationModifier = 6;
   }
 
-  public throwUp(): void {
+  public throwUp(direction?: string): void {
     this.velocityY -= 50;
     if (this.isUpActive) {
       this.isKeepJumping = true;
     }
+
+    switch (direction) {
+      case 'left':
+        this.velocityX -= 5;
+        break;
+      case 'right':
+        this.velocityX += 5;
+    }
   }
 
   public update(gravity: number): void {
+    // 350ms - time for death animation
+    if (this.isDeathTriggered) {
+      setTimeout(() => {
+        this.isDead = true;
+      }, 350);
+    }
+
+    // This condition prevents accidental movement if the navigation buttons were pre-clamped.
+    if (this.isHurt) {
+      this.stopMovingLeft();
+      this.stopMovingRight();
+    }
+
     this.adjustHorizontalMovement();
     this.adjustVerticalMovement(gravity);
     this.updateAnimation();
 
     if (!this.isColliding && this.velocityY > 0) {
       this.isFalling = true;
-    }
-
-    if (this.isDeathTriggered) {
-      setTimeout(() => {
-        this.isDead = true;
-      }, 350);
     }
   }
 
@@ -211,7 +215,9 @@ export default class Character extends Entity implements Character {
   }
 
   private updateAnimation(): void {
-    if (this.isDeathTriggered && !this.isDead) {
+    if (this.isHurt) {
+      this.animator.changeFrameset('hurt', 'loop', 2);
+    } else if (this.isDeathTriggered && !this.isDead) {
       this.animator.changeFrameset('death', 'loop', 2);
     } else if (
       (this.isMovingLeft || this.isMovingRight)

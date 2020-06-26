@@ -28,11 +28,11 @@ export default class {
   brain: Brain;
   activeZone: keyof zones;
   doors: Entity[];
-  player: Character;
+  player: Player;
 
   constructor (
     map: GameMap,
-    player: Character,
+    player: Player,
   ) {
     // Physics
     this.gravity = 10;

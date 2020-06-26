@@ -67,6 +67,16 @@ interface Animator {
   flippedSpriteMap: SpriteMap;
 }
 
+interface Player extends Character {
+  destination: {
+    name: string;
+    x: number;
+    y: number;
+  };
+  currentHealth: number;
+  maxHealth: number;
+}
+
 interface Character extends Entity {
   movingPattern?: {
     type: string;
@@ -78,6 +88,7 @@ interface Character extends Entity {
   isMovingLeft: boolean;
   isMovingRight: boolean;
   isFalling: boolean;
+  isHurt: boolean;
   isJumpTriggered: boolean;
   isDeathTriggered: boolean;
   isDead: boolean;
@@ -87,11 +98,6 @@ interface Character extends Entity {
   isDucking: boolean;
   isKeepDucking: boolean;
   isStuck: boolean;
-  destination: {
-    name: string;
-    x: number;
-    y: number;
-  }
   isUpActive: boolean;
   startDucking(): void;
   stopDucking(): void;
@@ -103,7 +109,7 @@ interface Character extends Entity {
   stopMovingRight(): void;
   startJumping(): void;
   stopJumping(): void;
-  throwUp(): void;
+  throwUp(direction?: string): void;
   update(gravity: number): void;
 }
 

@@ -1,4 +1,7 @@
 {
+  "player": {
+    "maxHealth": 3
+  },
   "entity": {
     "x": 0,
     "y": 0,
@@ -71,6 +74,10 @@
         "player-duck-2",
         "player-duck-3",
         "player-duck-4"
+      ],
+      "hurt": [
+        "player-hurt-1",
+        "player-hurt-2"
       ]
     }
   }

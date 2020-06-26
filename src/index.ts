@@ -204,7 +204,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     256,
     144,
   );
-  const player: Character = game.player;
+  const player: Player = game.player;
   const engine = new Engine(fps, render, update);
 
   // Synchronize display buffer size with the world size

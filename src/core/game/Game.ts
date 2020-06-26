@@ -1,13 +1,13 @@
 // The class is responsible for keeping and processing the game state
 import World from './World';
-import Character from './Character';
+import Player from './Player';
 import spriteMap from '../../assets/sprite-maps/sprites.json';
-import playerStats from '../../assets/configs/player.json';
+import playerConfig from '../../assets/configs/player.json';
 
 export default class {
   world: World;
   zones: zones;
-  player: Character;
+  player: Player;
 
   constructor(zones: zones, startingZone: keyof zones) {
     this.zones = zones;
@@ -15,8 +15,8 @@ export default class {
     this.loadZone(startingZone);
   }
 
-  private createPlayer(): Character {
-    return new Character(playerStats, spriteMap);
+  private createPlayer(): Player {
+    return new Player(playerConfig, spriteMap);
   }
 
   public loadZone(zone: keyof zones): void {
