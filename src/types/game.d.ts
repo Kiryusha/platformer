@@ -75,6 +75,7 @@ interface Player extends Character {
   };
   currentHealth: number;
   maxHealth: number;
+  throwUp(direction?: string): void;
 }
 
 interface Character extends Entity {
@@ -88,6 +89,7 @@ interface Character extends Entity {
   isMovingLeft: boolean;
   isMovingRight: boolean;
   isFalling: boolean;
+  isHurtTriggered: boolean;
   isHurt: boolean;
   isJumpTriggered: boolean;
   isDeathTriggered: boolean;
@@ -109,7 +111,6 @@ interface Character extends Entity {
   stopMovingRight(): void;
   startJumping(): void;
   stopJumping(): void;
-  throwUp(direction?: string): void;
   update(gravity: number): void;
 }
 
@@ -125,6 +126,9 @@ interface EntityConfig {
 }
 
 interface CharacterConfig {
+  player?: {
+    maxHealth: number;
+  };
   entity: EntityConfig;
   main: {
     isStuck: boolean

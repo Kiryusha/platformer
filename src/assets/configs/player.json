@@ -78,6 +78,10 @@
       "hurt": [
         "player-hurt-1",
         "player-hurt-2"
+      ],
+      "death": [
+        "player-hurt-1",
+        "player-hurt-2"
       ]
     }
   }

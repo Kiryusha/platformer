@@ -135,7 +135,12 @@ export default class {
     this.collisionDebugMap = [];
   }
 
-  processBoundariesCollision (object: Character): void {
+  // TODO: move this to the Collider
+  processBoundariesCollision(object: Character): void {
+    if (object.isDeathTriggered) {
+      return;
+    }
+
     // collisions with the world boundaries
     // left
     if (object.left < 0) {
@@ -163,7 +168,7 @@ export default class {
     }
   }
 
-  update (): void {
+  update(): void {
     // TODO: Fix condition, as last frame of jumping is taken for falling
     this.characters.forEach(character => {
       if (character.isDead) {

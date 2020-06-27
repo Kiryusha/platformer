@@ -28,6 +28,10 @@ export default class {
     stageWidth: number,
     stageHeight: number,
   ): void {
+    if (aim.isDeathTriggered) {
+      return;
+    }
+
     let aimY;
 
     if (aim.isDucking) {

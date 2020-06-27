@@ -16,6 +16,8 @@ export default class Character extends Entity implements Character {
   public isFalling: boolean;
   public isSprinting: boolean;
   public isDucking: boolean;
+  // Flags for processing hurting of the character: start of animation and actual status
+  public isHurtTriggered: boolean;
   public isHurt: boolean;
   // Flags for processing death of the character: start of animation and actual status
   public isDeathTriggered: boolean = false;
@@ -43,6 +45,10 @@ export default class Character extends Entity implements Character {
   // Property indicates that "up" button is hold. It is used during throwing up after attacking
   // enemy.
   public isUpActive: boolean;
+  // Flag used to indicate that the jump button has been pressed for longer than 100 ms.
+  protected isKeepJumping: boolean;
+  // VelocityYModifier ceiling
+  protected maxJumpingSpeed: number;
   // Max running speed
   private maxSpeed: number;
   // Run acceleration modifier: maxSpeed is divided into it and given to velocityX
@@ -53,13 +59,9 @@ export default class Character extends Entity implements Character {
   private jumpImpulse: number;
   // General modifier of velocityY: used during the jump
   private velocityYModifier: number;
-  // VelocityYModifier ceiling
-  private maxJumpingSpeed: number;
   // Modifier used to adjust jump acceleration. Not really needed.
   // Must be removed after jump reworking
   private friction: number;
-  // Flag used to indicate that the jump button has been pressed for longer than 100 ms.
-  private isKeepJumping: boolean;
   // Timer storage properties
   private duckingTimer: NodeJS.Timer;
   private jumpingTimer: NodeJS.Timer;
@@ -162,45 +164,23 @@ export default class Character extends Entity implements Character {
     this.accelerationModifier = 6;
   }
 
-  public throwUp(direction?: string): void {
-    // The position on the Y axis must be changed to prevent zeroing of velocityY due to a collision
-    // with the collision entity.
-    this.top -= 1;
-    // Actually, the throw itself.
-    this.velocityY -= 50;
-    if (this.isUpActive) {
-      this.isKeepJumping = true;
-    }
-
-    switch (direction) {
-      case 'left':
-        this.velocityX -= 5;
-        break;
-      case 'right':
-        this.velocityX += 5;
-    }
-  }
-
   public update(gravity: number): void {
-    // 350ms - time for death animation
-    if (this.isDeathTriggered) {
-      setTimeout(() => {
-        this.isDead = true;
-      }, 350);
-    }
-
-    // This condition prevents accidental movement if the navigation buttons were pre-clamped.
-    if (this.isHurt) {
-      this.stopMovingLeft();
-      this.stopMovingRight();
-    }
-
+    this.adjustHealth();
     this.adjustHorizontalMovement();
     this.adjustVerticalMovement(gravity);
     this.updateAnimation();
 
     if (!this.isColliding && this.velocityY > 0) {
       this.isFalling = true;
+    }
+  }
+
+  protected adjustHealth(): void {
+    // 350ms - time for death animation
+    if (this.isDeathTriggered) {
+      setTimeout(() => {
+        this.isDead = true;
+      }, 350);
     }
   }
 
@@ -247,7 +227,7 @@ export default class Character extends Entity implements Character {
   }
 
   private adjustVerticalMovement(rawGravity: number): void {
-    if (this.isDeathTriggered) {
+    if (this.type === 'enemy' && this.isDeathTriggered) {
       return;
     }
 

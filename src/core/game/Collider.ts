@@ -78,6 +78,7 @@ export default class {
   }
 
   // this router separates collisions of a player with an enemy
+  // TODO: refactor collisions: there is case, when player runs through an enemy freely
   routeNarrowPhasePlayerVsEnemy(
     player: Player,
     enemy: Character,
@@ -90,7 +91,7 @@ export default class {
       || this.isCollidingFromBottom(enemy, player)
     ) {
       enemy.isDeathTriggered = true;
-      player.throwUp();
+      player.throwUp('attacker');
       return;
     } else if (
       this.isCollidingFromRight(player, enemy)
@@ -98,22 +99,14 @@ export default class {
       || this.isCollidingFromTop(enemy, player)
       || this.isCollidingFromLeft(enemy, player)
     ) {
-      player.throwUp('right');
-      player.isHurt = true;
-      player.currentHealth -= 1;
-      setTimeout(() => {
-        player.isHurt = false;
-      }, 1000);
+      player.collisionXDirection = 'right';
+      player.isHurtTriggered = true;
     } else if (
       this.isCollidingFromLeft(player, enemy)
       || this.isCollidingFromRight(enemy, player)
     ) {
-      player.throwUp('left');
-      player.isHurt = true;
-      player.currentHealth -= 1;
-      setTimeout(() => {
-        player.isHurt = false;
-      }, 1000);
+      player.collisionXDirection = 'left';
+      player.isHurtTriggered = true;
     }
   }
 
@@ -138,7 +131,7 @@ export default class {
       } else {
         player.destination.y = destinationY - player.height;
         // add small velocity boost when jumping out of the pit
-        player.velocityY -= 7;
+        player.throwUp('fromThePit');
       }
       player.destination.x = player.left + offset;
     }
@@ -218,10 +211,14 @@ export default class {
   }
 
   // Resolves which router use for the collision
+  // TODO: refactor types
   private broadPhaseResolver(
     e1: any,
     e2: any,
   ): void {
+    if (e1.isDeathTriggered || e2.isDeathTriggered) {
+      return;
+    }
     if (e1.group === 'characters' && e2.group === 'collisions') {
       this.routeNarrowPhaseCharacterVsCollision(e1, e2);
     } else if (e2.group  === 'characters' && e1.group === 'collisions') {
