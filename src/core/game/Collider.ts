@@ -248,6 +248,7 @@ export default class {
     collision: Entity,
   ): void {
     character.bottom = collision.top - 0.01;
+    character.velocityY = 0;
     character.isJumping = false;
     character.isFalling = false;
     // specifying collision direction

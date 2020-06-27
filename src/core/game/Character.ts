@@ -163,6 +163,10 @@ export default class Character extends Entity implements Character {
   }
 
   public throwUp(direction?: string): void {
+    // The position on the Y axis must be changed to prevent zeroing of velocityY due to a collision
+    // with the collision entity.
+    this.top -= 1;
+    // Actually, the throw itself.
     this.velocityY -= 50;
     if (this.isUpActive) {
       this.isKeepJumping = true;
