@@ -140,6 +140,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     if (window.SHOW_COLLISIONS) {
       display.drawCollisionDebugMap(game.world.collisionDebugMap);
     }
+    display.drawHud(player, game.spriteMap);
     display.render();
     display.camera.adjustCamera(player, game.world.width, game.world.height);
   };

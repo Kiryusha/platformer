@@ -72,7 +72,7 @@ export default class {
       positionY = stageHeight - this.height;
     }
 
-    this.x = positionX;
-    this.y = positionY;
+    this.x = Math.round(positionX);
+    this.y = Math.round(positionY);
   }
 }

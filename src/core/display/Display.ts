@@ -29,62 +29,32 @@ export default class {
     this.renderer = new Renderer(this.buffer);
   }
 
-  private isObjectWithinCamera(
-    x: number,
-    y: number,
-    w?: number,
-    h?: number,
-  ): boolean {
-    if (w === undefined) w = x;
-
-    if (h === undefined) h = y;
-
-    // Do not draw what does not get into the camera right now, plus a margin of two tiles.
-    // Margin is needed in order to avoid glitches during fast movement
-    const margin = this.mapTileset.tileSize * 2;
-
-    return !(y > this.camera.y + this.camera.height + margin
-      || h < this.camera.y - margin
-      || x > this.camera.x + this.camera.width + margin
-      || w < this.camera.x - margin);
-  }
-
-  private drawLargeTiles(
-    imagesTilesData: Tileset,
-    tileId: number,
-    mapX: number,
-    mapY: number,
-  ): void {
-    const tile = imagesTilesData.tiles[tileId - imagesTilesData.firstgid];
-    const source = this.imagesMap.frames[tile.type];
-    const destinationX = mapX;
-    const destinationY = mapY - (source.frame.h - this.mapTileset.tileSize);
-
-    if (this.isObjectWithinCamera(
-      destinationX,
-      destinationY,
-      destinationX + source.frame.w,
-      destinationY + source.frame.h,
-    )) {
-      this.renderer.drawImage(
-        this.images.texture,
-        this.images.image.width,
-        this.images.image.height,
-        source.frame.x,
-        source.frame.y,
-        source.frame.w,
-        source.frame.h,
-        destinationX,
-        destinationY,
-        source.frame.w,
-        source.frame.h,
-      );
-    }
-  }
-
   public adjustBufferCanvasSize(stageWidth: number, stageHeight: number): void {
     this.buffer.canvas.width = stageWidth;
     this.buffer.canvas.height = stageHeight;
+  }
+
+  public drawHud(
+    player: Player,
+    spriteMap: SpriteMap,
+  ): void {
+    const frameSource = spriteMap.frames[`hud-${player.currentHealth}-hp`];
+    if (!frameSource) {
+      return;
+    }
+    const margin = 2;
+    const { frame } = frameSource;
+
+    this.drawObject(
+      false,
+      this.spriteSheet,
+      frame.x,
+      frame.y,
+      this.camera.x + margin,
+      this.camera.y + margin,
+      frame.w,
+      frame.h,
+    );
   }
 
   public drawObject(
@@ -272,5 +242,58 @@ export default class {
     }
 
     this.context.imageSmoothingEnabled = false;
+  }
+
+  private isObjectWithinCamera(
+    x: number,
+    y: number,
+    w?: number,
+    h?: number,
+  ): boolean {
+    if (w === undefined) w = x;
+
+    if (h === undefined) h = y;
+
+    // Do not draw what does not get into the camera right now, plus a margin of two tiles.
+    // Margin is needed in order to avoid glitches during fast movement
+    const margin = this.mapTileset.tileSize * 2;
+
+    return !(y > this.camera.y + this.camera.height + margin
+      || h < this.camera.y - margin
+      || x > this.camera.x + this.camera.width + margin
+      || w < this.camera.x - margin);
+  }
+
+  private drawLargeTiles(
+    imagesTilesData: Tileset,
+    tileId: number,
+    mapX: number,
+    mapY: number,
+  ): void {
+    const tile = imagesTilesData.tiles[tileId - imagesTilesData.firstgid];
+    const source = this.imagesMap.frames[tile.type];
+    const destinationX = mapX;
+    const destinationY = mapY - (source.frame.h - this.mapTileset.tileSize);
+
+    if (this.isObjectWithinCamera(
+      destinationX,
+      destinationY,
+      destinationX + source.frame.w,
+      destinationY + source.frame.h,
+    )) {
+      this.renderer.drawImage(
+        this.images.texture,
+        this.images.image.width,
+        this.images.image.height,
+        source.frame.x,
+        source.frame.y,
+        source.frame.w,
+        source.frame.h,
+        destinationX,
+        destinationY,
+        source.frame.w,
+        source.frame.h,
+      );
+    }
   }
 }

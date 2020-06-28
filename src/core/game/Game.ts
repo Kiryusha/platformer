@@ -8,15 +8,17 @@ export default class {
   world: World;
   zones: zones;
   player: Player;
+  spriteMap: SpriteMap;
 
   constructor(zones: zones, startingZone: keyof zones) {
+    this.spriteMap = spriteMap;
     this.zones = zones;
     this.player = this.createPlayer();
     this.loadZone(startingZone);
   }
 
   private createPlayer(): Player {
-    return new Player(playerConfig, spriteMap);
+    return new Player(playerConfig, this.spriteMap);
   }
 
   public loadZone(zone: keyof zones): void {
