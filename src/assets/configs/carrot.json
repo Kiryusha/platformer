@@ -1,0 +1,23 @@
+{
+  "entity": {
+    "x": 0,
+    "y": 0,
+    "width": 17,
+    "height": 19,
+    "group": "collectables",
+    "type": "carrot",
+    "name": "carrot"
+  },
+  "animation": {
+    "frameWidth": 17,
+    "frameHeight": 19,
+    "frames": {
+      "idle": [
+        "carrot-1",
+        "carrot-2",
+        "carrot-3",
+        "carrot-4"
+      ]
+    }
+  }
+}

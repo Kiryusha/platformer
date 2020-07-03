@@ -34,6 +34,52 @@ export default class {
     this.buffer.canvas.height = stageHeight;
   }
 
+  public drawCharacters(characters: Character[]): void {
+    characters.forEach((character: Character) => {
+      if (character.isDead) {
+        return;
+      }
+
+      let frame;
+
+      if (character.isFacingLeft) {
+        frame =
+          character.animator.flippedSpriteMap.frames[character.animator.frameValue].frame;
+      } else {
+        frame =
+          character.animator.spriteMap.frames[character.animator.frameValue].frame;
+      }
+
+      this.drawObject(
+        character.isFacingLeft,
+        this.spriteSheet,
+        frame.x,
+        frame.y,
+        character.left + Math.floor(character.width * 0.5 - frame.w * 0.5),
+        character.top - Math.floor(frame.h - character.height),
+        frame.w,
+        frame.h,
+      );
+    });
+  }
+
+  public drawCollectables(collectables: AnimatedEntity[]) {
+    collectables.forEach((collectable: AnimatedEntity) => {
+      let frame = collectable.animator.spriteMap.frames[collectable.animator.frameValue].frame;
+
+      this.drawObject(
+        false,
+        this.spriteSheet,
+        frame.x,
+        frame.y,
+        collectable.left,
+        collectable.top,
+        frame.w,
+        frame.h,
+      );
+    });
+  }
+
   public drawHud(
     player: Player,
     spriteMap: SpriteMap,

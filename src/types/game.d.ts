@@ -114,6 +114,11 @@ interface Character extends Entity {
   update(gravity: number): void;
 }
 
+interface AnimatedEntity extends Entity {
+  animator: Animator;
+  update(gravity: number): void;
+}
+
 interface EntityConfig {
   x: number;
   y: number;
@@ -123,6 +128,15 @@ interface EntityConfig {
   type: string;
   name: string;
   properties?: {};
+}
+
+interface AnimatedEntityConfig {
+  entity: EntityConfig;
+  animation: {
+    frameWidth: number
+    frameHeight: number
+    frames: {}
+  }
 }
 
 interface CharacterConfig {

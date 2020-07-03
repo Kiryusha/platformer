@@ -1,11 +1,13 @@
 // The class is responsible for keeping and processing the game world
 import Entity from './Entity';
+import AnimatedEntity from './AnimatedEntity';
 import Character from './Character';
 import Collider from './Collider';
 import Brain from './Brain';
 // Characters
 import spriteMap from '../../assets/sprite-maps/sprites.json';
 import slugStats from '../../assets/configs/slug.json';
+import carrotStats from '../../assets/configs/carrot.json';
 
 export default class {
   gravity: number;
@@ -23,11 +25,12 @@ export default class {
   collider: Collider;
   map: GameMap;
   rawLayers: any;
+  doors: Entity[];
   collisions: Entity[];
+  collectables: AnimatedEntity[];
   characters: Character[];
   brain: Brain;
   activeZone: keyof zones;
-  doors: Entity[];
   player: Player;
 
   constructor (
@@ -53,7 +56,44 @@ export default class {
     this.collider = new Collider();
   }
 
-  processMap(map: GameMap) {
+  public update(): void {
+    // TODO: Fix condition, as last frame of jumping is taken for falling
+    this.characters.forEach(character => {
+      if (character.isDead) {
+        return;
+      }
+      character.update(this.gravity);
+      this.processBoundariesCollision(character);
+    });
+    this.collectables.forEach(collectable => {
+      collectable.update();
+    });
+    const collisions = this.collider.processBroadPhase([
+      ...this.characters,
+      ...this.collisions,
+      ...this.doors,
+    ]);
+    this.collisionDebugMap = collisions;
+    this.brain.update();
+  }
+
+  private fillMapLayer(layer: GameLayer): Entity[] {
+    return layer.objects.map((object: MapObject) => new Entity({
+      x: object.x,
+      y: object.y,
+      width: object.width,
+      height: object.height,
+      group: layer.name,
+      type: object.type,
+      name: layer.name,
+      properties: !object.properties ? {} : object.properties.reduce((obj, prop) => {
+        obj[prop.name] = prop.value;
+        return obj;
+      }, {}),
+    }));
+  }
+
+  private processMap(map: GameMap) {
     this.rawLayers = map.layers.reduce((result, group) => {
       switch (group.name) {
         case 'tiles':
@@ -62,31 +102,19 @@ export default class {
         case 'objects':
           group.layers.forEach((layer: GameLayer) => {
             switch (layer.name) {
-              case 'doors':
-                result[layer.name] = layer.objects.map((object: MapObject) => new Entity({
-                  x: object.x,
-                  y: object.y,
-                  width: object.width,
-                  height: object.height,
-                  group: 'doors',
-                  type: object.type,
-                  name: 'door',
-                  properties: object.properties.reduce((obj, prop) => {
-                    obj[prop.name] = prop.value;
-                    return obj;
-                  }, {}),
-                }));
-                break;
               case 'collisions':
-                result[layer.name] = layer.objects.map((object: MapObject) => new Entity({
-                  x: object.x,
-                  y: object.y,
-                  width: object.width,
-                  height: object.height,
-                  group: 'collisions',
-                  type: object.type,
-                  name: 'block',
-                }));
+              case 'doors':
+                result[layer.name] = this.fillMapLayer(layer);
+                break;
+              case 'collectables':
+                result[layer.name] = layer.objects.map((object: MapObject) => {
+                  switch (object.type) {
+                    case 'carrot':
+                      carrotStats.entity.x = object.x;
+                      carrotStats.entity.y = object.y;
+                      return new AnimatedEntity(carrotStats, spriteMap);
+                  }
+                });
                 break;
               case 'characters':
                 result[layer.name] = layer.objects.map((object: MapObject) => {
@@ -132,11 +160,12 @@ export default class {
     this.collisions = [...this.rawLayers.collisions];
     this.characters = [...this.rawLayers.characters];
     this.doors = [...this.rawLayers.doors];
+    this.collectables = [...this.rawLayers.collectables];
     this.collisionDebugMap = [];
   }
 
   // TODO: move this to the Collider
-  processBoundariesCollision(object: Character): void {
+  private processBoundariesCollision(object: Character): void {
     if (object.isDeathTriggered) {
       return;
     }
@@ -166,23 +195,5 @@ export default class {
       object.top = this.height - object.height;
       object.velocityY = 0;
     }
-  }
-
-  update(): void {
-    // TODO: Fix condition, as last frame of jumping is taken for falling
-    this.characters.forEach(character => {
-      if (character.isDead) {
-        return;
-      }
-      character.update(this.gravity);
-      this.processBoundariesCollision(character);
-    });
-    const collisions = this.collider.processBroadPhase([
-      ...this.characters,
-      ...this.collisions,
-      ...this.doors,
-    ]);
-    this.collisionDebugMap = collisions;
-    this.brain.update();
   }
 }

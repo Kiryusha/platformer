@@ -134,6 +134,40 @@
          "id":16,
          "layers":[
                 {
+                 "color":"#ffff00",
+                 "draworder":"topdown",
+                 "id":22,
+                 "name":"collectables",
+                 "objects":[
+                        {
+                         "height":20,
+                         "id":32,
+                         "name":"carrot",
+                         "rotation":0,
+                         "type":"carrot",
+                         "visible":true,
+                         "width":20,
+                         "x":694,
+                         "y":230
+                        }, 
+                        {
+                         "height":20,
+                         "id":34,
+                         "name":"carrot",
+                         "rotation":0,
+                         "type":"carrot",
+                         "visible":true,
+                         "width":20,
+                         "x":262,
+                         "y":151
+                        }],
+                 "opacity":1,
+                 "type":"objectgroup",
+                 "visible":true,
+                 "x":0,
+                 "y":0
+                }, 
+                {
                  "color":"#55aa7f",
                  "draworder":"topdown",
                  "id":21,
@@ -494,8 +528,8 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":22,
- "nextobjectid":32,
+ "nextlayerid":23,
+ "nextobjectid":35,
  "orientation":"orthogonal",
  "renderorder":"left-up",
  "tiledversion":"1.3.4",

@@ -76,13 +76,13 @@ export default class Character extends Entity implements Character {
         frames
       },
     }: CharacterConfig,
-    playerSpriteMap: SpriteMap,
+    spriteMap: SpriteMap,
   ) {
     super(entity);
 
     Object.assign(this, main);
 
-    this.setAnimationDefaults(frameWidth, frameHeight, frames, playerSpriteMap);
+    this.setAnimationDefaults(frameWidth, frameHeight, frames, spriteMap);
   }
 
   public startMovingLeft(): void {

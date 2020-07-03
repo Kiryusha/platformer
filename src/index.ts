@@ -96,6 +96,7 @@ window.addEventListener('DOMContentLoaded', async () => {
       zones[game.world.activeZone].config.tilesets.filter(tileset => tileset.name === 'images')[0];
 
     display.renderer.clear();
+
     display.drawBackgrounds();
     display.drawMap(game.world.backgroundMap, game.world.columns, imagesTilesData);
     if (game.world.middleBackgroundMap) {
@@ -105,34 +106,8 @@ window.addEventListener('DOMContentLoaded', async () => {
     if (game.world.middleFrontMap) {
       display.drawMap(game.world.middleFrontMap, game.world.columns, imagesTilesData);
     }
-
-    game.world.characters.forEach((character: Character) => {
-      if (character.isDead) {
-        return;
-      }
-
-      let frame;
-
-      if (character.isFacingLeft) {
-        frame =
-          character.animator.flippedSpriteMap.frames[character.animator.frameValue].frame;
-      } else {
-        frame =
-          character.animator.spriteMap.frames[character.animator.frameValue].frame;
-      }
-
-      display.drawObject(
-        character.isFacingLeft,
-        display.spriteSheet,
-        frame.x,
-        frame.y,
-        character.left + Math.floor(character.width * 0.5 - frame.w * 0.5),
-        character.top - Math.floor(frame.h - character.height),
-        frame.w,
-        frame.h
-      );
-    });
-
+    display.drawCharacters(game.world.characters);
+    display.drawCollectables(game.world.collectables);
     display.drawMap(game.world.frontMap, game.world.columns, imagesTilesData);
 
     // Collisions debugging tool: to visualise collisions type window.SHOW_COLLISIONS = true
