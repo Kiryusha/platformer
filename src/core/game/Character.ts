@@ -19,9 +19,8 @@ export default class Character extends Entity implements Character {
   // Flags for processing hurting of the character: start of animation and actual status
   public isHurtTriggered: boolean;
   public isHurt: boolean;
-  // Flags for processing death of the character: start of animation and actual status
+  // Flag for processing death of the character: start of animation and actual status
   public isDeathTriggered: boolean = false;
-  public isDead: boolean;
   // Flag used during camera movement adjusting. If camera aim (player) keeps ducking,
   // camera smoothly moves down.
   public isKeepDucking: boolean;
@@ -179,7 +178,7 @@ export default class Character extends Entity implements Character {
     // 350ms - time for death animation
     if (this.isDeathTriggered) {
       setTimeout(() => {
-        this.isDead = true;
+        this.isVanished = true;
       }, 350);
     }
   }
@@ -201,7 +200,7 @@ export default class Character extends Entity implements Character {
   private updateAnimation(): void {
     if (this.isHurt) {
       this.animator.changeFrameset('hurt', 'loop', 2);
-    } else if (this.isDeathTriggered && !this.isDead) {
+    } else if (this.isDeathTriggered && !this.isVanished) {
       this.animator.changeFrameset('death', 'loop', 2);
     } else if (
       (this.isMovingLeft || this.isMovingRight)

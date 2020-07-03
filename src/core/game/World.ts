@@ -59,19 +59,23 @@ export default class {
   public update(): void {
     // TODO: Fix condition, as last frame of jumping is taken for falling
     this.characters.forEach(character => {
-      if (character.isDead) {
+      if (character.isVanished) {
         return;
       }
       character.update(this.gravity);
       this.processBoundariesCollision(character);
     });
     this.collectables.forEach(collectable => {
+      if (collectable.isVanished) {
+        return;
+      }
       collectable.update();
     });
     const collisions = this.collider.processBroadPhase([
       ...this.characters,
       ...this.collisions,
       ...this.doors,
+      ...this.collectables,
     ]);
     this.collisionDebugMap = collisions;
     this.brain.update();
@@ -160,7 +164,8 @@ export default class {
     this.collisions = [...this.rawLayers.collisions];
     this.characters = [...this.rawLayers.characters];
     this.doors = [...this.rawLayers.doors];
-    this.collectables = [...this.rawLayers.collectables];
+    // Collectables may not be in the zone.
+    this.collectables = this.rawLayers.collectables ? [...this.rawLayers.collectables] : [];
     this.collisionDebugMap = [];
   }
 

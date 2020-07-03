@@ -23,6 +23,8 @@ export default class Entity implements Entity {
   // Size in the axis
   public width: number;
   public height: number;
+  // Flag indicating that the entity is no longer being processed.
+  public isVanished: boolean = false;
   // Position on the axis: the current frame and the previous one
   private x: number;
   private y: number;

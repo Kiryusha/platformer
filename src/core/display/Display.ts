@@ -36,7 +36,7 @@ export default class {
 
   public drawCharacters(characters: Character[]): void {
     characters.forEach((character: Character) => {
-      if (character.isDead) {
+      if (character.isVanished) {
         return;
       }
 
@@ -65,6 +65,10 @@ export default class {
 
   public drawCollectables(collectables: AnimatedEntity[]) {
     collectables.forEach((collectable: AnimatedEntity) => {
+      if (collectable.isVanished) {
+        return;
+      }
+
       let frame = collectable.animator.spriteMap.frames[collectable.animator.frameValue].frame;
 
       this.drawObject(

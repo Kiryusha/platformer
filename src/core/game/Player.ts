@@ -29,6 +29,12 @@ export default class Player extends Character implements Player {
     this.currentHealth = this.maxHealth;
   }
 
+  public restoreHealth(): void {
+    if (this.currentHealth < this.maxHealth) {
+      this.currentHealth += 1;
+    }
+  }
+
   public throwUp(type?: string): void {
     switch (type) {
       case 'fromThePit':
@@ -78,7 +84,7 @@ export default class Player extends Character implements Player {
         this.throwUp('death');
 
         setTimeout(() => {
-          this.isDead = true;
+          this.isVanished = true;
         }, 1200);
       } else {
         this.throwUp(this.collisionXDirection);

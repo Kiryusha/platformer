@@ -37,6 +37,7 @@ interface Entity {
   collisionXDirection: string;
   collisionYDirection: string;
   defaults: EntityConfig;
+  isVanished: boolean;
   properties?: {
     target?: string;
     offset?: string;
@@ -76,6 +77,7 @@ interface Player extends Character {
   currentHealth: number;
   maxHealth: number;
   throwUp(direction?: string): void;
+  restoreHealth(): void;
 }
 
 interface Character extends Entity {
@@ -93,7 +95,6 @@ interface Character extends Entity {
   isHurt: boolean;
   isJumpTriggered: boolean;
   isDeathTriggered: boolean;
-  isDead: boolean;
   animator: Animator;
   isFacingLeft: boolean;
   isSprinting: boolean;

@@ -1,7 +1,13 @@
 // The class is responsible for processing all the possible collisions
 export default class {
+  // This method exists for the future possible separation of various methods of cycling objects:
+  // quad tree, spatial hash etc. For now it is just brute forcing all of them.
+  public processBroadPhase(entities: Entity[]): any[] {
+    return this.bruteForce(entities);
+  }
+
   // this router separates collisions of a character with a collision entity
-  private routeNarrowPhaseCharacterVsCollision(
+  private routeCharacterVsCollision(
     character: Character,
     collision: Entity,
   ): void {
@@ -77,40 +83,7 @@ export default class {
     }
   }
 
-  // this router separates collisions of a player with an enemy
-  // TODO: refactor collisions: there is case, when player runs through an enemy freely
-  routeNarrowPhasePlayerVsEnemy(
-    player: Player,
-    enemy: Character,
-  ): void {
-    if (enemy.isDead) {
-      return;
-    }
-    if (
-      this.isCollidingFromTop(player, enemy)
-      || this.isCollidingFromBottom(enemy, player)
-    ) {
-      enemy.isDeathTriggered = true;
-      player.throwUp('attacker');
-      return;
-    } else if (
-      this.isCollidingFromRight(player, enemy)
-      || this.isCollidingFromBottom(player, enemy)
-      || this.isCollidingFromTop(enemy, player)
-      || this.isCollidingFromLeft(enemy, player)
-    ) {
-      player.collisionXDirection = 'right';
-      player.isHurtTriggered = true;
-    } else if (
-      this.isCollidingFromLeft(player, enemy)
-      || this.isCollidingFromRight(enemy, player)
-    ) {
-      player.collisionXDirection = 'left';
-      player.isHurtTriggered = true;
-    }
-  }
-
-  routeNarrowPhaseCharacterVsDoor(player: Player, door: Entity): void {
+  private routePlayerVsDoor(player: Player, door: Entity): void {
     const { target } = door.properties;
     const offset = parseInt(door.properties.offset);
     const destinationX = door.properties.destinationX
@@ -138,6 +111,47 @@ export default class {
     player.destination.name = target;
   }
 
+  // this router separates collisions of a player with an enemy
+  // TODO: refactor collisions: there is case, when player runs through an enemy freely
+  private routePlayerVsEnemy(
+    player: Player,
+    enemy: Character,
+  ): void {
+    if (enemy.isVanished) {
+      return;
+    }
+    if (
+      this.isCollidingFromTop(player, enemy)
+      || this.isCollidingFromBottom(enemy, player)
+    ) {
+      enemy.isDeathTriggered = true;
+      player.throwUp('attacker');
+      return;
+    } else if (
+      this.isCollidingFromRight(player, enemy)
+      || this.isCollidingFromBottom(player, enemy)
+      || this.isCollidingFromTop(enemy, player)
+      || this.isCollidingFromLeft(enemy, player)
+    ) {
+      player.collisionXDirection = 'right';
+      player.isHurtTriggered = true;
+    } else if (
+      this.isCollidingFromLeft(player, enemy)
+      || this.isCollidingFromRight(enemy, player)
+    ) {
+      player.collisionXDirection = 'left';
+      player.isHurtTriggered = true;
+    }
+  }
+
+  private routePlayerVsCollectable(e1: Player, e2: Entity) {
+    switch (e2.type) {
+      case 'carrot':
+        e2.isVanished = true;
+        e1.restoreHealth();
+    }
+  }
+
   // these methods determine the presence of a one-way collision of e1 with e2
   private isCollidingFromTop(e1: Entity, e2: Entity): boolean {
     return e1.bottom > e2.top && e1.oldBottom <= e2.top;
@@ -153,12 +167,6 @@ export default class {
 
   private isCollidingFromLeft(e1: Entity, e2: Entity): boolean {
     return e1.right > e2.left && e1.oldRight <= e2.left;
-  }
-
-  // This method exists for the future possible separation of various methods of cycling objects:
-  // quad tree, spatial hash etc. For now it is just brute forcing all of them.
-  public processBroadPhase(entities: Entity[]): any[] {
-    return this.bruteForce(entities);
   }
 
   private bruteForce(entities: Entity[]): any[] {
@@ -220,22 +228,19 @@ export default class {
       return;
     }
     if (e1.group === 'characters' && e2.group === 'collisions') {
-      this.routeNarrowPhaseCharacterVsCollision(e1, e2);
-    } else if (e2.group  === 'characters' && e1.group === 'collisions') {
-      this.routeNarrowPhaseCharacterVsCollision(e2, e1);
+      this.routeCharacterVsCollision(e1, e2);
     } else if (e1.group === 'characters' && e2.group === 'characters') {
-      this.routeNarrowPhasePlayerVsEnemy(
-        e1.type === 'player' ? e1 : e2,
-        e2.type === 'player' ? e1 : e2,
-      );
-    } else if (
-      (e1.group === 'characters' && e2.group === 'doors')
-      || (e2.group === 'characters' && e1.group === 'doors')
-    ) {
-      this.routeNarrowPhaseCharacterVsDoor(
-        e1.group === 'characters' ? e1 : e2,
-        e2.group === 'characters' ? e1 : e2,
-      );
+      if (e1.type === 'player' && e2.type === 'enemy') {
+        this.routePlayerVsEnemy(e1, e2);
+      }
+    } else if (e1.group === 'characters' && e2.group === 'doors') {
+      if (e1.type === 'player') {
+        this.routePlayerVsDoor(e1, e2);
+      }
+    } else if (e1.group === 'characters' && e2.group === 'collectables') {
+      if (e1.type === 'player') {
+        this.routePlayerVsCollectable(e1, e2);
+      }
     }
   }
 
