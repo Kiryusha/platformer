@@ -1,10 +1,10 @@
-Rabbit-girl platformer
+Bunny platformer
 ------------------------------
+I am trying to create a 2d platformer game only using typescript.
 
 ## Demo:
 
-- https://kiryusha.github.io/platformer/dist_canvas/ (old version made only by CanvasRenderingContext2D)
-- https://kiryusha.github.io/platformer/dist/ (mix with WebGL and CanvasRenderingContext2D)
+- https://kiryusha.github.io/platformer/dist/
 
 ## Assets used:
 
@@ -20,15 +20,12 @@ Rabbit-girl platformer
 ## How to use
 
 ```
-# install all dependencies.
+# install all dependencies:
 yarn
 
-# Start developing and serve your app:
+# run dev version:
 yarn start
 
-# Build your app without minification:
+# build prod version:
 yarn build
-
-# Build your app with minification:
-yarn build.all
 ```
