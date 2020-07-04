@@ -147,8 +147,10 @@ export default class {
   private routePlayerVsCollectable(e1: Player, e2: Entity) {
     switch (e2.type) {
       case 'carrot':
-        e2.isVanished = true;
-        e1.restoreHealth();
+        if (!e2.isVanished) {
+          e2.isVanished = true;
+          e1.restoreHealth();
+        }
     }
   }
 
