@@ -35,21 +35,27 @@
   "animation": {
     "frameWidth": 32,
     "frameHeight": 21,
-    "frames": {
-      "skip": [
-        "slug-skip-1",
-        "slug-skip-2",
-        "slug-skip-3",
-        "slug-skip-4"
-      ],
-      "death": [
-        "enemy-death-1",
-        "enemy-death-2",
-        "enemy-death-3",
-        "enemy-death-4",
-        "enemy-death-5",
-        "enemy-death-6"
-      ]
+    "animations": {
+      "skip": {
+        "delay": 4,
+        "frames": [
+          "slug-skip-1",
+          "slug-skip-2",
+          "slug-skip-3",
+          "slug-skip-4"
+        ]
+      },
+      "death": {
+        "delay": 2,
+        "frames": [
+          "enemy-death-1",
+          "enemy-death-2",
+          "enemy-death-3",
+          "enemy-death-4",
+          "enemy-death-5",
+          "enemy-death-6"
+        ]
+      }
     }
   }
 }

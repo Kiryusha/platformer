@@ -72,7 +72,7 @@ export default class Character extends Entity implements Character {
       animation: {
         frameWidth,
         frameHeight,
-        frames
+        animations
       },
     }: CharacterConfig,
     spriteMap: SpriteMap,
@@ -81,7 +81,7 @@ export default class Character extends Entity implements Character {
 
     Object.assign(this, main);
 
-    this.setAnimationDefaults(frameWidth, frameHeight, frames, spriteMap);
+    this.setAnimationDefaults(frameWidth, frameHeight, animations, spriteMap);
   }
 
   public startMovingLeft(): void {
@@ -186,40 +186,40 @@ export default class Character extends Entity implements Character {
   private setAnimationDefaults(
     frameWidth: number,
     frameHeight: number,
-    frames: {},
+    animations: {},
     playerSpriteMap: SpriteMap,
   ): void {
     this.animator = new Animator(
       playerSpriteMap,
       frameWidth,
       frameHeight,
-      frames,
+      animations,
     );
   }
 
   private updateAnimation(): void {
     if (this.isHurt) {
-      this.animator.changeFrameset('hurt', 'loop', 2);
+      this.animator.changeFrameset('hurt');
     } else if (this.isDeathTriggered && !this.isVanished) {
-      this.animator.changeFrameset('death', 'loop', 2);
+      this.animator.changeFrameset('death');
     } else if (
       (this.isMovingLeft || this.isMovingRight)
       && !this.isJumping
       && !this.isFalling
     ) {
       if (this.isSprinting) {
-        this.animator.changeFrameset('skip', 'loop', 1.33);
+        this.animator.changeFrameset('skip', 1.33);
       } else {
-        this.animator.changeFrameset('skip', 'loop', 2);
+        this.animator.changeFrameset('skip');
       }
     } else if (this.isFalling) {
-      this.animator.changeFrameset('fall', 'loop', 4);
+      this.animator.changeFrameset('fall');
     } else if (this.isJumping) {
-      this.animator.changeFrameset('jump', 'loop', 4);
+      this.animator.changeFrameset('jump');
     } else if (this.isDucking) {
-      this.animator.changeFrameset('duck', 'loop', 4);
+      this.animator.changeFrameset('duck');
     } else {
-      this.animator.changeFrameset('idle', 'loop', 4);
+      this.animator.changeFrameset('idle');
     }
 
     this.animator.animate();

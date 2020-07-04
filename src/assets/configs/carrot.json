@@ -11,13 +11,16 @@
   "animation": {
     "frameWidth": 17,
     "frameHeight": 19,
-    "frames": {
-      "idle": [
-        "carrot-1",
-        "carrot-2",
-        "carrot-3",
-        "carrot-4"
-      ]
+    "animations": {
+      "idle": {
+        "delay": 6,
+        "frames": [
+          "carrot-1",
+          "carrot-2",
+          "carrot-3",
+          "carrot-4"
+        ]
+      }
     }
   }
 }

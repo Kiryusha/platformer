@@ -58,7 +58,7 @@ interface Animator {
   spriteMap: SpriteMap;
   frameWidth: number;
   frameHeight: number;
-  frames: any;
+  animations: any;
   count: number;
   delay: number;
   mode: string;
@@ -136,7 +136,7 @@ interface AnimatedEntityConfig {
   animation: {
     frameWidth: number
     frameHeight: number
-    frames: {}
+    animations: {}
   }
 }
 
@@ -169,6 +169,6 @@ interface CharacterConfig {
   animation: {
     frameWidth: number
     frameHeight: number
-    frames: {}
+    animations: {}
   }
 }
