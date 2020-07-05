@@ -19,6 +19,8 @@ export default class Player extends Character implements Player {
   public currentHealth: number;
   // Property indicates maximum obtainable hp point by player
   public maxHealth: number;
+  // Property shows amount of all the obtained stars
+  public currentStars: number;
 
   constructor(
     playerConfig: CharacterConfig,
@@ -27,6 +29,11 @@ export default class Player extends Character implements Player {
     super(playerConfig, playerSpriteMap);
     this.maxHealth = playerConfig.player.maxHealth;
     this.currentHealth = this.maxHealth;
+    this.currentStars = 0;
+  }
+
+  public obtainStar(): void {
+    this.currentStars += 1;
   }
 
   public restoreHealth(): void {

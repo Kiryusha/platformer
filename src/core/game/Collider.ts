@@ -145,12 +145,17 @@ export default class {
   }
 
   private routePlayerVsCollectable(e1: Player, e2: Entity) {
-    switch (e2.type) {
-      case 'carrot':
-        if (!e2.isVanished) {
+    if (!e2.isVanished) {
+      switch (e2.type) {
+        case 'carrot':
           e2.isVanished = true;
           e1.restoreHealth();
-        }
+          break;
+        case 'star':
+          e2.isVanished = true;
+          e1.obtainStar();
+          console.log(e1.currentStars);
+      }
     }
   }
 

@@ -8,6 +8,7 @@ import Brain from './Brain';
 import spriteMap from '../../assets/sprite-maps/sprites.json';
 import slugStats from '../../assets/configs/slug.json';
 import carrotStats from '../../assets/configs/carrot.json';
+import starStats from '../../assets/configs/star.json';
 
 export default class {
   gravity: number;
@@ -117,6 +118,10 @@ export default class {
                       carrotStats.entity.x = object.x;
                       carrotStats.entity.y = object.y;
                       return new AnimatedEntity(carrotStats, spriteMap);
+                    case 'star':
+                      starStats.entity.x = object.x;
+                      starStats.entity.y = object.y;
+                      return new AnimatedEntity(starStats, spriteMap);
                   }
                 });
                 break;

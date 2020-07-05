@@ -76,8 +76,10 @@ interface Player extends Character {
   };
   currentHealth: number;
   maxHealth: number;
+  currentStars: number;
   throwUp(direction?: string): void;
   restoreHealth(): void;
+  obtainStar(): void;
 }
 
 interface Character extends Entity {

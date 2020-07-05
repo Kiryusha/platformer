@@ -60,6 +60,29 @@
          "id":3,
          "layers":[
                 {
+                 "color":"#ffff00",
+                 "draworder":"topdown",
+                 "id":10,
+                 "name":"collectables",
+                 "objects":[
+                        {
+                         "height":13,
+                         "id":29,
+                         "name":"star",
+                         "rotation":0,
+                         "type":"star",
+                         "visible":true,
+                         "width":13,
+                         "x":824.833333333333,
+                         "y":106.166666666667
+                        }],
+                 "opacity":1,
+                 "type":"objectgroup",
+                 "visible":true,
+                 "x":0,
+                 "y":0
+                }, 
+                {
                  "color":"#55aa7f",
                  "draworder":"topdown",
                  "id":9,
@@ -331,8 +354,8 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":10,
- "nextobjectid":28,
+ "nextlayerid":11,
+ "nextobjectid":30,
  "orientation":"orthogonal",
  "renderorder":"left-up",
  "tiledversion":"1.3.4",

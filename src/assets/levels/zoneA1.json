@@ -151,13 +151,13 @@
                          "y":230
                         }, 
                         {
-                         "height":20,
+                         "height":13,
                          "id":34,
-                         "name":"carrot",
+                         "name":"star",
                          "rotation":0,
-                         "type":"carrot",
+                         "type":"star",
                          "visible":true,
-                         "width":20,
+                         "width":13,
                          "x":262,
                          "y":151
                         }],
@@ -186,7 +186,7 @@
                                 {
                                  "name":"offset",
                                  "type":"string",
-                                 "value":"112"
+                                 "value":"192"
                                 }, 
                                 {
                                  "name":"target",

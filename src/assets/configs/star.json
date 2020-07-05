@@ -1,0 +1,28 @@
+{
+  "entity": {
+    "x": 0,
+    "y": 0,
+    "width": 13,
+    "height": 13,
+    "group": "collectables",
+    "type": "star",
+    "name": "star"
+  },
+  "animation": {
+    "frameWidth": 13,
+    "frameHeight": 13,
+    "animations": {
+      "idle": {
+        "delay": 6,
+        "frames": [
+          "star-1",
+          "star-2",
+          "star-3",
+          "star-4",
+          "star-5",
+          "star-6"
+        ]
+      }
+    }
+  }
+}
