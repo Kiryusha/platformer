@@ -5,8 +5,7 @@
     "width": 17,
     "height": 19,
     "group": "collectables",
-    "type": "carrot",
-    "name": "carrot"
+    "type": "carrot"
   },
   "animation": {
     "frameWidth": 17,

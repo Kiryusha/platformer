@@ -106,8 +106,8 @@ window.addEventListener('DOMContentLoaded', async () => {
     if (game.world.middleFrontMap) {
       display.drawMap(game.world.middleFrontMap, game.world.columns, imagesTilesData);
     }
-    display.drawCharacters(game.world.characters);
-    display.drawCollectables(game.world.collectables);
+    display.drawCharacters(game.objects[game.world.activeZone].characters);
+    display.drawCollectables(game.objects[game.world.activeZone].collectables);
     display.drawMap(game.world.frontMap, game.world.columns, imagesTilesData);
 
     // Collisions debugging tool: to visualise collisions type window.SHOW_COLLISIONS = true

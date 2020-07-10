@@ -5,8 +5,7 @@
     "width": 25,
     "height": 15,
     "group": "characters",
-    "type": "enemy",
-    "name": "slug"
+    "type": "enemy"
   },
   "main": {
     "jumpImpulse": 221,

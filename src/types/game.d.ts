@@ -1,3 +1,12 @@
+interface ZoneObjectsCollections {
+  [key: string]: ZoneObjectsCollection
+}
+
+interface ZoneObjectsCollection {
+  characters: Character[]
+  collectables: AnimatedEntity[]
+}
+
 interface GameMap {
   tilewidth: number
   width: number
@@ -28,7 +37,7 @@ interface MapObject {
 }
 
 interface Entity {
-  name: string;
+  id: string;
   type: string;
   group: string;
   width: number;
@@ -119,7 +128,7 @@ interface Character extends Entity {
 
 interface AnimatedEntity extends Entity {
   animator: Animator;
-  update(gravity: number): void;
+  update(): void;
 }
 
 interface EntityConfig {
@@ -129,7 +138,7 @@ interface EntityConfig {
   height: number;
   group: string;
   type: string;
-  name: string;
+  id?: string;
   properties?: {};
 }
 

@@ -13,7 +13,7 @@ export default class Entity implements Entity {
   public collisionXDirection: string = '';
   public collisionYDirection: string = '';
   // Property for the future, not used now
-  public name: string;
+  public id: string;
   // Storage of any custom properties
   // Current use: Doors custom properties
   public properties?: {};

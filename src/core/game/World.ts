@@ -24,19 +24,16 @@ export default class {
   rows: number;
   tileSize: number;
   collider: Collider;
-  map: GameMap;
   rawLayers: any;
   doors: Entity[];
   collisions: Entity[];
-  collectables: AnimatedEntity[];
-  characters: Character[];
   brain: Brain;
   activeZone: keyof zones;
-  player: Player;
 
   constructor (
-    map: GameMap,
-    player: Player,
+    public player: Player,
+    private map: GameMap,
+    private collection: ZoneObjectsCollection,
   ) {
     // Physics
     this.gravity = 10;
@@ -52,31 +49,31 @@ export default class {
 
     this.brain = new Brain();
 
-    this.processMap(map);
+    this.processMap(this.map);
 
     this.collider = new Collider();
   }
 
   public update(): void {
     // TODO: Fix condition, as last frame of jumping is taken for falling
-    this.characters.forEach(character => {
+    this.collection.characters.forEach(character => {
       if (character.isVanished) {
         return;
       }
       character.update(this.gravity);
       this.processBoundariesCollision(character);
     });
-    this.collectables.forEach(collectable => {
+    this.collection.collectables.forEach(collectable => {
       if (collectable.isVanished) {
         return;
       }
       collectable.update();
     });
     const collisions = this.collider.processBroadPhase([
-      ...this.characters,
+      ...this.collection.characters,
       ...this.collisions,
       ...this.doors,
-      ...this.collectables,
+      ...this.collection.collectables,
     ]);
     this.collisionDebugMap = collisions;
     this.brain.update();
@@ -90,7 +87,6 @@ export default class {
       height: object.height,
       group: layer.name,
       type: object.type,
-      name: layer.name,
       properties: !object.properties ? {} : object.properties.reduce((obj, prop) => {
         obj[prop.name] = prop.value;
         return obj;
@@ -99,7 +95,11 @@ export default class {
   }
 
   private processMap(map: GameMap) {
-    this.rawLayers = map.layers.reduce((result, group) => {
+    this.collection.collectables = this.collection.collectables || [];
+    this.collection.characters = this.collection.characters || [];
+
+    this.rawLayers = map.layers.reduce((result, group, index) => {
+      let id: string;
       switch (group.name) {
         case 'tiles':
           group.layers.forEach((layer: GameLayer) => result[layer.name] = layer.data);
@@ -115,13 +115,23 @@ export default class {
                 result[layer.name] = layer.objects.map((object: MapObject) => {
                   switch (object.type) {
                     case 'carrot':
-                      carrotStats.entity.x = object.x;
-                      carrotStats.entity.y = object.y;
-                      return new AnimatedEntity(carrotStats, spriteMap);
+                      id = `carrot_${index}`;
+                      // if (this.collection.collectables.every(item => item.id !== id)) {
+                        carrotStats.entity.id = id;
+                        carrotStats.entity.x = object.x;
+                        carrotStats.entity.y = object.y;
+                        return new AnimatedEntity(carrotStats, spriteMap);
+                      // }
+                      break;
                     case 'star':
-                      starStats.entity.x = object.x;
-                      starStats.entity.y = object.y;
-                      return new AnimatedEntity(starStats, spriteMap);
+                      id = `star_${index}`;
+                      // if (this.collection.collectables.every(item => item.id !== id)) {
+                        starStats.entity.id = id;
+                        starStats.entity.x = object.x;
+                        starStats.entity.y = object.y;
+                        return new AnimatedEntity(starStats, spriteMap);
+                      // }
+                      break;
                   }
                 });
                 break;
@@ -141,11 +151,14 @@ export default class {
                     case 'enemy':
                       switch (object.name) {
                         case 'slug':
-                          slugStats.entity.x = object.x;
-                          slugStats.entity.y = object.y;
-                          const character = new Character(slugStats, spriteMap);
-                          this.brain.bindCharacter(character);
-                          return character;
+                          id = `slug_${index}`;
+                          // if (this.collection.characters.every(item => item.id !== id)) {
+                            slugStats.entity.x = object.x;
+                            slugStats.entity.y = object.y;
+                            const character = new Character(slugStats, spriteMap);
+                            this.brain.bindCharacter(character);
+                            return character;
+                          // }
                       }
                   }
                 });
@@ -167,10 +180,10 @@ export default class {
     }
     this.frontMap = [...this.rawLayers.front];
     this.collisions = [...this.rawLayers.collisions];
-    this.characters = [...this.rawLayers.characters];
+    this.collection.characters = [...this.rawLayers.characters];
     this.doors = [...this.rawLayers.doors];
     // Collectables may not be in the zone.
-    this.collectables = this.rawLayers.collectables ? [...this.rawLayers.collectables] : [];
+    this.collection.collectables = this.rawLayers.collectables ? [...this.rawLayers.collectables] : [];
     this.collisionDebugMap = [];
   }
 

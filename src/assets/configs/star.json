@@ -5,8 +5,7 @@
     "width": 13,
     "height": 13,
     "group": "collectables",
-    "type": "star",
-    "name": "star"
+    "type": "star"
   },
   "animation": {
     "frameWidth": 13,

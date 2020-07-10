@@ -7,8 +7,10 @@ import playerConfig from '../../assets/configs/player.json';
 export default class {
   world: World;
   zones: zones;
-  player: Player;
   spriteMap: SpriteMap;
+  // permanent objects which do not recreate when zones change
+  player: Player;
+  objects: ZoneObjectsCollections = {};
 
   constructor(zones: zones, startingZone: keyof zones) {
     this.spriteMap = spriteMap;
@@ -21,8 +23,13 @@ export default class {
     return new Player(playerConfig, this.spriteMap);
   }
 
-  public loadZone(zone: keyof zones): void {
-    this.world = new World(this.zones[zone].config, this.player);
+  public loadZone(zone: keyof zones | keyof ZoneObjectsCollections): void {
+    this.objects[zone] = this.objects[zone] || <ZoneObjectsCollection>{};
+    this.world = new World(
+      this.player,
+      this.zones[zone].config,
+      this.objects[zone],
+    );
     this.world.activeZone = zone;
   }
 
