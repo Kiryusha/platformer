@@ -56,14 +56,14 @@ export default class {
 
   public update(): void {
     // TODO: Fix condition, as last frame of jumping is taken for falling
-    this.collection.characters.forEach(character => {
+    this.collection.characters.forEach((character: Character) => {
       if (character.isVanished) {
         return;
       }
       character.update(this.gravity);
       this.processBoundariesCollision(character);
     });
-    this.collection.collectables.forEach(collectable => {
+    this.collection.collectables.forEach((collectable: AnimatedEntity) => {
       if (collectable.isVanished) {
         return;
       }
@@ -98,8 +98,10 @@ export default class {
     this.collection.collectables = this.collection.collectables || [];
     this.collection.characters = this.collection.characters || [];
 
-    this.rawLayers = map.layers.reduce((result, group, index) => {
+    this.rawLayers = map.layers.reduce((result, group) => {
       let id: string;
+      let obj;
+
       switch (group.name) {
         case 'tiles':
           group.layers.forEach((layer: GameLayer) => result[layer.name] = layer.data);
@@ -112,31 +114,33 @@ export default class {
                 result[layer.name] = this.fillMapLayer(layer);
                 break;
               case 'collectables':
-                result[layer.name] = layer.objects.map((object: MapObject) => {
+                result[layer.name] = layer.objects.map((object: MapObject, index) => {
                   switch (object.type) {
                     case 'carrot':
                       id = `carrot_${index}`;
-                      // if (this.collection.collectables.every(item => item.id !== id)) {
+                      obj = this.collection.collectables.filter(item => item.id === id)[0];
+                      if (!obj) {
                         carrotStats.entity.id = id;
                         carrotStats.entity.x = object.x;
                         carrotStats.entity.y = object.y;
                         return new AnimatedEntity(carrotStats, spriteMap);
-                      // }
-                      break;
+                      }
+                      return obj;
                     case 'star':
                       id = `star_${index}`;
-                      // if (this.collection.collectables.every(item => item.id !== id)) {
+                      obj = this.collection.collectables.filter(item => item.id === id)[0];
+                      if (!obj) {
                         starStats.entity.id = id;
                         starStats.entity.x = object.x;
                         starStats.entity.y = object.y;
                         return new AnimatedEntity(starStats, spriteMap);
-                      // }
-                      break;
+                      }
+                      return obj;
                   }
                 });
                 break;
               case 'characters':
-                result[layer.name] = layer.objects.map((object: MapObject) => {
+                result[layer.name] = layer.objects.map((object: MapObject, index) => {
                   switch (object.type) {
                     case 'player':
                       if (this.player.destination.name.length) {
@@ -152,13 +156,25 @@ export default class {
                       switch (object.name) {
                         case 'slug':
                           id = `slug_${index}`;
-                          // if (this.collection.characters.every(item => item.id !== id)) {
+                          obj = this.collection.characters.filter(item => item.id === id)[0];
+                          if (!obj) {
+                            slugStats.entity.id = id;
                             slugStats.entity.x = object.x;
                             slugStats.entity.y = object.y;
+                            slugStats.main.movingPattern.startingPoint = {
+                              x: object.x,
+                              y: object.y,
+                            };
                             const character = new Character(slugStats, spriteMap);
                             this.brain.bindCharacter(character);
                             return character;
-                          // }
+                          }
+                          obj.movingPattern.startingPoint = {
+                            x: object.x,
+                            y: object.y,
+                          };
+                          this.brain.bindCharacter(obj);
+                          return obj;
                       }
                   }
                 });

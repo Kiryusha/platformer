@@ -11,10 +11,7 @@ export default class {
   public bindCharacter(character: Character): void {
     this.characters.push({
       character,
-      startingPoint: {
-        x: character.left,
-        y: character.top,
-      },
+      startingPoint: character.movingPattern.startingPoint,
       reachedLeftBorder: false,
       reachedRightBorder: false,
     });

@@ -3,6 +3,7 @@
     "maxHealth": 3
   },
   "entity": {
+    "id": "",
     "x": 0,
     "y": 0,
     "width": 13,
@@ -28,8 +29,7 @@
     "isDucking": false,
     "isKeepDucking": false,
     "isStuck": false,
-    "isFacingLeft": false,
-    "movingPattern": null
+    "isFacingLeft": false
   },
   "animation": {
     "frameWidth": 37,

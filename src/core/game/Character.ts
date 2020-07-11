@@ -40,6 +40,10 @@ export default class Character extends Entity implements Character {
   public movingPattern?: {
     type: string;
     length: number;
+    startingPoint: {
+      x: number;
+      y: number;
+    }
   };
   // Property indicates that "up" button is hold. It is used during throwing up after attacking
   // enemy.

@@ -1,5 +1,6 @@
 {
   "entity": {
+    "id": null,
     "x": 0,
     "y": 0,
     "width": 25,
@@ -28,7 +29,11 @@
     "isFacingLeft": false,
     "movingPattern": {
       "type": "roaming",
-      "length": 130
+      "length": 130,
+      "startingPoint": {
+        "x": 0,
+        "y": 0
+      }
     }
   },
   "animation": {

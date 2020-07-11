@@ -95,6 +95,10 @@ interface Character extends Entity {
   movingPattern?: {
     type: string;
     length: number;
+    startingPoint: {
+      x: number;
+      y: number;
+    }
   };
   isJumping: boolean;
   velocityX: number;
@@ -157,29 +161,36 @@ interface CharacterConfig {
   };
   entity: EntityConfig;
   main: {
-    isStuck: boolean
-    jumpImpulse: number
-    maxSpeed: number
-    maxJumpingSpeed: number
-    isJumping: boolean
-    isJumpTriggered: boolean
-    isFalling: boolean
-    accelerationModifier: number
-    brakingModifier: number
-    velocityX: number
-    velocityY: number
-    isMovingLeft: boolean
-    isMovingRight: boolean
-    friction: number
-    isSprinting: boolean
-    isDucking: boolean
-    isKeepDucking: boolean
-    isFacingLeft: boolean
-    movingPattern: any
+    isStuck: boolean;
+    jumpImpulse: number;
+    maxSpeed: number;
+    maxJumpingSpeed: number;
+    isJumping: boolean;
+    isJumpTriggered: boolean;
+    isFalling: boolean;
+    accelerationModifier: number;
+    brakingModifier: number;
+    velocityX: number;
+    velocityY: number;
+    isMovingLeft: boolean;
+    isMovingRight: boolean;
+    friction: number;
+    isSprinting: boolean;
+    isDucking: boolean;
+    isKeepDucking: boolean;
+    isFacingLeft: boolean;
+    movingPattern?: {
+      type: string;
+      length: number;
+      startingPoint: {
+        x: number;
+        y: number;
+      }
+    }
   }
   animation: {
-    frameWidth: number
-    frameHeight: number
+    frameWidth: number;
+    frameHeight: number;
     animations: {}
   }
 }
