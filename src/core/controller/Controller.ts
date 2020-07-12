@@ -7,6 +7,7 @@ export default class {
   up: Button;
   shift: Button;
   down: Button;
+  jump: Button;
 
   constructor() {
     this.left = new Button();
@@ -14,6 +15,7 @@ export default class {
     this.up = new Button();
     this.shift = new Button();
     this.down = new Button();
+    this.jump = new Button();
   }
 
   handleKeyEvent(
@@ -35,6 +37,9 @@ export default class {
         break;
       case 40:
         this.down.getInput(type);
+        break;
+      case 90:
+        this.jump.getInput(type);
         break;
     }
   }
