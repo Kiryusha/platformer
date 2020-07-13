@@ -116,7 +116,9 @@ interface Character extends Entity {
   isDucking: boolean;
   isKeepDucking: boolean;
   isStuck: boolean;
+  isJumpActive: boolean;
   isUpActive: boolean;
+  isClimbing: boolean;
   startDucking(): void;
   stopDucking(): void;
   startSprinting(): void;
@@ -127,6 +129,8 @@ interface Character extends Entity {
   stopMovingRight(): void;
   startJumping(): void;
   stopJumping(): void;
+  startClimbingAndMoving(direction: 'up' | 'right' | 'down' | 'left'): void;
+  stopClimbingAndMoving(): void;
   update(gravity: number): void;
 }
 

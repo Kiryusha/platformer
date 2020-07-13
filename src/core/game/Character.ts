@@ -16,6 +16,9 @@ export default class Character extends Entity implements Character {
   public isFalling: boolean;
   public isSprinting: boolean;
   public isDucking: boolean;
+  // Statuses that indicate climbing - climbing prevents falling and allows your the character
+  // to climb.
+  public isClimbing: boolean;
   // Flags for processing hurting of the character: start of animation and actual status
   public isHurtTriggered: boolean;
   public isHurt: boolean;
@@ -45,13 +48,18 @@ export default class Character extends Entity implements Character {
       y: number;
     }
   };
-  // Property indicates that "up" button is hold. It is used during throwing up after attacking
+  // Property indicates that "jump" button is hold. It is used during throwing up after attacking
   // enemy.
+  public isJumpActive: boolean;
+  // Likewise for "up" and button. It is used for climbing detection
   public isUpActive: boolean;
   // Flag used to indicate that the jump button has been pressed for longer than 100 ms.
   protected isKeepJumping: boolean;
   // VelocityYModifier ceiling
   protected maxJumpingSpeed: number;
+  // Moving direction while climbing
+  private climbingDirection: string;
+  private climbingSpeed: number;
   // Max running speed
   private maxSpeed: number;
   // Run acceleration modifier: maxSpeed is divided into it and given to velocityX
@@ -167,14 +175,25 @@ export default class Character extends Entity implements Character {
     this.accelerationModifier = 6;
   }
 
+  public startClimbingAndMoving(direction: 'up' | 'right' | 'down' | 'left'): void {
+    this.climbingDirection = direction;
+  }
+
+  public stopClimbingAndMoving(): void {
+    this.climbingDirection = 'still';
+  }
+
   public update(gravity: number): void {
     this.adjustHealth();
     this.adjustHorizontalMovement();
     this.adjustVerticalMovement(gravity);
     this.updateAnimation();
 
-    if (!this.isColliding && this.velocityY > 0) {
-      this.isFalling = true;
+    if (!this.isColliding) {
+      if (this.velocityY > 0 && !this.isOnSurface) {
+        this.isFalling = true;
+      }
+      this.isClimbing = false;
     }
   }
 
@@ -185,6 +204,12 @@ export default class Character extends Entity implements Character {
         this.isVanished = true;
       }, 350);
     }
+  }
+
+  // As long as the character collides with the collision object from above, he rises and falls
+  // no more than one pixel.
+  private get isOnSurface(): boolean {
+    return this.top - this.oldTop < 1;
   }
 
   private setAnimationDefaults(
@@ -201,6 +226,7 @@ export default class Character extends Entity implements Character {
     );
   }
 
+  // TODO: it needs refactoring
   private updateAnimation(): void {
     if (this.isHurt) {
       this.animator.changeFrameset('hurt');
@@ -218,6 +244,10 @@ export default class Character extends Entity implements Character {
       }
     } else if (this.isFalling) {
       this.animator.changeFrameset('fall');
+    } else if (this.isClimbing && this.climbingDirection) {
+      this.animator.changeFrameset('climb');
+    } else if (this.isClimbing) {
+      this.animator.changeFrameset('climb', null, 'pause');
     } else if (this.isJumping) {
       this.animator.changeFrameset('jump');
     } else if (this.isDucking) {
@@ -234,35 +264,50 @@ export default class Character extends Entity implements Character {
       return;
     }
 
-    let gravity = rawGravity;
-    this.oldTop = this.top;
+    if (this.isClimbing) {
+      switch (this.climbingDirection) {
+        case 'up':
+          this.velocityY = -this.climbingSpeed;
+          break;
+        case 'down':
+          this.velocityY = this.climbingSpeed;
+          break;
+        default:
+          this.velocityY = 0;
+      }
 
-    // if the player continues to press the jump key, then gravity will be halved until
-    // the character reaches the top point of the jump.
-    if (this.isKeepJumping && this.velocityY < 0) {
-      gravity *= 0.6;
+      this.top += this.velocityY;
     } else {
-      this.isKeepJumping = false;
+      let gravity = rawGravity;
+      this.oldTop = this.top;
+
+      // if the player continues to press the jump key, then gravity will be halved until
+      // the character reaches the top point of the jump.
+      if (this.isKeepJumping && this.velocityY < 0) {
+        gravity *= 0.6;
+      } else {
+        this.isKeepJumping = false;
+      }
+
+      this.velocityYModifier = gravity;
+
+      // trigger jumping calculation only if:
+      // 1) the corresponding button has been pressed and
+      // 2) we are not in a jump already
+      // 3) we are not in a fall.
+      if (this.isJumpTriggered && !this.isJumping && !this.isFalling) {
+        this.velocityYModifier -= this.jumpImpulse;
+        this.isJumping = true;
+      }
+
+      this.velocityY = bound(
+        this.velocityY + (this.friction * this.velocityYModifier),
+        -this.maxJumpingSpeed,
+        this.maxJumpingSpeed,
+      );
+
+      this.top += this.velocityY + (this.friction * this.velocityY);
     }
-
-    this.velocityYModifier = gravity;
-
-    // trigger jumping calculation only if:
-    // 1) the corresponding button has been pressed and
-    // 2) we are not in a jump already
-    // 3) we are not in a fall.
-    if (this.isJumpTriggered && !this.isJumping && !this.isFalling) {
-      this.velocityYModifier -= this.jumpImpulse;
-      this.isJumping = true;
-    }
-
-    this.velocityY = bound(
-      this.velocityY + (this.friction * this.velocityYModifier),
-      -this.maxJumpingSpeed,
-      this.maxJumpingSpeed,
-    );
-
-    this.top += this.velocityY + (this.friction * this.velocityY);
   }
 
   private adjustHorizontalMovement(): void {
@@ -270,45 +315,60 @@ export default class Character extends Entity implements Character {
       return;
     }
 
-    this.oldLeft = this.left;
-    // If we move to the left,
-    if (this.isMovingLeft) {
-      // then we will reach maximum speed for as many frames as specified in the modifier.
-      if (this.velocityX > -this.maxSpeed) {
-        this.velocityX -= this.maxSpeed / this.accelerationModifier;
+    if (this.isClimbing) {
+      switch (this.climbingDirection) {
+        case 'left':
+          this.velocityX = -this.climbingSpeed;
+          break;
+        case 'right':
+          this.velocityX = this.climbingSpeed;
+          break;
+        default:
+          this.velocityX = 0;
       }
 
-      // slowing down after sprinting
-      if (this.velocityX < -this.maxSpeed) {
-        this.velocityX += this.maxSpeed / this.accelerationModifier;
-      }
-    // And vice versa for the moving to the right.
-    } else if (this.isMovingRight) {
-      if (this.velocityX < this.maxSpeed) {
-        this.velocityX += this.maxSpeed / this.accelerationModifier;
+      this.left += this.velocityX;
+    } else {
+      this.oldLeft = this.left;
+      // If we move to the left,
+      if (this.isMovingLeft) {
+        // then we will reach maximum speed for as many frames as specified in the modifier.
+        if (this.velocityX > -this.maxSpeed) {
+          this.velocityX -= this.maxSpeed / this.accelerationModifier;
+        }
+
+        // slowing down after sprinting
+        if (this.velocityX < -this.maxSpeed) {
+          this.velocityX += this.maxSpeed / this.accelerationModifier;
+        }
+      // And vice versa for the moving to the right.
+      } else if (this.isMovingRight) {
+        if (this.velocityX < this.maxSpeed) {
+          this.velocityX += this.maxSpeed / this.accelerationModifier;
+        }
+
+        // slowing down after sprinting
+        if (this.velocityX > this.maxSpeed) {
+          this.velocityX -= this.maxSpeed / this.accelerationModifier;
+        }
+      // If we stop left and right moving, then we completely slow down for
+      // as many frames as specified in the modifier.
+      } else if (!this.isMovingLeft && !this.isMovingRight) {
+        if (this.velocityX < 0 ) {
+          this.velocityX += this.maxSpeed / this.brakingModifier;
+
+          // this check is protecting against looping at small speed residuals.
+          if (this.velocityX > 0) this.velocityX = 0;
+        }
+
+        if (this.velocityX > 0) {
+          this.velocityX -= this.maxSpeed / this.brakingModifier;
+
+          if (this.velocityX < 0) this.velocityX = 0;
+        }
       }
 
-      // slowing down after sprinting
-      if (this.velocityX > this.maxSpeed) {
-        this.velocityX -= this.maxSpeed / this.accelerationModifier;
-      }
-    // If we stop left and right moving, then we completely slow down for
-    // as many frames as specified in the modifier.
-    } else if (!this.isMovingLeft && !this.isMovingRight) {
-      if (this.velocityX < 0 ) {
-        this.velocityX += this.maxSpeed / this.brakingModifier;
-
-        // this check is protecting against looping at small speed residuals.
-        if (this.velocityX > 0) this.velocityX = 0;
-      }
-
-      if (this.velocityX > 0) {
-        this.velocityX -= this.maxSpeed / this.brakingModifier;
-
-        if (this.velocityX < 0) this.velocityX = 0;
-      }
+      this.left += this.velocityX;
     }
-
-    this.left += this.velocityX;
   }
 }

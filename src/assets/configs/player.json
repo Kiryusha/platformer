@@ -22,6 +22,7 @@
     "brakingModifier": 6,
     "velocityX": 0,
     "velocityY": 0,
+    "climbingSpeed": 0.5,
     "isMovingLeft": false,
     "isMovingRight": false,
     "friction": 0.09,
@@ -101,6 +102,15 @@
         "frames": [
           "player-hurt-1",
           "player-hurt-2"
+        ]
+      },
+      "climb": {
+        "delay": 2,
+        "frames": [
+          "player-climb-1",
+          "player-climb-2",
+          "player-climb-3",
+          "player-climb-4"
         ]
       }
     }

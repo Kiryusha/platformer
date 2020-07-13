@@ -159,6 +159,15 @@ export default class {
     }
   }
 
+  private routePlayerVsRope (e1: Player) {
+    if (e1.isUpActive) {
+      if (!e1.isClimbing) {
+        e1.velocityY = 0;
+      }
+      e1.isClimbing = true;
+    }
+  }
+
   // these methods determine the presence of a one-way collision of e1 with e2
   private isCollidingFromTop(e1: Entity, e2: Entity): boolean {
     return e1.bottom > e2.top && e1.oldBottom <= e2.top;
@@ -247,6 +256,10 @@ export default class {
     } else if (e1.group === 'characters' && e2.group === 'collectables') {
       if (e1.type === 'player') {
         this.routePlayerVsCollectable(e1, e2);
+      }
+    } else if (e1.group === 'characters' && e2.group === 'ropes') {
+      if (e1.type === 'player') {
+        this.routePlayerVsRope(e1);
       }
     }
   }

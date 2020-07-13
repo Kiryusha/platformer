@@ -19,6 +19,7 @@
     "brakingModifier": 6,
     "velocityX": 0,
     "velocityY": 0,
+    "climbingSpeed": 0,
     "isMovingLeft": false,
     "isMovingRight": false,
     "friction": 0.09,

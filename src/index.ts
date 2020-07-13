@@ -122,23 +122,34 @@ window.addEventListener('DOMContentLoaded', async () => {
 
   const update = async () => {
     if (controller.left.isActive) {
-      player.startMovingLeft();
+      if (player.isClimbing) {
+        player.startClimbingAndMoving('left');
+      } else {
+        player.startMovingLeft();
+      }
     } else if (player.isMovingLeft) {
       player.stopMovingLeft();
     }
 
     if (controller.right.isActive) {
-      player.startMovingRight();
-    } else if (player.isMovingRight) {
+      if (player.isClimbing) {
+        player.startClimbingAndMoving('right');
+      } else {
+        player.startMovingRight();
+      }
+    } else if (player.isMovingRight || player.isClimbing) {
       player.stopMovingRight();
+      player.stopClimbingAndMoving();
     }
 
+    player.isJumpActive = controller.jump.isActive;
     player.isUpActive = controller.up.isActive;
 
     if (controller.jump.isActive && !controller.jump.isHold) {
       player.startJumping();
-    } else if (player.isJumpTriggered) {
+    } else if (player.isJumpTriggered || player.isClimbing) {
       player.stopJumping();
+      player.stopClimbingAndMoving();
     }
 
     if (controller.shift.isActive) {
@@ -148,9 +159,22 @@ window.addEventListener('DOMContentLoaded', async () => {
     }
 
     if (controller.down.isActive) {
-      player.startDucking();
-    } else if (player.isDucking) {
+      if (player.isClimbing) {
+        player.startClimbingAndMoving('down');
+      } else {
+        player.startDucking();
+      }
+    } else if (player.isDucking || player.isClimbing) {
       player.stopDucking();
+      player.stopClimbingAndMoving();
+    }
+
+    if (controller.up.isActive) {
+      if (player.isClimbing) {
+        player.startClimbingAndMoving('up');
+      }
+    } else if (player.isClimbing) {
+      player.stopClimbingAndMoving();
     }
 
     // The zone changes only if the player collided with the door and the collider recorded data

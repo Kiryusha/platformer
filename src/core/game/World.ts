@@ -11,24 +11,25 @@ import carrotStats from '../../assets/configs/carrot.json';
 import starStats from '../../assets/configs/star.json';
 
 export default class {
-  gravity: number;
-  height: number;
-  width: number;
-  backgroundMap: number[];
-  middleBackgroundMap: any[];
-  middleFrontMap: any[];
-  middleMap: number[];
-  frontMap: number[];
-  collisionDebugMap: (number | string)[];
-  columns: number;
-  rows: number;
-  tileSize: number;
-  collider: Collider;
-  rawLayers: any;
-  doors: Entity[];
-  collisions: Entity[];
-  brain: Brain;
-  activeZone: keyof zones;
+  public height: number;
+  public width: number;
+  public backgroundMap: number[];
+  public middleBackgroundMap: number[];
+  public middleFrontMap: number[];
+  public middleMap: number[];
+  public frontMap: number[];
+  public collisionDebugMap: (number | string)[];
+  public columns: number;
+  public rows: number;
+  public activeZone: keyof zones;
+  private gravity: number;
+  private tileSize: number;
+  private collider: Collider;
+  private rawLayers: any;
+  private doors: Entity[];
+  private collisions: Entity[];
+  private brain: Brain;
+  private ropes: Entity[];
 
   constructor (
     public player: Player,
@@ -74,6 +75,7 @@ export default class {
       ...this.collisions,
       ...this.doors,
       ...this.collection.collectables,
+      ...this.ropes,
     ]);
     this.collisionDebugMap = collisions;
     this.brain.update();
@@ -111,6 +113,7 @@ export default class {
             switch (layer.name) {
               case 'collisions':
               case 'doors':
+              case 'ropes':
                 result[layer.name] = this.fillMapLayer(layer);
                 break;
               case 'collectables':
@@ -198,8 +201,10 @@ export default class {
     this.collisions = [...this.rawLayers.collisions];
     this.collection.characters = [...this.rawLayers.characters];
     this.doors = [...this.rawLayers.doors];
-    // Collectables may not be in the zone.
-    this.collection.collectables = this.rawLayers.collectables ? [...this.rawLayers.collectables] : [];
+    // That objects may not be in the zone.
+    this.ropes = this.rawLayers.ropes ? [...this.rawLayers.ropes] : [];
+    this.collection.collectables = this.rawLayers.collectables ?
+      [...this.rawLayers.collectables] : [];
     this.collisionDebugMap = [];
   }
 
