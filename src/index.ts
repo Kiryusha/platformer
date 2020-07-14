@@ -112,7 +112,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     } else if (player.isDucking)  {
       player.stopDucking();
     }
-  }
+  };
 
   const adjustClimbingControls = () => {
     if (
@@ -139,7 +139,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     if (controller.up.isActive) {
       player.startClimbingAndMoving('up');
     }
-  }
+  };
 
   const resize = () => {
     display.resize(

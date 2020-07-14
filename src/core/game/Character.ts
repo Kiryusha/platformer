@@ -180,7 +180,7 @@ export default class Character extends Entity implements Character {
   }
 
   public stopClimbingAndMoving(): void {
-    this.climbingDirection = 'still';
+    this.climbingDirection = null;
   }
 
   public update(gravity: number): void {
@@ -228,6 +228,9 @@ export default class Character extends Entity implements Character {
 
   // TODO: it needs refactoring
   private updateAnimation(): void {
+    // if (this.type === 'player') {
+    //   console.log(this.climbingDirection)
+    // }
     if (this.isHurt) {
       this.animator.changeFrameset('hurt');
     } else if (this.isDeathTriggered && !this.isVanished) {
@@ -246,8 +249,8 @@ export default class Character extends Entity implements Character {
       this.animator.changeFrameset('fall');
     } else if (this.isClimbing && this.climbingDirection) {
       this.animator.changeFrameset('climb');
-    } else if (this.isClimbing) {
-      this.animator.changeFrameset('climb', null, 'pause');
+    } else if (this.isClimbing && !this.climbingDirection) {
+      this.animator.changeFrameset('climb', 30, 'pause');
     } else if (this.isJumping) {
       this.animator.changeFrameset('jump');
     } else if (this.isDucking) {
