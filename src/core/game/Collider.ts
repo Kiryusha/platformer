@@ -161,10 +161,9 @@ export default class {
 
   private routePlayerVsRope (e1: Player) {
     if (e1.isUpActive) {
-      if (!e1.isClimbing) {
-        e1.velocityY = 0;
-      }
       e1.isClimbing = true;
+      e1.isJumping = false;
+      e1.isFalling = false;
     }
   }
 

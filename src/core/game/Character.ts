@@ -120,6 +120,7 @@ export default class Character extends Entity implements Character {
 
   public startJumping(): void {
     if (!this.isStuck) {
+      this.isClimbing = false;
       if (!this.isJumping) {
         this.jumpingTimer = setTimeout(() => {
           this.isKeepJumping = true;
@@ -228,9 +229,6 @@ export default class Character extends Entity implements Character {
 
   // TODO: it needs refactoring
   private updateAnimation(): void {
-    // if (this.type === 'player') {
-    //   console.log(this.climbingDirection)
-    // }
     if (this.isHurt) {
       this.animator.changeFrameset('hurt');
     } else if (this.isDeathTriggered && !this.isVanished) {
@@ -239,6 +237,7 @@ export default class Character extends Entity implements Character {
       (this.isMovingLeft || this.isMovingRight)
       && !this.isJumping
       && !this.isFalling
+      && !this.isClimbing
     ) {
       if (this.isSprinting) {
         this.animator.changeFrameset('skip', 1.33);
