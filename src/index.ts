@@ -10,6 +10,7 @@ import zoneA1 from './assets/levels/zoneA1.json';
 import zoneB0 from './assets/levels/zoneB0.json';
 import zoneB1 from './assets/levels/zoneB1.json';
 import zoneB2 from './assets/levels/zoneB2.json';
+import zoneB3 from './assets/levels/zoneB3.json';
 import cloudsBack from './assets/images/default/background/clouds-back.png';
 import cloudsFront from './assets/images/default/background/clouds-front.png';
 import bgBack from './assets/images/default/background/bg-back.png';
@@ -70,6 +71,12 @@ window.addEventListener('DOMContentLoaded', async () => {
     },
     'zoneB2': {
       config: zoneB2,
+      tileset: sunnyLandTileSet,
+      backgrounds: {},
+      images: {},
+    },
+    'zoneB3': {
+      config: zoneB3,
       tileset: sunnyLandTileSet,
       backgrounds: {},
       images: {},
