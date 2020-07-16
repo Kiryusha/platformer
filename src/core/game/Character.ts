@@ -19,6 +19,8 @@ export default class Character extends Entity implements Character {
   // Statuses that indicate climbing - climbing prevents falling and allows your the character
   // to climb.
   public isClimbing: boolean;
+  // Moving direction while climbing
+  public climbingDirection: string;
   // Flags for processing hurting of the character: start of animation and actual status
   public isHurtTriggered: boolean;
   public isHurt: boolean;
@@ -57,8 +59,6 @@ export default class Character extends Entity implements Character {
   protected isKeepJumping: boolean;
   // VelocityYModifier ceiling
   protected maxJumpingSpeed: number;
-  // Moving direction while climbing
-  private climbingDirection: string;
   private climbingSpeed: number;
   // Max running speed
   private maxSpeed: number;

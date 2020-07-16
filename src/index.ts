@@ -140,7 +140,7 @@ window.addEventListener('DOMContentLoaded', async () => {
       player.startClimbingAndMoving('up');
     }
 
-    if (controller.jump.isActive && !controller.jump.isHold) {
+    if (controller.jump.isActive && !controller.jump.isHold && !player.climbingDirection) {
       player.startJumping();
     } else if (player.isJumpTriggered) {
       player.stopJumping();

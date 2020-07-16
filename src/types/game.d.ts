@@ -119,6 +119,7 @@ interface Character extends Entity {
   isJumpActive: boolean;
   isUpActive: boolean;
   isClimbing: boolean;
+  climbingDirection: string;
   startDucking(): void;
   stopDucking(): void;
   startSprinting(): void;
