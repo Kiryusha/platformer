@@ -134,6 +134,29 @@
          "id":16,
          "layers":[
                 {
+                 "color":"#aa55ff",
+                 "draworder":"topdown",
+                 "id":23,
+                 "name":"ropes",
+                 "objects":[
+                        {
+                         "height":128,
+                         "id":37,
+                         "name":"rope",
+                         "rotation":0,
+                         "type":"rope",
+                         "visible":true,
+                         "width":16,
+                         "x":16,
+                         "y":192
+                        }],
+                 "opacity":1,
+                 "type":"objectgroup",
+                 "visible":true,
+                 "x":0,
+                 "y":0
+                }, 
+                {
                  "color":"#ffff00",
                  "draworder":"topdown",
                  "id":22,
@@ -226,6 +249,33 @@
                          "width":112,
                          "x":528,
                          "y":319
+                        }, 
+                        {
+                         "height":1,
+                         "id":40,
+                         "name":"",
+                         "properties":[
+                                {
+                                 "name":"destinationY",
+                                 "type":"string",
+                                 "value":"1"
+                                }, 
+                                {
+                                 "name":"offset",
+                                 "type":"string",
+                                 "value":"176"
+                                }, 
+                                {
+                                 "name":"target",
+                                 "type":"string",
+                                 "value":"zoneB3"
+                                }],
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":16,
+                         "x":16,
+                         "y":319
                         }],
                  "opacity":1,
                  "type":"objectgroup",
@@ -302,8 +352,8 @@
                          "rotation":0,
                          "type":"full",
                          "visible":true,
-                         "width":185,
-                         "x":0,
+                         "width":153,
+                         "x":32,
                          "y":258
                         }, 
                         {
@@ -313,8 +363,8 @@
                          "rotation":0,
                          "type":"full",
                          "visible":true,
-                         "width":170,
-                         "x":0,
+                         "width":138,
+                         "x":32,
                          "y":283
                         }, 
                         {
@@ -335,8 +385,8 @@
                          "rotation":0,
                          "type":"full",
                          "visible":true,
-                         "width":118,
-                         "x":0,
+                         "width":86,
+                         "x":32,
                          "y":242
                         }, 
                         {
@@ -346,12 +396,12 @@
                          "rotation":0,
                          "type":"full",
                          "visible":true,
-                         "width":71,
-                         "x":0,
+                         "width":39,
+                         "x":32,
                          "y":226
                         }, 
                         {
-                         "height":144,
+                         "height":94,
                          "id":10,
                          "name":"full",
                          "rotation":0,
@@ -514,6 +564,28 @@
                          "width":16,
                          "x":233,
                          "y":194
+                        }, 
+                        {
+                         "height":144,
+                         "id":35,
+                         "name":"full",
+                         "rotation":0,
+                         "type":"full",
+                         "visible":true,
+                         "width":16,
+                         "x":0,
+                         "y":176
+                        }, 
+                        {
+                         "height":18,
+                         "id":36,
+                         "name":"full",
+                         "rotation":0,
+                         "type":"full",
+                         "visible":true,
+                         "width":26,
+                         "x":32,
+                         "y":208
                         }],
                  "opacity":1,
                  "type":"objectgroup",
@@ -528,8 +600,8 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":23,
- "nextobjectid":35,
+ "nextlayerid":24,
+ "nextobjectid":41,
  "orientation":"orthogonal",
  "renderorder":"left-up",
  "tiledversion":"1.3.4",
