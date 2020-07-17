@@ -200,11 +200,11 @@ export default class {
             this.broadPhaseResolver(e1, e2);
             collisions.push([e1, e2]);
 
-            e1.isColliding = true;
-            e2.isColliding = true;
+            e1.collisionType = e2.group;
+            e2.collisionType = e1.group;
           } else {
-            e1.isColliding = false;
-            e2.isColliding = false;
+            e1.collisionType = null;
+            e2.collisionType = null;
           }
         }
       }

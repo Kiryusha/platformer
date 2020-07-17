@@ -190,7 +190,10 @@ export default class Character extends Entity implements Character {
     this.adjustVerticalMovement(gravity);
     this.updateAnimation();
 
-    if (!this.isColliding) {
+    // Set the fall and turn off climbing status if the character does not collide with anything
+    // and has a positive velocityY or if he collides with the rope, but is not in a state of
+    // active climbing
+    if (!this.collisionType || (this.collisionType === 'ropes' && !this.isClimbing)) {
       if (this.velocityY > 0 && !this.isOnSurface) {
         this.isFalling = true;
       }

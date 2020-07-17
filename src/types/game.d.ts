@@ -42,7 +42,7 @@ interface Entity {
   group: string;
   width: number;
   height: number;
-  isColliding: boolean;
+  collisionType: string;
   collisionXDirection: string;
   collisionYDirection: string;
   defaults: EntityConfig;

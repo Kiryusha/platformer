@@ -7,7 +7,7 @@ export default class Entity implements Entity {
   public type: string;
   // Is the entity in collision right now
   // Current use: setting isFalling status for the Character
-  public isColliding: boolean = false;
+  public collisionType: string = null;
   // Last collisions for left and right directions
   // Current use: Brain processing of moving patterns
   public collisionXDirection: string = '';
