@@ -269,6 +269,8 @@ export default class Character extends Entity implements Character {
       return;
     }
 
+    this.oldTop = this.top;
+
     if (this.isClimbing) {
       switch (this.climbingDirection) {
         case 'up':
@@ -284,7 +286,6 @@ export default class Character extends Entity implements Character {
       this.top += this.velocityY;
     } else {
       let gravity = rawGravity;
-      this.oldTop = this.top;
 
       // if the player continues to press the jump key, then gravity will be halved until
       // the character reaches the top point of the jump.
@@ -320,6 +321,8 @@ export default class Character extends Entity implements Character {
       return;
     }
 
+    this.oldLeft = this.left;
+
     if (this.isClimbing) {
       switch (this.climbingDirection) {
         case 'left':
@@ -334,7 +337,6 @@ export default class Character extends Entity implements Character {
 
       this.left += this.velocityX;
     } else {
-      this.oldLeft = this.left;
       // If we move to the left,
       if (this.isMovingLeft) {
         // then we will reach maximum speed for as many frames as specified in the modifier.
