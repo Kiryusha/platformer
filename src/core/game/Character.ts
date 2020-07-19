@@ -216,6 +216,17 @@ export default class Character extends Entity implements Character {
     return this.top - this.oldTop < 1;
   }
 
+  private get isMoving(): boolean {
+    return (this.isMovingLeft || this.isMovingRight)
+    && !this.isJumping
+    && !this.isFalling
+    && !this.isClimbing;
+  }
+
+  private get isBeganToDie(): boolean {
+    return this.isDeathTriggered && !this.isVanished;
+  }
+
   private setAnimationDefaults(
     frameWidth: number,
     frameHeight: number,
@@ -234,14 +245,9 @@ export default class Character extends Entity implements Character {
   private updateAnimation(): void {
     if (this.isHurt) {
       this.animator.changeFrameset('hurt');
-    } else if (this.isDeathTriggered && !this.isVanished) {
+    } else if (this.isBeganToDie) {
       this.animator.changeFrameset('death');
-    } else if (
-      (this.isMovingLeft || this.isMovingRight)
-      && !this.isJumping
-      && !this.isFalling
-      && !this.isClimbing
-    ) {
+    } else if (this.isMoving) {
       if (this.isSprinting) {
         this.animator.changeFrameset('skip', 1.33);
       } else {
@@ -249,10 +255,12 @@ export default class Character extends Entity implements Character {
       }
     } else if (this.isFalling) {
       this.animator.changeFrameset('fall');
-    } else if (this.isClimbing && this.climbingDirection) {
-      this.animator.changeFrameset('climb');
-    } else if (this.isClimbing && !this.climbingDirection) {
-      this.animator.changeFrameset('climb', 30, 'pause');
+    } else if (this.isClimbing) {
+      if (this.climbingDirection) {
+        this.animator.changeFrameset('climb');
+      } else {
+        this.animator.changeFrameset('climb', 30, 'pause');
+      }
     } else if (this.isJumping) {
       this.animator.changeFrameset('jump');
     } else if (this.isDucking) {
