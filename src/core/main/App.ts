@@ -5,21 +5,7 @@ import Game from '../game/Game';
 import Engine from '../engine/Engine';
 import AssetsManager from '../display/AssetsManager';
 import spriteSheet from '../../assets/images/sprites.png';
-// default zone set
-import zoneA0 from '../../assets/levels/zoneA0.json';
-import zoneA1 from '../../assets/levels/zoneA1.json';
-import zoneB0 from '../../assets/levels/zoneB0.json';
-import zoneB1 from '../../assets/levels/zoneB1.json';
-import zoneB2 from '../../assets/levels/zoneB2.json';
-import zoneB3 from '../../assets/levels/zoneB3.json';
-import cloudsBack from '../../assets/images/default/background/clouds-back.png';
-import cloudsFront from '../../assets/images/default/background/clouds-front.png';
-import bgBack from '../../assets/images/default/background/bg-back.png';
-import bgFront from '../../assets/images/default/background/bg-front.png';
-import defaultTileSet from '../../assets/images/default/default-tileset.png';
-import sunnyLandTileSet from '../../assets/images/sunny-land/sunny-land-tileset.png';
-import defaultImages from '../../assets/images/default/images.png';
-import defaultImagesMap from '../../assets/sprite-maps/default/images.json';
+import zones from './zones';
 
 declare global {
   interface Window {
@@ -28,14 +14,13 @@ declare global {
 }
 
 export default class {
-  aspectRatio: number;
-  fps: number;
-  zones: zones;
-  startingZone: string;
+  aspectRatio: number = 9 / 16;
+  fps: number = 1000 / 30;
+  zones: zones = zones;
+  startingZone: string = 'zoneA1';
   controller: Controller;
   game: Game;
   display: Display;
-  player: Player;
   engine: Engine;
 
   constructor() {
@@ -43,61 +28,6 @@ export default class {
   }
 
   public async init(): Promise<any> {
-    this.aspectRatio = 9 / 16;
-    this.fps = 1000 / 30;
-    this.zones = {
-      'zoneA0': {
-        config: zoneA0,
-        tileset: defaultTileSet,
-        backgrounds: {
-          cloudsBack,
-          cloudsFront,
-          bgBack,
-          bgFront,
-        },
-        images: {
-          spriteSheet: defaultImages,
-          spriteMap: defaultImagesMap,
-        }
-      },
-      'zoneA1': {
-        config: zoneA1,
-        tileset: defaultTileSet,
-        backgrounds: {
-          cloudsBack,
-          cloudsFront,
-        },
-        images: {
-          spriteSheet: defaultImages,
-          spriteMap: defaultImagesMap,
-        }
-      },
-      'zoneB0': {
-        config: zoneB0,
-        tileset: sunnyLandTileSet,
-        backgrounds: {},
-        images: {},
-      },
-      'zoneB1': {
-        config: zoneB1,
-        tileset: sunnyLandTileSet,
-        backgrounds: {},
-        images: {},
-      },
-      'zoneB2': {
-        config: zoneB2,
-        tileset: sunnyLandTileSet,
-        backgrounds: {},
-        images: {},
-      },
-      'zoneB3': {
-        config: zoneB3,
-        tileset: sunnyLandTileSet,
-        backgrounds: {},
-        images: {},
-      },
-    };
-    this.startingZone = 'zoneA1';
     this.controller = new Controller();
     this.game = new Game(this.zones, this.startingZone);
     this.display = new Display(
@@ -105,7 +35,6 @@ export default class {
       256,
       144,
     );
-    this.player = this.game.player;
     this.engine = new Engine(this.fps, this.render.bind(this), this.update.bind(this));
 
     // Synchronize display buffer size with the world size
@@ -134,33 +63,33 @@ export default class {
 
   private adjustMovingControls(): void {
     if (this.controller.left.isActive) {
-      this.player.startMovingLeft();
-    } else if (this.player.isMovingLeft) {
-      this.player.stopMovingLeft();
+      this.game.player.startMovingLeft();
+    } else if (this.game.player.isMovingLeft) {
+      this.game.player.stopMovingLeft();
     }
 
     if (this.controller.right.isActive) {
-      this.player.startMovingRight();
-    } else if (this.player.isMovingRight) {
-      this.player.stopMovingRight();
+      this.game.player.startMovingRight();
+    } else if (this.game.player.isMovingRight) {
+      this.game.player.stopMovingRight();
     }
 
     if (this.controller.jump.isActive && !this.controller.jump.isHold) {
-      this.player.startJumping();
-    } else if (this.player.isJumpTriggered) {
-      this.player.stopJumping();
+      this.game.player.startJumping();
+    } else if (this.game.player.isJumpTriggered) {
+      this.game.player.stopJumping();
     }
 
     if (this.controller.shift.isActive) {
-      this.player.startSprinting();
-    } else if (this.player.isSprinting) {
-      this.player.stopSprinting();
+      this.game.player.startSprinting();
+    } else if (this.game.player.isSprinting) {
+      this.game.player.stopSprinting();
     }
 
     if (this.controller.down.isActive) {
-      this.player.startDucking();
-    } else if (this.player.isDucking)  {
-      this.player.stopDucking();
+      this.game.player.startDucking();
+    } else if (this.game.player.isDucking)  {
+      this.game.player.stopDucking();
     }
   }
 
@@ -171,29 +100,33 @@ export default class {
       && !this.controller.down.isActive
       && !this.controller.left.isActive
     ) {
-      this.player.stopClimbingAndMoving();
+      this.game.player.stopClimbingAndMoving();
     }
 
     if (this.controller.left.isActive) {
-      this.player.startClimbingAndMoving('left');
+      this.game.player.startClimbingAndMoving('left');
     }
 
     if (this.controller.right.isActive) {
-      this.player.startClimbingAndMoving('right');
+      this.game.player.startClimbingAndMoving('right');
     }
 
     if (this.controller.down.isActive) {
-      this.player.startClimbingAndMoving('down');
+      this.game.player.startClimbingAndMoving('down');
     }
 
     if (this.controller.up.isActive) {
-      this.player.startClimbingAndMoving('up');
+      this.game.player.startClimbingAndMoving('up');
     }
 
-    if (this.controller.jump.isActive && !this.controller.jump.isHold && !this.player.climbingDirection) {
-      this.player.startJumping();
-    } else if (this.player.isJumpTriggered) {
-      this.player.stopJumping();
+    if (
+      this.controller.jump.isActive
+      && !this.controller.jump.isHold
+      && !this.game.player.climbingDirection
+    ) {
+      this.game.player.startJumping();
+    } else if (this.game.player.isJumpTriggered) {
+      this.game.player.stopJumping();
     }
   }
 
@@ -204,43 +137,71 @@ export default class {
       this.aspectRatio,
     );
     this.display.render();
-    this.display.camera.adjustCamera(this.player, this.game.world.width, this.game.world.height);
+    this.display.camera.adjustCamera(
+      this.game.player,
+      this.game.world.width,
+      this.game.world.height
+    );
   }
 
   private render(): void {
-    const imagesTilesData =
-      this.zones[this.game.world.activeZone].config.tilesets.filter(tileset => tileset.name === 'images')[0];
+    const imagesTilesData = this.zones[this.game.world.activeZone].config.tilesets
+      .filter(tileset => tileset.name === 'images')[0];
 
     this.display.renderer.clear();
 
     this.display.drawBackgrounds();
-    this.display.drawMap(this.game.world.backgroundMap, this.game.world.columns, imagesTilesData);
+    this.display.drawMap(
+      this.game.world.backgroundMap,
+      this.game.world.columns,
+      imagesTilesData
+    );
     if (this.game.world.middleBackgroundMap) {
-      this.display.drawMap(this.game.world.middleBackgroundMap, this.game.world.columns, imagesTilesData);
+      this.display.drawMap(
+        this.game.world.middleBackgroundMap,
+        this.game.world.columns,
+        imagesTilesData
+      );
     }
-    this.display.drawMap(this.game.world.middleMap, this.game.world.columns, imagesTilesData);
+    this.display.drawMap(
+      this.game.world.middleMap,
+      this.game.world.columns,
+      imagesTilesData
+    );
     if (this.game.world.middleFrontMap) {
-      this.display.drawMap(this.game.world.middleFrontMap, this.game.world.columns, imagesTilesData);
+      this.display.drawMap(
+        this.game.world.middleFrontMap,
+        this.game.world.columns,
+        imagesTilesData
+      );
     }
     this.display.drawCharacters(this.game.objects[this.game.world.activeZone].characters);
     this.display.drawCollectables(this.game.objects[this.game.world.activeZone].collectables);
-    this.display.drawMap(this.game.world.frontMap, this.game.world.columns, imagesTilesData);
+    this.display.drawMap(
+      this.game.world.frontMap,
+      this.game.world.columns,
+      imagesTilesData
+    );
 
     // Collisions debugging tool: to visualise collisions type window.SHOW_COLLISIONS = true
     // in browser console
     if (window.SHOW_COLLISIONS) {
       this.display.drawCollisionDebugMap(this.game.world.collisionDebugMap);
     }
-    this.display.drawHud(this.player, this.game.spriteMap);
+    this.display.drawHud(this.game.player, this.game.spriteMap);
     this.display.render();
-    this.display.camera.adjustCamera(this.player, this.game.world.width, this.game.world.height);
+    this.display.camera.adjustCamera(
+      this.game.player,
+      this.game.world.width,
+      this.game.world.height
+    );
   }
 
   private async update(): Promise<any> {
-    this.player.isJumpActive = this.controller.jump.isActive;
-    this.player.isUpActive = this.controller.up.isActive;
+    this.game.player.isJumpActive = this.controller.jump.isActive;
+    this.game.player.isUpActive = this.controller.up.isActive;
 
-    if (this.player.isClimbing) {
+    if (this.game.player.isClimbing) {
       this.adjustClimbingControls();
     } else {
       this.adjustMovingControls();
@@ -248,15 +209,19 @@ export default class {
 
     // The zone changes only if the player collided with the door and the collider recorded data
     // about the new zone in the corresponding property of the player's character.
-    if (this.player.destination.name.length) {
+    if (this.game.player.destination.name.length) {
       // We should stop the engine, as loading new assets may take some time
       this.engine.stop();
       // load new zone schemes
-      this.game.loadZone(this.player.destination.name);
+      this.game.loadZone(this.game.player.destination.name);
       // position the camera in advance to prevent one frame flicking since it has not yet had
       // time to position itself in the new zone
-      this.display.camera.adjustCamera(this.player, this.game.world.width, this.game.world.height);
-      this.player.destination.name = '';
+      this.display.camera.adjustCamera(
+        this.game.player,
+        this.game.world.width,
+        this.game.world.height
+      );
+      this.game.player.destination.name = '';
       // update only assets that are not yet loaded by comparing urls
       await this.updateZoneAssets();
       // now we can start engine again
