@@ -5,6 +5,7 @@ import Game from '../game/Game';
 import Engine from '../engine/Engine';
 import AssetsManager from '../display/AssetsManager';
 import spriteSheet from '../../assets/images/sprites.png';
+import font from '../../assets/images/font.png';
 import zones from './zones';
 
 declare global {
@@ -48,6 +49,7 @@ export default class {
     await Promise.all([
       // characters sprites are always the same
       this.display.spriteSheet.loadAsset(spriteSheet, true),
+      this.display.font.loadAsset(font, true),
 
       // initial asset setup
       this.updateZoneAssets(),

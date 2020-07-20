@@ -2,11 +2,13 @@
 import AssetsManager from './AssetsManager';
 import Camera from './Camera';
 import Renderer from './Renderer';
+import fontMap from '../../assets/sprite-maps/font.json';
 
 export default class {
   context: CanvasRenderingContext2D;
   mapTileset: AssetsManager;
   spriteSheet: AssetsManager;
+  font: AssetsManager;
   images: AssetsManager;
   camera: Camera;
   renderer: Renderer;
@@ -23,6 +25,7 @@ export default class {
     this.buffer = document.createElement('canvas').getContext('webgl');
     this.mapTileset = new AssetsManager(this.buffer);
     this.spriteSheet = new AssetsManager(this.buffer);
+    this.font = new AssetsManager(this.buffer);
     this.backgrounds = [];
     this.images = new AssetsManager(this.buffer);
     this.camera = new Camera(cameraWidth, cameraHeight);
@@ -32,6 +35,43 @@ export default class {
   public adjustBufferCanvasSize(stageWidth: number, stageHeight: number): void {
     this.buffer.canvas.width = stageWidth;
     this.buffer.canvas.height = stageHeight;
+  }
+
+  public drawFont(
+    word: string,
+    x: number = 0,
+    y: number = 0,
+  ): void {
+    // Font sprite map
+    const dictionary: any = fontMap;
+    // Letters to draw
+    const letters: string[] = word.split('');
+    // Margin from the beginning of the font tile to the letter itself
+    const topMargin: number = 4;
+    // Margin between letters
+    const leftMargin: number = 1;
+    // Cumulative string length
+    let width: number = 0;
+
+    for (let i = 0; i < letters.length; i += 1) {
+      const letter: any = dictionary[letters[i]];
+      // Width of previous letter
+      const prevWidth: number = letters[i - 1] ? dictionary[letters[i - 1]].w : 0;
+
+      // Left margin is only need after first letter
+      if (i) width += prevWidth + leftMargin;
+
+      this.drawObject(
+        false,
+        this.font,
+        letter.x,
+        letter.y + topMargin,
+        this.camera.x + x + width,
+        this.camera.y + y,
+        letter.w,
+        letter.h,
+      );
+    }
   }
 
   public drawCharacters(characters: Character[]): void {
@@ -105,6 +145,9 @@ export default class {
       frame.w,
       frame.h,
     );
+
+    // Drawing current stars amount
+    this.drawFont(`${player.currentStars}`, 48, 4);
   }
 
   public drawObject(
