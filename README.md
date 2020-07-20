@@ -11,11 +11,13 @@ I am trying to create a 2d platformer game only using typescript.
 - https://trixelized.itch.io/nightfield
 - https://ansimuz.itch.io/sunnyland-forest
 - https://aamatniekss.itch.io/free-pixelart-platformer-tileset
+- https://managore.itch.io/m3x6
 
 ## Programs used:
 
 - https://www.mapeditor.org/
 - http://free-tex-packer.com/app/
+- http://www.codehead.co.uk/cbfg/
 
 ## How to use
 
