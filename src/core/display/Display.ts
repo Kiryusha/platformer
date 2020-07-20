@@ -41,11 +41,12 @@ export default class {
     word: string,
     x: number = 0,
     y: number = 0,
+    align: string = 'left',
   ): void {
     // Font sprite map
     const dictionary: any = fontMap;
     // Letters to draw
-    const letters: string[] = word.split('');
+    let letters: string[] = word.split('');
     // Margin from the beginning of the font tile to the letter itself
     const topMargin: number = 4;
     // Margin between letters
@@ -53,20 +54,29 @@ export default class {
     // Cumulative string length
     let width: number = 0;
 
+    if (align === 'right') {
+      letters = letters.reverse();
+    }
+
     for (let i = 0; i < letters.length; i += 1) {
       const letter: any = dictionary[letters[i]];
       // Width of previous letter
       const prevWidth: number = letters[i - 1] ? dictionary[letters[i - 1]].w : 0;
-
       // Left margin is only need after first letter
       if (i) width += prevWidth + leftMargin;
+      // The position of the letter on the x-axis
+      let posX = this.camera.x + x + width;
+
+      if (align === 'right') {
+        posX = this.camera.x + x - width;
+      }
 
       this.drawObject(
         false,
         this.font,
         letter.x,
         letter.y + topMargin,
-        this.camera.x + x + width,
+        posX,
         this.camera.y + y,
         letter.w,
         letter.h,
@@ -147,7 +157,7 @@ export default class {
     );
 
     // Drawing current stars amount
-    this.drawFont(`${player.currentStars}`, 48, 4);
+    this.drawFont(`${player.currentStars}`, 52, 4, 'right');
   }
 
   public drawObject(
