@@ -6,6 +6,16 @@ interface Tileset {
   tilewidth: number
 }
 
-interface backgrounds {
+interface FontMap {
+  [key: string]: {
+    x: number;
+    y: number;
+    w: number;
+    h: number;
+    m: number;
+  }
+}
+
+interface Backgrounds {
   [key: string]: HTMLImageElement
 }

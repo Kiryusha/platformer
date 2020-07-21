@@ -1,39 +1,39 @@
 interface ZoneObjectsCollections {
-  [key: string]: ZoneObjectsCollection
+  [key: string]: ZoneObjectsCollection;
 }
 
 interface ZoneObjectsCollection {
-  characters: Character[]
-  collectables: AnimatedEntity[]
+  characters: Character[];
+  collectables: AnimatedEntity[];
 }
 
 interface GameMap {
-  tilewidth: number
-  width: number
-  height: number
-  layers: any[]
-  tilesets: Tileset[]
+  tilewidth: number;
+  width: number;
+  height: number;
+  layers: any[];
+  tilesets: Tileset[];
 }
 
 interface GameLayer {
-  data?: any[]
-  objects?: any[]
-  name: string
+  data?: any[];
+  objects?: any[];
+  name: string;
 }
 
 interface SpriteMap {
-  frames: any
-  meta: any
+  frames: any;
+  meta: any;
 }
 
 interface MapObject {
-  name: string
-  type: string
-  x: number
-  y: number
-  width: number
-  height: number
-  properties?: any[]
+  name: string;
+  type: string;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  properties?: any[];
 }
 
 interface Entity {
@@ -154,9 +154,9 @@ interface EntityConfig {
 interface AnimatedEntityConfig {
   entity: EntityConfig;
   animation: {
-    frameWidth: number
-    frameHeight: number
-    animations: {}
+    frameWidth: number;
+    frameHeight: number;
+    animations: {};
   }
 }
 
@@ -196,6 +196,6 @@ interface CharacterConfig {
   animation: {
     frameWidth: number;
     frameHeight: number;
-    animations: {}
+    animations: {};
   }
 }

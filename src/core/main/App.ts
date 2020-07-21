@@ -17,7 +17,7 @@ declare global {
 export default class {
   aspectRatio: number = 9 / 16;
   fps: number = 1000 / 30;
-  zones: zones = zones;
+  zones: Zones = zones;
   startingZone: string = 'zoneA1';
   controller: Controller;
   game: Game;
@@ -235,7 +235,7 @@ export default class {
 
   private async updateZoneAssets(): Promise<any> {
     const promises = [];
-    const backgrounds: backgrounds = this.zones[this.game.world.activeZone].backgrounds;
+    const backgrounds: Backgrounds = this.zones[this.game.world.activeZone].backgrounds;
 
     // check if new backgrounds are among already processed backgrounds
     const areNewBackgroundsAmongOld = Object.keys(backgrounds).every(url =>
@@ -271,7 +271,7 @@ export default class {
 
       promises.push(
         ...Object.keys(backgrounds)
-          .map((background: keyof backgrounds, i) =>
+          .map((background: keyof Backgrounds, i) =>
             this.display.backgrounds[i]
               .loadAsset(backgrounds[background])),
       );

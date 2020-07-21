@@ -21,7 +21,7 @@ export default class {
   public collisionDebugMap: (number | string)[];
   public columns: number;
   public rows: number;
-  public activeZone: keyof zones;
+  public activeZone: keyof Zones;
   private gravity: number;
   private tileSize: number;
   private collider: Collider;

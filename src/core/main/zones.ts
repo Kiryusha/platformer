@@ -13,7 +13,7 @@ import sunnyLandTileSet from '../../assets/images/sunny-land/sunny-land-tileset.
 import defaultImages from '../../assets/images/default/images.png';
 import defaultImagesMap from '../../assets/sprite-maps/default/images.json';
 
-const zones: zones = {
+const zones: Zones = {
   'zoneA0': {
     config: zoneA0,
     tileset: defaultTileSet,

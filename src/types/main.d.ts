@@ -3,14 +3,14 @@ declare module '*.png'{
    export = value;
 }
 
-interface zones {
+interface Zones {
   [key: string]: {
-    config: GameMap
-    tileset: string
-    backgrounds: {}
+    config: GameMap;
+    tileset: string;
+    backgrounds: {};
     images: {
-      spriteSheet?: string
-      spriteMap?: SpriteMap
+      spriteSheet?: string;
+      spriteMap?: SpriteMap;
     }
   }
 }

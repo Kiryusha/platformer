@@ -44,7 +44,7 @@ export default class {
     align: string = 'left',
   ): void {
     // Font sprite map
-    const dictionary: any = fontMap;
+    const dictionary: FontMap = fontMap;
     // Letters to draw
     let letters: string[] = word.split('');
     // Margin between letters
