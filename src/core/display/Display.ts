@@ -47,8 +47,6 @@ export default class {
     const dictionary: any = fontMap;
     // Letters to draw
     let letters: string[] = word.split('');
-    // Margin from the beginning of the font tile to the letter itself
-    const topMargin: number = 4;
     // Margin between letters
     const leftMargin: number = 1;
     // Cumulative string length
@@ -75,7 +73,8 @@ export default class {
         false,
         this.font,
         letter.x,
-        letter.y + topMargin,
+        // The font tile y + margin to the letter itself
+        letter.y + letter.m,
         posX,
         this.camera.y + y,
         letter.w,
@@ -157,7 +156,7 @@ export default class {
     );
 
     // Drawing current stars amount
-    this.drawFont(`${player.currentStars}`, 52, 4, 'right');
+    this.drawFont(`${player.currentStars}`, 52, 4);
   }
 
   public drawObject(
