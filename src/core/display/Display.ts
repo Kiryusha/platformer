@@ -156,7 +156,7 @@ export default class {
     );
 
     // Drawing current stars amount
-    this.drawFont(`${player.currentStars}`, 52, 4);
+    this.drawFont(`${player.currentStars}`, 52, 4, 'right');
   }
 
   public drawObject(
