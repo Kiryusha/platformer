@@ -5,6 +5,7 @@ import Game from '../game/Game';
 import Engine from '../engine/Engine';
 import AssetsManager from '../display/AssetsManager';
 import spriteSheet from '../../assets/images/sprites.png';
+import popup from '../../assets/images/popup.png';
 import font from '../../assets/images/font.png';
 import zones from './zones';
 
@@ -23,6 +24,8 @@ export default class {
   game: Game;
   display: Display;
   engine: Engine;
+  isPopupVisible: boolean = false;
+  popupText: string = '';
 
   constructor() {
     this.init();
@@ -49,6 +52,7 @@ export default class {
     await Promise.all([
       // characters sprites are always the same
       this.display.spriteSheet.loadAsset(spriteSheet, true),
+      this.display.popup.loadAsset(popup, true),
       this.display.font.loadAsset(font, true),
 
       // initial asset setup
@@ -57,10 +61,23 @@ export default class {
 
     this.resize();
     this.engine.start();
+
+    this.showPopup('Find some stars! Eat lots of carrots! Find some stars!|Eat lots of carrots! Eat lots of carrots! Eat lots of|carrots! Eat lots of carrots! Eat lots of carrots! Eat|lots of carrots! Eat lots of carrots!');
+  }
+
+  private showPopup(text: string): void {
+    this.isPopupVisible = true;
+    this.popupText = text;
+  }
+
+  private hidePopup(): void {
+    this.isPopupVisible = false;
+    this.popupText = '';
   }
 
   private handleKeyEvent(event: { type: string; keyCode: number; }): void {
     this.controller.handleKeyEvent(event.type, event.keyCode);
+    this.hidePopup();
   }
 
   private adjustMovingControls(): void {
@@ -191,6 +208,9 @@ export default class {
       this.display.drawCollisionDebugMap(this.game.world.collisionDebugMap);
     }
     this.display.drawHud(this.game.player, this.game.spriteMap);
+    if (this.isPopupVisible) {
+      this.display.drawPopup(this.popupText);
+    }
     this.display.render();
     this.display.camera.adjustCamera(
       this.game.player,

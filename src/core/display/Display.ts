@@ -8,6 +8,7 @@ export default class {
   context: CanvasRenderingContext2D;
   mapTileset: AssetsManager;
   spriteSheet: AssetsManager;
+  popup: AssetsManager;
   font: AssetsManager;
   images: AssetsManager;
   camera: Camera;
@@ -25,6 +26,7 @@ export default class {
     this.buffer = document.createElement('canvas').getContext('webgl');
     this.mapTileset = new AssetsManager(this.buffer);
     this.spriteSheet = new AssetsManager(this.buffer);
+    this.popup = new AssetsManager(this.buffer);
     this.font = new AssetsManager(this.buffer);
     this.backgrounds = [];
     this.images = new AssetsManager(this.buffer);
@@ -37,12 +39,44 @@ export default class {
     this.buffer.canvas.height = stageHeight;
   }
 
+  public drawPopup(
+    word: string,
+    x: number = 10,
+    y: number = 68,
+  ): void {
+    // Drawing popup body
+    const width = 236;
+    const height = 66;
+    const xPadding = 15;
+    const yPadding = 13;
+
+    this.drawObject(
+      false,
+      this.popup,
+      0,
+      0,
+      this.camera.x + x,
+      this.camera.y + y,
+      width,
+      height,
+    );
+
+    // Drawing text
+    this.drawFont(
+      word,
+      x + xPadding,
+      y + yPadding,
+    );
+  }
+
   public drawFont(
     word: string,
     x: number = 0,
-    y: number = 0,
+    rawY: number = 0,
     align: string = 'left',
   ): void {
+    let y = rawY;
+    const lineHeight = 11;
     // Font sprite map
     const dictionary: FontMap = fontMap;
     // Letters to draw
@@ -57,9 +91,15 @@ export default class {
     }
 
     for (let i = 0; i < letters.length; i += 1) {
+      if (letters[i] === '|') {
+        y += lineHeight;
+        width = -leftMargin;
+        continue;
+      }
       const letter: any = dictionary[letters[i]];
       // Width of previous letter
-      const prevWidth: number = letters[i - 1] ? dictionary[letters[i - 1]].w : 0;
+      const shouldAddWidth = letters[i - 1] && letters[i - 1] !== '|';
+      const prevWidth: number = shouldAddWidth ? dictionary[letters[i - 1]].w : 0;
       // Left margin is only need after first letter
       if (i) width += prevWidth + leftMargin;
       // The position of the letter on the x-axis
