@@ -16,6 +16,9 @@ export default class {
   buffer: WebGLRenderingContext;
   backgrounds: AssetsManager[];
   imagesMap: SpriteMap;
+  popupOffset: number = 70;
+  popupOffsetMax: number = 70;
+  popupOffsetStep: number = 5;
 
   constructor(
     canvas: HTMLCanvasElement,
@@ -41,14 +44,24 @@ export default class {
 
   public drawPopup(
     word: string,
+    isVisible: boolean,
     x: number = 10,
     y: number = 68,
   ): void {
+    if (!isVisible && this.popupOffset > this.popupOffsetMax) {
+      return;
+    }
     // Drawing popup body
     const width = 236;
     const height = 66;
     const xPadding = 15;
     const yPadding = 13;
+
+    if (isVisible && this.popupOffset > 0) {
+      this.popupOffset -= this.popupOffsetStep;
+    } else if (!isVisible) {
+      this.popupOffset += this.popupOffsetStep;
+    }
 
     this.drawObject(
       false,
@@ -56,20 +69,20 @@ export default class {
       0,
       0,
       this.camera.x + x,
-      this.camera.y + y,
+      this.camera.y + y + this.popupOffset,
       width,
       height,
     );
 
     // Drawing text
-    this.drawFont(
+    this.drawText(
       word,
       x + xPadding,
-      y + yPadding,
+      y + yPadding + this.popupOffset,
     );
   }
 
-  public drawFont(
+  public drawText(
     word: string,
     x: number = 0,
     rawY: number = 0,
@@ -196,7 +209,7 @@ export default class {
     );
 
     // Drawing current stars amount
-    this.drawFont(`${player.currentStars}`, 52, 4, 'right');
+    this.drawText(`${player.currentStars}`, 52, 4, 'right');
   }
 
   public drawObject(

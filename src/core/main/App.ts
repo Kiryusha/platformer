@@ -62,17 +62,18 @@ export default class {
     this.resize();
     this.engine.start();
 
-    this.showPopup('Find some stars! Eat lots of carrots! Find some stars!|Eat lots of carrots! Eat lots of carrots! Eat lots of|carrots! Eat lots of carrots! Eat lots of carrots! Eat|lots of carrots! Eat lots of carrots!');
+    this.showPopup('Welcome!|Movement: arrow buttons. Jump: Z. Sprint: Shift.|Find some stars! Eat lots of carrots!');
   }
 
   private showPopup(text: string): void {
     this.isPopupVisible = true;
     this.popupText = text;
+    // this.engine.stop();
   }
 
   private hidePopup(): void {
     this.isPopupVisible = false;
-    this.popupText = '';
+    // this.engine.start();
   }
 
   private handleKeyEvent(event: { type: string; keyCode: number; }): void {
@@ -208,9 +209,7 @@ export default class {
       this.display.drawCollisionDebugMap(this.game.world.collisionDebugMap);
     }
     this.display.drawHud(this.game.player, this.game.spriteMap);
-    if (this.isPopupVisible) {
-      this.display.drawPopup(this.popupText);
-    }
+    this.display.drawPopup(this.popupText, this.isPopupVisible);
     this.display.render();
     this.display.camera.adjustCamera(
       this.game.player,
