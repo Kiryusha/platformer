@@ -68,12 +68,10 @@ export default class {
   private showPopup(text: string): void {
     this.isPopupVisible = true;
     this.popupText = text;
-    // this.engine.stop();
   }
 
   private hidePopup(): void {
     this.isPopupVisible = false;
-    // this.engine.start();
   }
 
   private handleKeyEvent(event: { type: string; keyCode: number; }): void {

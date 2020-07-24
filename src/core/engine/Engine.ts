@@ -51,7 +51,7 @@ export default class {
   start(): void {
     this.accumulatedTime = this.timeStep;
     this.previousTime = window.performance.now();
-    window.requestAnimationFrame(this.handleRun = this.run.bind(this));
+    this.animationFrame = window.requestAnimationFrame(this.handleRun = this.run.bind(this));
   }
 
   stop(): void {
