@@ -55,13 +55,13 @@ export default class {
     this.collider = new Collider();
   }
 
-  public update(): void {
+  public update(isPaused: boolean): void {
     // TODO: Fix condition, as last frame of jumping is taken for falling
     this.collection.characters.forEach((character: Character) => {
       if (character.isVanished) {
         return;
       }
-      character.update(this.gravity);
+      character.update(this.gravity, isPaused);
       this.processBoundariesCollision(character);
     });
     this.collection.collectables.forEach((collectable: AnimatedEntity) => {

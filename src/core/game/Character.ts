@@ -76,6 +76,8 @@ export default class Character extends Entity implements Character {
   // Timer storage properties
   private duckingTimer: NodeJS.Timer;
   private jumpingTimer: NodeJS.Timer;
+  // Completely freezes movement. Current use - game pause
+  private isFreezed: boolean = false;
 
   constructor(
     {
@@ -184,7 +186,8 @@ export default class Character extends Entity implements Character {
     this.climbingDirection = null;
   }
 
-  public update(gravity: number): void {
+  public update(gravity: number, isPaused: boolean): void {
+    this.isFreezed = isPaused;
     this.adjustHealth();
     this.adjustHorizontalMovement();
     this.adjustVerticalMovement(gravity);
@@ -273,6 +276,10 @@ export default class Character extends Entity implements Character {
   }
 
   private adjustVerticalMovement(rawGravity: number): void {
+    if (this.isFreezed) {
+      return;
+    }
+
     if (this.type === 'enemy' && this.isDeathTriggered) {
       return;
     }
@@ -325,6 +332,10 @@ export default class Character extends Entity implements Character {
   }
 
   private adjustHorizontalMovement(): void {
+    if (this.isFreezed) {
+      return;
+    }
+
     if (this.isDeathTriggered) {
       return;
     }

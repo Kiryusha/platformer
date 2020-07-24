@@ -6,13 +6,13 @@ import playerConfig from '../../assets/configs/player.json';
 
 export default class {
   world: World;
-  zones: zones;
+  zones: Zones;
   spriteMap: SpriteMap;
   // permanent objects which do not recreate when zones change
   player: Player;
   objects: ZoneObjectsCollections = {};
 
-  constructor(zones: zones, startingZone: keyof zones) {
+  constructor(zones: Zones, startingZone: keyof Zones) {
     this.spriteMap = spriteMap;
     this.zones = zones;
     this.player = this.createPlayer();
@@ -23,7 +23,7 @@ export default class {
     return new Player(playerConfig, this.spriteMap);
   }
 
-  public loadZone(zone: keyof zones | keyof ZoneObjectsCollections): void {
+  public loadZone(zone: keyof Zones | keyof ZoneObjectsCollections): void {
     this.objects[zone] = this.objects[zone] || <ZoneObjectsCollection>{};
     this.world = new World(
       this.player,
@@ -33,7 +33,7 @@ export default class {
     this.world.activeZone = zone;
   }
 
-  public update(): void {
-    this.world.update();
+  public update(isPaused: boolean): void {
+    this.world.update(isPaused);
   }
 }

@@ -26,6 +26,7 @@ export default class {
   engine: Engine;
   isPopupVisible: boolean = false;
   popupText: string = '';
+  isPaused: boolean = false;
 
   constructor() {
     this.init();
@@ -68,10 +69,12 @@ export default class {
   private showPopup(text: string): void {
     this.isPopupVisible = true;
     this.popupText = text;
+    this.isPaused = true;
   }
 
   private hidePopup(): void {
     this.isPopupVisible = false;
+    this.isPaused = false;
   }
 
   private handleKeyEvent(event: { type: string; keyCode: number; }): void {
@@ -247,7 +250,7 @@ export default class {
       this.engine.start();
     }
 
-    this.game.update();
+    this.game.update(this.isPaused);
   }
 
   private async updateZoneAssets(): Promise<any> {
