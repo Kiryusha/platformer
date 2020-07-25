@@ -9,13 +9,11 @@ export default class {
   public player: Player;
   public spriteMap: SpriteMap;
   public world: World;
-  private bus: Bus;
   // TODO: some way to get this amount
   private maximumStars: number = 14;
   private zones: Zones;
 
-  constructor(bus: Bus, zones: Zones, startingZone: keyof Zones) {
-    this.bus = bus;
+  constructor(private bus: Bus, zones: Zones, startingZone: keyof Zones) {
     this.spriteMap = spriteMap;
     this.zones = zones;
     this.player = this.createPlayer();
@@ -29,6 +27,7 @@ export default class {
   public loadZone(zone: keyof Zones | keyof ZoneObjectsCollections): void {
     this.objects[zone] = this.objects[zone] || <ZoneObjectsCollection>{};
     this.world = new World(
+      this.bus,
       this.player,
       this.zones[zone].config,
       this.objects[zone],
@@ -36,7 +35,7 @@ export default class {
     this.world.activeZone = zone;
   }
 
-  public update(isPaused: boolean): void {
-    this.world.update(isPaused);
+  public update(): void {
+    this.world.update();
   }
 }

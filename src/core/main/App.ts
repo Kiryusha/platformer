@@ -26,9 +26,7 @@ export default class {
   display: Display;
   engine: Engine;
   bus: Bus;
-  isPopupVisible: boolean = false;
-  popupText: string = '';
-  isPaused: boolean = false;
+  areControlsDisabled: boolean = false;
 
   constructor() {
     this.init();
@@ -39,6 +37,7 @@ export default class {
     this.controller = new Controller();
     this.game = new Game(this.bus, this.zones, this.startingZone);
     this.display = new Display(
+      this.bus,
       document.getElementById('game') as HTMLCanvasElement,
       256,
       144,
@@ -64,7 +63,10 @@ export default class {
     this.resize();
     this.engine.start();
 
-    this.showPopup('Welcome!|Movement: arrow buttons. Jump: Z. Sprint: Shift.|Find some stars! Eat lots of carrots!');
+    this.bus.publish(
+      this.bus.SHOW_POPUP,
+      'Welcome!|Movement: arrow buttons. Jump: Z. Sprint: Shift.|Find some stars! Eat lots of carrots!'
+    );
   }
 
   private subscribeToEvents(): void {
@@ -72,23 +74,20 @@ export default class {
     window.addEventListener('keyup', this.handleKeyEvent.bind(this));
     window.addEventListener('resize', this.resize.bind(this));
 
-    this.bus.subscribe(this.bus.POPUP_CALL, this.showPopup.bind(this));
+    this.bus.subscribe(this.bus.DISABLE_CONTROLS, this.disableControls.bind(this));
+    this.bus.subscribe(this.bus.ENABLE_CONTROLS, this.enableControls.bind(this));
   }
 
-  private showPopup(text: string): void {
-    this.isPopupVisible = true;
-    this.popupText = text;
-    this.isPaused = true;
+  private disableControls() {
+    this.areControlsDisabled = true;
   }
 
-  private hidePopup(): void {
-    this.isPopupVisible = false;
-    this.isPaused = false;
+  private enableControls() {
+    this.areControlsDisabled = false;
   }
 
   private handleKeyEvent(event: { type: string; keyCode: number; }): void {
     this.controller.handleKeyEvent(event.type, event.keyCode);
-    this.hidePopup();
   }
 
   private adjustMovingControls(): void {
@@ -219,7 +218,7 @@ export default class {
       this.display.drawCollisionDebugMap(this.game.world.collisionDebugMap);
     }
     this.display.drawHud(this.game.player, this.game.spriteMap);
-    this.display.drawPopup(this.popupText, this.isPopupVisible);
+    this.display.drawPopup();
     this.display.render();
     this.display.camera.adjustCamera(
       this.game.player,
@@ -232,10 +231,16 @@ export default class {
     this.game.player.isJumpActive = this.controller.jump.isActive;
     this.game.player.isUpActive = this.controller.up.isActive;
 
-    if (this.game.player.isClimbing) {
-      this.adjustClimbingControls();
-    } else {
-      this.adjustMovingControls();
+    if (!this.areControlsDisabled) {
+      if (this.controller.isAnyKeyIsActive) {
+        this.bus.publish(this.bus.UNFREEZE_CHARACTERS);
+        this.bus.publish(this.bus.HIDE_POPUP);
+      }
+      if (this.game.player.isClimbing) {
+        this.adjustClimbingControls();
+      } else {
+        this.adjustMovingControls();
+      }
     }
 
     // The zone changes only if the player collided with the door and the collider recorded data
@@ -259,7 +264,7 @@ export default class {
       this.engine.start();
     }
 
-    this.game.update(this.isPaused);
+    this.game.update();
   }
 
   private async updateZoneAssets(): Promise<any> {

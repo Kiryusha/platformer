@@ -80,6 +80,7 @@ export default class Character extends Entity implements Character {
   private isFreezed: boolean = false;
 
   constructor(
+    protected bus: Bus,
     {
       entity,
       main,
@@ -96,6 +97,7 @@ export default class Character extends Entity implements Character {
     Object.assign(this, main);
 
     this.setAnimationDefaults(frameWidth, frameHeight, animations, spriteMap);
+    this.subscribeToEvents();
   }
 
   public startMovingLeft(): void {
@@ -186,8 +188,7 @@ export default class Character extends Entity implements Character {
     this.climbingDirection = null;
   }
 
-  public update(gravity: number, isPaused: boolean): void {
-    this.isFreezed = isPaused;
+  public update(gravity: number): void {
     this.adjustHealth();
     this.adjustHorizontalMovement();
     this.adjustVerticalMovement(gravity);
@@ -211,6 +212,19 @@ export default class Character extends Entity implements Character {
         this.isVanished = true;
       }, 350);
     }
+  }
+
+  private freeze(): void {
+    this.isFreezed = true;
+  }
+
+  private unfreeze(): void {
+    this.isFreezed = false;
+  }
+
+  private subscribeToEvents(): void {
+    this.bus.subscribe(this.bus.FREEZE_CHARACTERS, this.freeze.bind(this));
+    this.bus.subscribe(this.bus.UNFREEZE_CHARACTERS, this.unfreeze.bind(this));
   }
 
   // As long as the character collides with the collision object from above, he rises and falls

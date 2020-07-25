@@ -32,6 +32,7 @@ export default class {
   private ropes: Entity[];
 
   constructor (
+    private bus: Bus,
     public player: Player,
     private map: GameMap,
     private collection: ZoneObjectsCollection,
@@ -55,13 +56,13 @@ export default class {
     this.collider = new Collider();
   }
 
-  public update(isPaused: boolean): void {
+  public update(): void {
     // TODO: Fix condition, as last frame of jumping is taken for falling
     this.collection.characters.forEach((character: Character) => {
       if (character.isVanished) {
         return;
       }
-      character.update(this.gravity, isPaused);
+      character.update(this.gravity);
       this.processBoundariesCollision(character);
     });
     this.collection.collectables.forEach((collectable: AnimatedEntity) => {
@@ -168,7 +169,7 @@ export default class {
                               x: object.x,
                               y: object.y,
                             };
-                            const character = new Character(slugStats, spriteMap);
+                            const character = new Character(this.bus, slugStats, spriteMap);
                             this.brain.bindCharacter(character);
                             return character;
                           }

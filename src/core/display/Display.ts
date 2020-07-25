@@ -19,8 +19,11 @@ export default class {
   popupOffset: number = 70;
   popupOffsetMax: number = 70;
   popupOffsetStep: number = 5;
+  private isPopupVisible: boolean = false;
+  private popupText: string = '';
 
   constructor(
+    private bus: Bus,
     canvas: HTMLCanvasElement,
     cameraWidth: number,
     cameraHeight: number,
@@ -35,6 +38,7 @@ export default class {
     this.images = new AssetsManager(this.buffer);
     this.camera = new Camera(cameraWidth, cameraHeight);
     this.renderer = new Renderer(this.buffer);
+    this.subscribeToEvents();
   }
 
   public adjustBufferCanvasSize(stageWidth: number, stageHeight: number): void {
@@ -43,12 +47,10 @@ export default class {
   }
 
   public drawPopup(
-    word: string,
-    isVisible: boolean,
     x: number = 10,
     y: number = 68,
   ): void {
-    if (!isVisible && this.popupOffset > this.popupOffsetMax) {
+    if (!this.isPopupVisible && this.popupOffset > this.popupOffsetMax) {
       return;
     }
     // Drawing popup body
@@ -57,10 +59,14 @@ export default class {
     const xPadding = 15;
     const yPadding = 13;
 
-    if (isVisible && this.popupOffset > 0) {
+    if (this.isPopupVisible && this.popupOffset > 0) {
+      this.bus.publish(this.bus.FREEZE_CHARACTERS);
+      this.bus.publish(this.bus.DISABLE_CONTROLS);
       this.popupOffset -= this.popupOffsetStep;
-    } else if (!isVisible) {
+    } else if (!this.isPopupVisible) {
       this.popupOffset += this.popupOffsetStep;
+    } else {
+      this.bus.publish(this.bus.ENABLE_CONTROLS);
     }
 
     this.drawObject(
@@ -76,7 +82,7 @@ export default class {
 
     // Drawing text
     this.drawText(
-      word,
+      this.popupText,
       x + xPadding,
       y + yPadding + this.popupOffset,
     );
@@ -397,6 +403,20 @@ export default class {
     }
 
     this.context.imageSmoothingEnabled = false;
+  }
+
+  private subscribeToEvents() {
+    this.bus.subscribe(this.bus.SHOW_POPUP, this.showPopup.bind(this));
+    this.bus.subscribe(this.bus.HIDE_POPUP, this.hidePopup.bind(this));
+  }
+
+  private showPopup(text: string): void {
+    this.isPopupVisible = true;
+    this.popupText = text;
+  }
+
+  private hidePopup(): void {
+    this.isPopupVisible = false;
   }
 
   private isObjectWithinCamera(

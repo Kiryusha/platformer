@@ -2,12 +2,12 @@
 import Button from './Button';
 
 export default class {
-  left: Button;
-  right: Button;
-  up: Button;
-  shift: Button;
-  down: Button;
-  jump: Button;
+  public left: Button;
+  public right: Button;
+  public up: Button;
+  public shift: Button;
+  public down: Button;
+  public jump: Button;
 
   constructor() {
     this.left = new Button();
@@ -18,7 +18,17 @@ export default class {
     this.jump = new Button();
   }
 
-  handleKeyEvent(
+  public get isAnyKeyIsActive(): boolean {
+    return this.left.isActive
+      || this.right.isActive
+      || this.up.isActive
+      || this.shift.isActive
+      || this.up.isActive
+      || this.down.isActive
+      || this.jump.isActive;
+  }
+
+  public handleKeyEvent(
     type: string,
     keyCode: number
   ): void {

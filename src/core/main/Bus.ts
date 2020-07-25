@@ -1,10 +1,15 @@
 // Publisher-subscriber relationship implementation
 export default class Bus implements Bus {
   // Constants for various events
-  // Pause when only movement adjusting is stopped
-  public readonly SOFT_PAUSE: string = 'app.isPaused';
-  // Event to call popup
-  public readonly POPUP_CALL: string = 'app.showPopup';
+  // Only movement adjusting is stopped
+  public readonly FREEZE_CHARACTERS: string = 'character.freeze';
+  public readonly UNFREEZE_CHARACTERS: string = 'character.unfreeze';
+  // Call popup
+  public readonly SHOW_POPUP: string = 'display.showPopup';
+  public readonly HIDE_POPUP: string = 'display.hidePopup';
+  // Disable player controls
+  public readonly DISABLE_CONTROLS: string = 'app.disableControls';
+  public readonly ENABLE_CONTROLS: string = 'app.enableControls';
 
   private subscriptions: Subscriptions = {};
   private lastId: number = 0;
@@ -23,7 +28,7 @@ export default class Bus implements Bus {
     delete this.subscriptions[event][id];
   }
 
-  public publish(event: string, arg: any): void {
+  public publish(event: string, arg?: any): void {
     if (!this.subscriptions[event]) return;
 
     Object.keys(this.subscriptions[event]).forEach(id => this.subscriptions[event][id](arg));

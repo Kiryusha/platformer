@@ -16,11 +16,15 @@ interface Zones {
 }
 
 interface Bus {
-  SOFT_PAUSE: string;
-  POPUP_CALL: string;
+  FREEZE_CHARACTERS: string;
+  UNFREEZE_CHARACTERS: string;
+  SHOW_POPUP: string;
+  HIDE_POPUP: string;
+  DISABLE_CONTROLS: string;
+  ENABLE_CONTROLS: string;
   subscribe(event: string, callback: Callback): string;
   unsubscribe(event: string, id: string): void;
-  publish(event: string, arg: any): void;
+  publish(event: string, arg?: any): void;
 }
 
 interface Callback {
