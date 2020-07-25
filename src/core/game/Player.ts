@@ -99,6 +99,10 @@ export default class Player extends Character implements Player {
         this.throwUp('death');
 
         setTimeout(() => {
+          this.bus.publish(this.bus.SHOW_POPUP, {
+            text: 'YOU DIED',
+            fontSize: 6,
+          });
           this.isVanished = true;
         }, 1200);
       } else {

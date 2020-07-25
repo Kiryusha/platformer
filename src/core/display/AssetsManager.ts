@@ -1,13 +1,13 @@
 // the class is responsible for creating tilesheets
-export default class {
-  image: HTMLImageElement;
-  tileSize: number;
-  columns: number;
-  flippedImage: CanvasImageSource;
-  gl: WebGLRenderingContext;
-  texture: WebGLTexture;
-  flippedTexture: WebGLTexture;
-  url: any;
+export default class AssetsManager implements AssetsManager {
+  public image: HTMLImageElement;
+  public tileSize: number;
+  public columns: number;
+  public flippedImage: CanvasImageSource;
+  public texture: WebGLTexture;
+  public flippedTexture: WebGLTexture;
+  public url: any;
+  private gl: WebGLRenderingContext;
 
   constructor(
     gl: WebGLRenderingContext,
@@ -16,7 +16,7 @@ export default class {
     this.image = new Image();
   }
 
-  async loadAsset(
+  public async loadAsset(
     url: any,
     makeFlipped: boolean = false,
     tileSize?: number,
@@ -38,7 +38,7 @@ export default class {
     }
   }
 
-  createTexture(image: any): WebGLTexture {
+  private createTexture(image: any): WebGLTexture {
     const texture = this.gl.createTexture();
 
     this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
@@ -46,6 +46,7 @@ export default class {
     this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_S, this.gl.CLAMP_TO_EDGE);
     this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_T, this.gl.CLAMP_TO_EDGE);
     this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.LINEAR);
+    this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this.gl.NEAREST);
 
     this.gl.texImage2D(
       this.gl.TEXTURE_2D,
@@ -59,7 +60,7 @@ export default class {
     return texture;
   }
 
-  loadImage(url: any) {
+  private loadImage(url: any) {
     return new Promise((resolve, reject) => {
       this.image.addEventListener('load', () => resolve());
       this.image.addEventListener('error', err => reject(err));
@@ -67,7 +68,7 @@ export default class {
     });
   }
 
-  flipImage(url: any): any {
+  private flipImage(url: any): any {
     return new Promise((resolve, reject) => {
       const buffer = document.createElement('canvas').getContext('2d');
       const image = new Image();

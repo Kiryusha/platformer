@@ -53,7 +53,7 @@ export default class {
     await Promise.all([
       // characters sprites are always the same
       this.display.spriteSheet.loadAsset(spriteSheet, true),
-      this.display.popup.loadAsset(popup, true),
+      this.display.popupBackground.loadAsset(popup, true),
       this.display.font.loadAsset(font, true),
 
       // initial asset setup
@@ -63,10 +63,12 @@ export default class {
     this.resize();
     this.engine.start();
 
-    this.bus.publish(
-      this.bus.SHOW_POPUP,
-      'Welcome!|Movement: arrow buttons. Jump: Z. Sprint: Shift.|Find some stars! Eat lots of carrots!'
-    );
+    setTimeout(() => {
+      this.bus.publish(
+        this.bus.SHOW_POPUP,
+        'Welcome!|Movement: arrow buttons. Jump: Z. Sprint: Shift.|Find some stars! Eat lots of carrots!'
+      );
+    }, 300);
   }
 
   private subscribeToEvents(): void {

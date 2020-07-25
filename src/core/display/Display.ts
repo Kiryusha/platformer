@@ -8,7 +8,6 @@ export default class {
   context: CanvasRenderingContext2D;
   mapTileset: AssetsManager;
   spriteSheet: AssetsManager;
-  popup: AssetsManager;
   font: AssetsManager;
   images: AssetsManager;
   camera: Camera;
@@ -16,11 +15,13 @@ export default class {
   buffer: WebGLRenderingContext;
   backgrounds: AssetsManager[];
   imagesMap: SpriteMap;
+  popupBackground: AssetsManager;
   popupOffset: number = 70;
   popupOffsetMax: number = 70;
   popupOffsetStep: number = 5;
   private isPopupVisible: boolean = false;
   private popupText: string = '';
+  private popupFontSize: number = 1;
 
   constructor(
     private bus: Bus,
@@ -32,7 +33,7 @@ export default class {
     this.buffer = document.createElement('canvas').getContext('webgl');
     this.mapTileset = new AssetsManager(this.buffer);
     this.spriteSheet = new AssetsManager(this.buffer);
-    this.popup = new AssetsManager(this.buffer);
+    this.popupBackground = new AssetsManager(this.buffer);
     this.font = new AssetsManager(this.buffer);
     this.backgrounds = [];
     this.images = new AssetsManager(this.buffer);
@@ -71,7 +72,7 @@ export default class {
 
     this.drawObject(
       false,
-      this.popup,
+      this.popupBackground,
       0,
       0,
       this.camera.x + x,
@@ -85,6 +86,8 @@ export default class {
       this.popupText,
       x + xPadding,
       y + yPadding + this.popupOffset,
+      'left',
+      this.popupFontSize,
     );
   }
 
@@ -93,6 +96,7 @@ export default class {
     x: number = 0,
     rawY: number = 0,
     align: string = 'left',
+    fontSize: number = 1,
   ): void {
     let y = rawY;
     const lineHeight = 11;
@@ -122,10 +126,10 @@ export default class {
       // Left margin is only need after first letter
       if (i) width += prevWidth + leftMargin;
       // The position of the letter on the x-axis
-      let posX = this.camera.x + x + width;
+      let posX = this.camera.x + x + (width * fontSize);
 
       if (align === 'right') {
-        posX = this.camera.x + x - width;
+        posX = this.camera.x + x - (width * fontSize);
       }
 
       this.drawObject(
@@ -138,6 +142,8 @@ export default class {
         this.camera.y + y,
         letter.w,
         letter.h,
+        letter.w * fontSize,
+        letter.h * fontSize,
       );
     }
   }
@@ -225,9 +231,19 @@ export default class {
     sourceY: number,
     destinationX: number,
     destinationY: number,
-    width: number,
-    height: number,
+    srcWidth: number,
+    srcHeight: number,
+    dstWidth?: number,
+    dstHeight?: number,
   ): void {
+    if (dstWidth === undefined) {
+      dstWidth = srcWidth;
+    }
+
+    if (dstHeight === undefined) {
+      dstHeight = srcHeight;
+    }
+
     if (this.isObjectWithinCamera(destinationX, destinationY)) {
       this.renderer.drawImage(
         isFlipped ? asset.flippedTexture : asset.texture,
@@ -235,12 +251,12 @@ export default class {
         asset.image.height,
         sourceX,
         sourceY,
-        width,
-        height,
+        srcWidth,
+        srcHeight,
         Math.round(destinationX),
         Math.round(destinationY),
-        width,
-        height,
+        dstWidth,
+        dstHeight,
       );
     }
   }
@@ -410,9 +426,21 @@ export default class {
     this.bus.subscribe(this.bus.HIDE_POPUP, this.hidePopup.bind(this));
   }
 
-  private showPopup(text: string): void {
+  private showPopup(payload: PopupPayload | string): void {
     this.isPopupVisible = true;
-    this.popupText = text;
+
+    if (typeof payload === 'object') {
+      this.popupText = payload.text;
+
+      if (payload.fontSize) {
+        this.popupFontSize = payload.fontSize;
+      } else {
+        this.popupFontSize = 1;
+      }
+    } else {
+      this.popupText = payload;
+      this.popupFontSize = 1;
+    }
   }
 
   private hidePopup(): void {
