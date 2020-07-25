@@ -4,6 +4,7 @@ import Display from '../display/Display';
 import Game from '../game/Game';
 import Engine from '../engine/Engine';
 import AssetsManager from '../display/AssetsManager';
+import Bus from '../main/Bus';
 import spriteSheet from '../../assets/images/sprites.png';
 import popup from '../../assets/images/popup.png';
 import font from '../../assets/images/font.png';
@@ -24,6 +25,7 @@ export default class {
   game: Game;
   display: Display;
   engine: Engine;
+  bus: Bus;
   isPopupVisible: boolean = false;
   popupText: string = '';
   isPaused: boolean = false;
@@ -33,8 +35,9 @@ export default class {
   }
 
   public async init(): Promise<any> {
+    this.bus = new Bus();
     this.controller = new Controller();
-    this.game = new Game(this.zones, this.startingZone);
+    this.game = new Game(this.bus, this.zones, this.startingZone);
     this.display = new Display(
       document.getElementById('game') as HTMLCanvasElement,
       256,
@@ -46,9 +49,7 @@ export default class {
     this.display.buffer.canvas.height = this.game.world.height;
     this.display.buffer.canvas.width = this.game.world.width;
 
-    window.addEventListener('keydown', this.handleKeyEvent.bind(this));
-    window.addEventListener('keyup', this.handleKeyEvent.bind(this));
-    window.addEventListener('resize', this.resize.bind(this));
+    this.subscribeToEvents();
 
     await Promise.all([
       // characters sprites are always the same
@@ -64,6 +65,14 @@ export default class {
     this.engine.start();
 
     this.showPopup('Welcome!|Movement: arrow buttons. Jump: Z. Sprint: Shift.|Find some stars! Eat lots of carrots!');
+  }
+
+  private subscribeToEvents(): void {
+    window.addEventListener('keydown', this.handleKeyEvent.bind(this));
+    window.addEventListener('keyup', this.handleKeyEvent.bind(this));
+    window.addEventListener('resize', this.resize.bind(this));
+
+    this.bus.subscribe(this.bus.POPUP_CALL, this.showPopup.bind(this));
   }
 
   private showPopup(text: string): void {

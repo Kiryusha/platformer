@@ -15,6 +15,14 @@ interface Zones {
   }
 }
 
+interface Bus {
+  SOFT_PAUSE: string;
+  POPUP_CALL: string;
+  subscribe(event: string, callback: Callback): string;
+  unsubscribe(event: string, id: string): void;
+  publish(event: string, arg: any): void;
+}
+
 interface Callback {
   (param: any): void;
 }

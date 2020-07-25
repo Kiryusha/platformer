@@ -21,19 +21,29 @@ export default class Player extends Character implements Player {
   public maxHealth: number;
   // Property shows amount of all the obtained stars
   public currentStars: number;
+  private bus: Bus;
+  private maximumStars: number;
 
   constructor(
+    bus: Bus,
     playerConfig: CharacterConfig,
     playerSpriteMap: SpriteMap,
+    maximumStars: number,
   ) {
     super(playerConfig, playerSpriteMap);
+    this.bus = bus;
     this.maxHealth = playerConfig.player.maxHealth;
     this.currentHealth = this.maxHealth;
     this.currentStars = 0;
+    this.maximumStars = maximumStars;
   }
 
   public obtainStar(): void {
     this.currentStars += 1;
+
+    if (this.currentStars === this.maximumStars) {
+      this.bus.publish(this.bus.POPUP_CALL, 'Wow! You have collected all the stars!');
+    }
   }
 
   public restoreHealth(): void {

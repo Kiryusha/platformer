@@ -154,7 +154,6 @@ export default class {
         case 'star':
           e2.isVanished = true;
           e1.obtainStar();
-          console.log(e1.currentStars);
       }
     }
   }
