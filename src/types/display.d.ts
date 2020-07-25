@@ -1,9 +1,9 @@
 interface Tileset {
-  firstgid: number
-  tiles: any[]
-  name: string
-  columns: number
-  tilewidth: number
+  firstgid: number;
+  tiles: any[];
+  name: string;
+  columns: number;
+  tilewidth: number;
 }
 
 interface FontMap {
@@ -17,5 +17,5 @@ interface FontMap {
 }
 
 interface Backgrounds {
-  [key: string]: HTMLImageElement
+  [key: string]: HTMLImageElement;
 }

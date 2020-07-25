@@ -14,3 +14,13 @@ interface Zones {
     }
   }
 }
+
+interface Callback {
+  (param: any): void;
+}
+
+interface Subscriptions {
+  [key: string]: {
+    [key: string]: Callback;
+  };
+}
