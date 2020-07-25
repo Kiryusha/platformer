@@ -132,7 +132,7 @@ interface Character extends Entity {
   stopJumping(): void;
   startClimbingAndMoving(direction: 'up' | 'right' | 'down' | 'left'): void;
   stopClimbingAndMoving(): void;
-  update(gravity: number): void;
+  update(gravity: number, isPaused: boolean): void;
 }
 
 interface AnimatedEntity extends Entity {
