@@ -53,7 +53,7 @@ export default class {
     await Promise.all([
       // characters sprites are always the same
       this.display.spriteSheet.loadAsset(spriteSheet, true),
-      this.display.popupBackground.loadAsset(popup, true),
+      this.display.popup.background.loadAsset(popup, true),
       this.display.font.loadAsset(font, true),
 
       // initial asset setup

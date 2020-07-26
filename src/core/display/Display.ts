@@ -2,6 +2,7 @@
 import AssetsManager from './AssetsManager';
 import Camera from './Camera';
 import Renderer from './Renderer';
+import Popup from './Popup';
 import fontMap from '../../assets/sprite-maps/font.json';
 
 export default class {
@@ -15,13 +16,7 @@ export default class {
   buffer: WebGLRenderingContext;
   backgrounds: AssetsManager[];
   imagesMap: SpriteMap;
-  popupBackground: AssetsManager;
-  popupOffset: number = 70;
-  popupOffsetMax: number = 70;
-  popupOffsetStep: number = 5;
-  private isPopupVisible: boolean = false;
-  private popupText: string = '';
-  private popupFontSize: number = 1;
+  popup: Popup;
 
   constructor(
     private bus: Bus,
@@ -33,13 +28,13 @@ export default class {
     this.buffer = document.createElement('canvas').getContext('webgl');
     this.mapTileset = new AssetsManager(this.buffer);
     this.spriteSheet = new AssetsManager(this.buffer);
-    this.popupBackground = new AssetsManager(this.buffer);
     this.font = new AssetsManager(this.buffer);
     this.backgrounds = [];
     this.images = new AssetsManager(this.buffer);
     this.camera = new Camera(cameraWidth, cameraHeight);
     this.renderer = new Renderer(this.buffer);
-    this.subscribeToEvents();
+    this.popup = new Popup(this.bus);
+    this.popup.background = new AssetsManager(this.buffer);
   }
 
   public adjustBufferCanvasSize(stageWidth: number, stageHeight: number): void {
@@ -51,7 +46,7 @@ export default class {
     x: number = 10,
     y: number = 68,
   ): void {
-    if (!this.isPopupVisible && this.popupOffset > this.popupOffsetMax) {
+    if (!this.popup.isVisible && this.popup.offset > this.popup.offsetMax) {
       return;
     }
     // Drawing popup body
@@ -60,34 +55,34 @@ export default class {
     const xPadding = 15;
     const yPadding = 13;
 
-    if (this.isPopupVisible && this.popupOffset > 0) {
+    if (this.popup.isVisible && this.popup.offset > 0) {
       this.bus.publish(this.bus.FREEZE_CHARACTERS);
       this.bus.publish(this.bus.DISABLE_CONTROLS);
-      this.popupOffset -= this.popupOffsetStep;
-    } else if (!this.isPopupVisible) {
-      this.popupOffset += this.popupOffsetStep;
+      this.popup.offset -= this.popup.offsetStep;
+    } else if (!this.popup.isVisible) {
+      this.popup.offset += this.popup.offsetStep;
     } else {
       this.bus.publish(this.bus.ENABLE_CONTROLS);
     }
 
     this.drawObject(
       false,
-      this.popupBackground,
+      <AssetsManager>this.popup.background,
       0,
       0,
       this.camera.x + x,
-      this.camera.y + y + this.popupOffset,
+      this.camera.y + y + this.popup.offset,
       width,
       height,
     );
 
     // Drawing text
     this.drawText(
-      this.popupText,
+      this.popup.text,
       x + xPadding,
-      y + yPadding + this.popupOffset,
+      y + yPadding + this.popup.offset,
       'left',
-      this.popupFontSize,
+      this.popup.fontSize,
     );
   }
 
@@ -419,32 +414,6 @@ export default class {
     }
 
     this.context.imageSmoothingEnabled = false;
-  }
-
-  private subscribeToEvents() {
-    this.bus.subscribe(this.bus.SHOW_POPUP, this.showPopup.bind(this));
-    this.bus.subscribe(this.bus.HIDE_POPUP, this.hidePopup.bind(this));
-  }
-
-  private showPopup(payload: PopupPayload | string): void {
-    this.isPopupVisible = true;
-
-    if (typeof payload === 'object') {
-      this.popupText = payload.text;
-
-      if (payload.fontSize) {
-        this.popupFontSize = payload.fontSize;
-      } else {
-        this.popupFontSize = 1;
-      }
-    } else {
-      this.popupText = payload;
-      this.popupFontSize = 1;
-    }
-  }
-
-  private hidePopup(): void {
-    this.isPopupVisible = false;
   }
 
   private isObjectWithinCamera(
