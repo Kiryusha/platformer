@@ -42,27 +42,31 @@ export default class {
     this.buffer.canvas.height = stageHeight;
   }
 
+
   public drawPopup(
     x: number = 10,
     y: number = 68,
   ): void {
+    // Popup is off-screen, if its offset is greater than offsetMax, so we skip the rest
     if (!this.popup.isVisible && this.popup.offset > this.popup.offsetMax) {
+      // Popup is off-screen, but its promise is not resolved
+      if (this.popup.resolve && !this.popup.isResolved) {
+        this.popup.resolve();
+        this.popup.isResolved = true;
+      }
       return;
     }
-    // Drawing popup body
-    const width = 236;
-    const height = 66;
-    const xPadding = 15;
-    const yPadding = 13;
 
+    // If the popup is visible, but it has offset, lower its offset till it is zero.
     if (this.popup.isVisible && this.popup.offset > 0) {
-      this.bus.publish(this.bus.FREEZE_CHARACTERS);
-      this.bus.publish(this.bus.DISABLE_CONTROLS);
       this.popup.offset -= this.popup.offsetStep;
+    // If the popup is no more visible, raise its offset until it reaches its maximum.
     } else if (!this.popup.isVisible) {
       this.popup.offset += this.popup.offsetStep;
-    } else {
-      this.bus.publish(this.bus.ENABLE_CONTROLS);
+    // Start waiting, if the popup's offset is zero, but it is still visible
+    } else if (this.popup.startWaiting && !this.popup.isWaiting) {
+      this.popup.startWaiting();
+      this.popup.isWaiting = true;
     }
 
     this.drawObject(
@@ -72,15 +76,15 @@ export default class {
       0,
       this.camera.x + x,
       this.camera.y + y + this.popup.offset,
-      width,
-      height,
+      this.popup.width,
+      this.popup.height,
     );
 
     // Drawing text
     this.drawText(
       this.popup.text,
-      x + xPadding,
-      y + yPadding + this.popup.offset,
+      x + this.popup.xPadding,
+      y + this.popup.yPadding + this.popup.offset,
       'left',
       this.popup.fontSize,
     );

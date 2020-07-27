@@ -17,7 +17,7 @@ declare global {
 }
 
 export default class {
-  aspectRatio: number = 9 / 16;
+  aspectRatio = 9 / 16;
   fps: number = 1000 / 30;
   zones: Zones = zones;
   startingZone: string = 'zoneA1';
@@ -63,7 +63,7 @@ export default class {
     this.resize();
     this.engine.start();
 
-    setTimeout(() => {
+    setTimeout(async () => {
       this.bus.publish(
         this.bus.SHOW_POPUP,
         'Welcome!|Movement: arrow buttons. Jump: Z. Sprint: Shift.|Find some stars! Eat lots of carrots!'
@@ -235,7 +235,6 @@ export default class {
 
     if (!this.areControlsDisabled) {
       if (this.controller.isAnyKeyIsActive) {
-        this.bus.publish(this.bus.UNFREEZE_CHARACTERS);
         this.bus.publish(this.bus.HIDE_POPUP);
       }
       if (this.game.player.isClimbing) {

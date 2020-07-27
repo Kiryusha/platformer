@@ -5,8 +5,8 @@ export default class Bus implements Bus {
   public readonly FREEZE_CHARACTERS: string = 'character.freeze';
   public readonly UNFREEZE_CHARACTERS: string = 'character.unfreeze';
   // Call popup
-  public readonly SHOW_POPUP: string = 'display.showPopup';
-  public readonly HIDE_POPUP: string = 'display.hidePopup';
+  public readonly SHOW_POPUP: string = 'popup.callPopup';
+  public readonly HIDE_POPUP: string = 'popup.startHiding';
   // Disable player controls
   public readonly DISABLE_CONTROLS: string = 'app.disableControls';
   public readonly ENABLE_CONTROLS: string = 'app.enableControls';
@@ -28,10 +28,14 @@ export default class Bus implements Bus {
     delete this.subscriptions[event][id];
   }
 
-  public publish(event: string, arg?: any): void {
+  public async publish(event: string, arg?: any): Promise<void> {
     if (!this.subscriptions[event]) return;
 
-    Object.keys(this.subscriptions[event]).forEach(id => this.subscriptions[event][id](arg));
+    const ids: string[] = Object.keys(this.subscriptions[event]);
+
+    for (const id of ids) {
+      await this.subscriptions[event][id](arg);
+    }
   }
 
   private getId(): string {

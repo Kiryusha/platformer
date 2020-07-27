@@ -37,6 +37,10 @@ interface AssetsManager {
 }
 
 interface Popup {
+  width: number;
+  height: number;
+  xPadding: number;
+  yPadding: number;
   background: AssetsManager;
   isVisible: boolean;
   offset: number;
@@ -44,6 +48,10 @@ interface Popup {
   offsetStep: number;
   text: string;
   fontSize: number;
+  resolve: Callback;
+  isResolved: boolean;
+  isWaiting: boolean;
+  startWaiting(): void;
 }
 
 interface PopupPayload {

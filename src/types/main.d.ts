@@ -28,7 +28,7 @@ interface Bus {
 }
 
 interface Callback {
-  (param: any): void;
+  (param?: any): void;
 }
 
 interface Subscriptions {
