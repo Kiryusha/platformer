@@ -1,8 +1,11 @@
 // The class is responsible for processing all the possible collisions
 export default class {
+  constructor (
+    private bus: Bus,
+  ) {}
   // This method exists for the future possible separation of various methods of cycling objects:
   // quad tree, spatial hash etc. For now it is just brute forcing all of them.
-  public processBroadPhase(entities: Entity[]): any[] {
+  public processBroadPhase(entities: Entity[]): Promise<any[]> {
     return this.bruteForce(entities);
   }
 
@@ -83,32 +86,36 @@ export default class {
     }
   }
 
-  private routePlayerVsDoor(player: Player, door: Entity): void {
+  private async routePlayerVsDoor(player: Player, door: Entity): Promise<void> {
     const { target } = door.properties;
     const offset = parseInt(door.properties.offset);
     const destinationX = door.properties.destinationX
       ? parseInt(door.properties.destinationX) : null;
     const destinationY = door.properties.destinationY
       ? parseInt(door.properties.destinationY) : null;
+    const payload = <ZonePayload>{};
+
 
     if (door.type === 'vertical') {
       if (this.isCollidingFromLeft(player, door)) {
-        player.destination.x = destinationX;
+        payload.x = destinationX;
       } else {
-        player.destination.x = destinationX - player.width;
+        payload.x = destinationX - player.width;
       }
-      player.destination.y = player.top + offset;
+      payload.y = player.top + offset;
     } else {
       if (this.isCollidingFromTop(player, door)) {
-        player.destination.y = destinationY;
+        payload.y = destinationY;
       } else {
-        player.destination.y = destinationY - player.height;
+        payload.y = destinationY - player.height;
         // add small velocity boost when jumping out of the pit
         player.throwUp('fromThePit');
       }
-      player.destination.x = player.left + offset;
+      payload.x = player.left + offset;
     }
-    player.destination.name = target;
+    payload.name = target;
+
+    await this.bus.publish(this.bus.LOAD_ZONE, payload);
   }
 
   // this router separates collisions of a player with an enemy
@@ -183,7 +190,7 @@ export default class {
     return e1.right > e2.left && e1.oldRight <= e2.left;
   }
 
-  private bruteForce(entities: Entity[]): any[] {
+  private async bruteForce(entities: Entity[]): Promise<any[]> {
     // based on https://github.com/reu/broadphase.js/blob/master/src/brute-force.js
     const length = entities.length;
     const collisions = [];
@@ -196,7 +203,7 @@ export default class {
           let e2 = entities[k];
 
           if (this.broadPhaseComparator(e1, e2)) {
-            this.broadPhaseResolver(e1, e2);
+            await this.broadPhaseResolver(e1, e2);
             collisions.push([e1, e2]);
 
             e1.collisionType = e2.group;
@@ -234,10 +241,10 @@ export default class {
 
   // Resolves which router use for the collision
   // TODO: refactor types
-  private broadPhaseResolver(
+  private async broadPhaseResolver(
     e1: any,
     e2: any,
-  ): void {
+  ): Promise<void> {
     if (e1.isDeathTriggered || e2.isDeathTriggered) {
       return;
     }
@@ -249,7 +256,7 @@ export default class {
       }
     } else if (e1.group === 'characters' && e2.group === 'doors') {
       if (e1.type === 'player') {
-        this.routePlayerVsDoor(e1, e2);
+        await this.routePlayerVsDoor(e1, e2);
       }
     } else if (e1.group === 'characters' && e2.group === 'collectables') {
       if (e1.type === 'player') {

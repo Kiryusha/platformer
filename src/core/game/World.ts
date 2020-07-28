@@ -53,10 +53,10 @@ export default class {
 
     this.processMap(this.map);
 
-    this.collider = new Collider();
+    this.collider = new Collider(bus);
   }
 
-  public update(): void {
+  public async update(): Promise<void> {
     // TODO: Fix condition, as last frame of jumping is taken for falling
     this.collection.characters.forEach((character: Character) => {
       if (character.isVanished) {
@@ -71,7 +71,7 @@ export default class {
       }
       collectable.update();
     });
-    const collisions = this.collider.processBroadPhase([
+    const collisions = await this.collider.processBroadPhase([
       ...this.collection.characters,
       ...this.collisions,
       ...this.doors,

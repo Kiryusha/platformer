@@ -10,6 +10,8 @@ export default class Bus implements Bus {
   // Disable player controls
   public readonly DISABLE_CONTROLS: string = 'app.disableControls';
   public readonly ENABLE_CONTROLS: string = 'app.enableControls';
+  // Event is triggered on entering doors
+  public readonly LOAD_ZONE: string = 'app.loadZone';
 
   private subscriptions: Subscriptions = {};
   private lastId: number = 0;

@@ -78,6 +78,7 @@ export default class {
 
     this.bus.subscribe(this.bus.DISABLE_CONTROLS, this.disableControls.bind(this));
     this.bus.subscribe(this.bus.ENABLE_CONTROLS, this.enableControls.bind(this));
+    this.bus.subscribe(this.bus.LOAD_ZONE, this.loadZone.bind(this));
   }
 
   private disableControls() {
@@ -229,7 +230,7 @@ export default class {
     );
   }
 
-  private async update(): Promise<any> {
+  private async update(): Promise<void> {
     this.game.player.isJumpActive = this.controller.jump.isActive;
     this.game.player.isUpActive = this.controller.up.isActive;
 
@@ -244,32 +245,33 @@ export default class {
       }
     }
 
-    // The zone changes only if the player collided with the door and the collider recorded data
-    // about the new zone in the corresponding property of the player's character.
-    if (this.game.player.destination.name.length) {
-      // We should stop the engine, as loading new assets may take some time
-      this.engine.stop();
-      // load new zone schemes
-      this.game.loadZone(this.game.player.destination.name);
-      // position the camera in advance to prevent one frame flicking since it has not yet had
-      // time to position itself in the new zone
-      this.display.camera.adjustCamera(
-        this.game.player,
-        this.game.world.width,
-        this.game.world.height
-      );
-      this.game.player.destination.name = '';
-      // update only assets that are not yet loaded by comparing urls
-      await this.updateZoneAssets();
-      // now we can start engine again
-      this.engine.start();
-    }
+    await this.game.update();
+  }
 
-    this.game.update();
+  private async loadZone(payload: ZonePayload): Promise<void> {
+    // We should stop the engine, as loading new assets may take some time
+    this.engine.stop();
+    // Set the player's destination params - they will be used during the new zone data parsing
+    this.game.player.destination.x = payload.x;
+    this.game.player.destination.y = payload.y;
+    this.game.player.destination.name = payload.name;
+    // load new zone schemes
+    this.game.loadZone(payload.name);
+    // position the camera in advance to prevent one frame flicking since it has not yet had
+    // time to position itself in the new zone
+    this.display.camera.adjustCamera(
+      this.game.player,
+      this.game.world.width,
+      this.game.world.height
+    );
+    // update only assets that are not yet loaded by comparing urls
+    await this.updateZoneAssets();
+    // now we can start engine again
+    this.engine.start();
   }
 
   private async updateZoneAssets(): Promise<any> {
-    const promises = [];
+    const promises: Promise<any>[] = [];
     const backgrounds: Backgrounds = this.zones[this.game.world.activeZone].backgrounds;
 
     // check if new backgrounds are among already processed backgrounds
@@ -313,7 +315,6 @@ export default class {
     }
 
     await Promise.all(promises);
-
     this.display.imagesMap = this.zones[this.game.world.activeZone].images.spriteMap;
     // By default, the size of the buffer canvas is equal to the size of the first zone, so we need
     // to update it when changing the zone, so its size may not be enough for the new zone
