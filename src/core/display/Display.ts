@@ -1,22 +1,21 @@
 // the class is responsible for all the rendering in the canvas
-import AssetsManager from './AssetsManager';
 import Camera from './Camera';
 import Renderer from './Renderer';
 import Popup from './Popup';
+import Library from './Library';
 import fontMap from '../../assets/sprite-maps/font.json';
 
 export default class {
   context: CanvasRenderingContext2D;
-  mapTileset: AssetsManager;
-  spriteSheet: AssetsManager;
-  font: AssetsManager;
-  images: AssetsManager;
   camera: Camera;
   renderer: Renderer;
   buffer: WebGLRenderingContext;
-  backgrounds: AssetsManager[];
   imagesMap: SpriteMap;
   popup: Popup;
+  library: Library;
+  backgrounds: AssetsManager[];
+  mapTileset: AssetsManager;
+  images: AssetsManager;
 
   constructor(
     private bus: Bus,
@@ -26,15 +25,11 @@ export default class {
   ) {
     this.context = canvas.getContext('2d');
     this.buffer = document.createElement('canvas').getContext('webgl');
-    this.mapTileset = new AssetsManager(this.buffer);
-    this.spriteSheet = new AssetsManager(this.buffer);
-    this.font = new AssetsManager(this.buffer);
     this.backgrounds = [];
-    this.images = new AssetsManager(this.buffer);
     this.camera = new Camera(cameraWidth, cameraHeight);
     this.renderer = new Renderer(this.buffer);
     this.popup = new Popup(this.bus);
-    this.popup.background = new AssetsManager(this.buffer);
+    this.library = new Library(this.buffer);
   }
 
   public adjustBufferCanvasSize(stageWidth: number, stageHeight: number): void {
@@ -71,7 +66,7 @@ export default class {
 
     this.drawObject(
       false,
-      <AssetsManager>this.popup.background,
+      <AssetsManager>this.library.popup,
       0,
       0,
       this.camera.x + x,
@@ -133,7 +128,7 @@ export default class {
 
       this.drawObject(
         false,
-        this.font,
+        this.library.font,
         letter.x,
         // The font tile y + margin to the letter itself
         letter.y + letter.m,
@@ -165,7 +160,7 @@ export default class {
 
       this.drawObject(
         character.isFacingLeft,
-        this.spriteSheet,
+        this.library.spriteSheet,
         frame.x,
         frame.y,
         character.left + Math.floor(character.width * 0.5 - frame.w * 0.5),
@@ -186,7 +181,7 @@ export default class {
 
       this.drawObject(
         false,
-        this.spriteSheet,
+        this.library.spriteSheet,
         frame.x,
         frame.y,
         collectable.left,
@@ -210,7 +205,7 @@ export default class {
 
     this.drawObject(
       false,
-      this.spriteSheet,
+      this.library.spriteSheet,
       frame.x,
       frame.y,
       this.camera.x + margin,

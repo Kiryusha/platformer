@@ -3,12 +3,7 @@ import Controller from '../controller/Controller';
 import Display from '../display/Display';
 import Game from '../game/Game';
 import Engine from '../engine/Engine';
-import AssetsManager from '../display/AssetsManager';
 import Bus from '../main/Bus';
-import spriteSheet from '../../assets/images/sprites.png';
-import popup from '../../assets/images/popup.png';
-import font from '../../assets/images/font.png';
-import zones from './zones';
 
 declare global {
   interface Window {
@@ -19,7 +14,6 @@ declare global {
 export default class {
   aspectRatio = 9 / 16;
   fps: number = 1000 / 30;
-  zones: Zones = zones;
   startingZone: string = 'zoneA1';
   controller: Controller;
   game: Game;
@@ -35,13 +29,13 @@ export default class {
   public async init(): Promise<any> {
     this.bus = new Bus();
     this.controller = new Controller();
-    this.game = new Game(this.bus, this.zones, this.startingZone);
     this.display = new Display(
       this.bus,
       document.getElementById('game') as HTMLCanvasElement,
       256,
       144,
     );
+    this.game = new Game(this.bus, this.display.library.zones, this.startingZone);
     this.engine = new Engine(this.fps, this.render.bind(this), this.update.bind(this));
 
     // Synchronize display buffer size with the world size
@@ -50,15 +44,9 @@ export default class {
 
     this.subscribeToEvents();
 
-    await Promise.all([
-      // characters sprites are always the same
-      this.display.spriteSheet.loadAsset(spriteSheet, true),
-      this.display.popup.background.loadAsset(popup, true),
-      this.display.font.loadAsset(font, true),
+    await this.display.library.initAssets();
 
-      // initial asset setup
-      this.updateZoneAssets(),
-    ]);
+    this.updateZoneAssets(),
 
     this.resize();
     this.engine.start();
@@ -177,7 +165,7 @@ export default class {
   }
 
   private render(): void {
-    const imagesTilesData = this.zones[this.game.world.activeZone].config.tilesets
+    const imagesTilesData = this.display.library.zones[this.game.world.activeZone].config.tilesets
       .filter(tileset => tileset.name === 'images')[0];
 
     this.display.renderer.clear();
@@ -248,7 +236,7 @@ export default class {
     await this.game.update();
   }
 
-  private async loadZone(payload: ZonePayload): Promise<void> {
+  private loadZone(payload: ZonePayload): void {
     // We should stop the engine, as loading new assets may take some time
     this.engine.stop();
     // Set the player's destination params - they will be used during the new zone data parsing
@@ -265,57 +253,18 @@ export default class {
       this.game.world.height
     );
     // update only assets that are not yet loaded by comparing urls
-    await this.updateZoneAssets();
+    this.updateZoneAssets();
     // now we can start engine again
     this.engine.start();
   }
 
   private async updateZoneAssets(): Promise<any> {
-    const promises: Promise<any>[] = [];
-    const backgrounds: Backgrounds = this.zones[this.game.world.activeZone].backgrounds;
-
-    // check if new backgrounds are among already processed backgrounds
-    const areNewBackgroundsAmongOld = Object.keys(backgrounds).every(url =>
-      this.display.backgrounds.some(asset => asset.url === url));
-
-    // check if the same assets is used in new zone
-    if (this.display.mapTileset.url !== this.zones[this.game.world.activeZone].tileset) {
-      promises.push(
-        this.display.mapTileset.loadAsset(
-          this.zones[this.game.world.activeZone].tileset,
-          false,
-          this.zones[this.game.world.activeZone].config.tilesets[0].tilewidth,
-          this.zones[this.game.world.activeZone].config.tilesets[0].columns,
-        ),
-      );
-    }
-
-    if (
-      this.zones[this.game.world.activeZone].images.spriteSheet &&
-      (this.display.images.url !== this.zones[this.game.world.activeZone].images)
-    ) {
-      promises.push(
-        this.display.images.loadAsset(this.zones[this.game.world.activeZone].images.spriteSheet)
-      );
-    }
-
-    if (!areNewBackgroundsAmongOld) {
-      this.display.backgrounds = [];
-
-      Object.keys(backgrounds).forEach(() => {
-        this.display.backgrounds.push(new AssetsManager(this.display.buffer));
-      });
-
-      promises.push(
-        ...Object.keys(backgrounds)
-          .map((background: keyof Backgrounds, i) =>
-            this.display.backgrounds[i]
-              .loadAsset(backgrounds[background])),
-      );
-    }
-
-    await Promise.all(promises);
-    this.display.imagesMap = this.zones[this.game.world.activeZone].images.spriteMap;
+    this.display.backgrounds = this.display.library.zones[this.game.world.activeZone].backgrounds;
+    this.display.mapTileset = this.display.library.zones[this.game.world.activeZone].tileset;
+    this.display.mapTileset.tileSize = this.display.library.zones[this.game.world.activeZone].config.tilesets[0].tilewidth;
+    this.display.mapTileset.columns = this.display.library.zones[this.game.world.activeZone].config.tilesets[0].columns;
+    this.display.images = this.display.library.zones[this.game.world.activeZone].images.spriteSheet;
+    this.display.imagesMap = this.display.library.zones[this.game.world.activeZone].images.spriteMap;
     // By default, the size of the buffer canvas is equal to the size of the first zone, so we need
     // to update it when changing the zone, so its size may not be enough for the new zone
     this.display.adjustBufferCanvasSize(this.game.world.width, this.game.world.height);

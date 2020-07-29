@@ -19,11 +19,7 @@ export default class AssetsManager implements AssetsManager {
   public async loadAsset(
     url: any,
     makeFlipped: boolean = false,
-    tileSize?: number,
-    columns?: number,
-  ): Promise<any> {
-    this.tileSize = tileSize;
-    this.columns = columns;
+  ): Promise<void> {
     this.url = url;
     if (makeFlipped) {
       await Promise.all([

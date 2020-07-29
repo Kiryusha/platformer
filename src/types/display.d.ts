@@ -58,3 +58,20 @@ interface PopupPayload {
   text: string;
   fontSize?: number;
 }
+
+interface Zones {
+  [key: string]: {
+    config: GameMap;
+    tileset: AssetsManager;
+    backgrounds: AssetsManager[];
+    images: {
+      spriteSheet?: AssetsManager;
+      spriteMap?: SpriteMap;
+    }
+  }
+}
+
+interface Library {
+  zones: Zones;
+  initAssets(): void;
+}

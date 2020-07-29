@@ -3,18 +3,6 @@ declare module '*.png'{
    export = value;
 }
 
-interface Zones {
-  [key: string]: {
-    config: GameMap;
-    tileset: string;
-    backgrounds: {};
-    images: {
-      spriteSheet?: string;
-      spriteMap?: SpriteMap;
-    }
-  }
-}
-
 interface Bus {
   FREEZE_CHARACTERS: string;
   UNFREEZE_CHARACTERS: string;
