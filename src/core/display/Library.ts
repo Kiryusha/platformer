@@ -44,17 +44,19 @@ export default class Library implements Library {
     this.defaultImagesMap = defaultImagesMap;
   }
 
-  public async initAssets(): Promise<void> {
-    this.cloudsBack.loadAsset(cloudsBack);
-    this.cloudsFront.loadAsset(cloudsFront);
-    this.bgBack.loadAsset(bgBack);
-    this.bgFront.loadAsset(bgFront);
-    this.defaultTileSet.loadAsset(defaultTileSet);
-    this.sunnyLandTileSet.loadAsset(sunnyLandTileSet);
-    this.defaultImages.loadAsset(defaultImages);
-    this.spriteSheet.loadAsset(spriteSheet, true);
-    this.popup.loadAsset(popup);
-    this.font.loadAsset(font);
+  public initAssets(): Promise<void[]> {
+    return Promise.all([
+      this.cloudsBack.loadAsset(cloudsBack),
+      this.cloudsFront.loadAsset(cloudsFront),
+      this.bgBack.loadAsset(bgBack),
+      this.bgFront.loadAsset(bgFront),
+      this.defaultTileSet.loadAsset(defaultTileSet),
+      this.sunnyLandTileSet.loadAsset(sunnyLandTileSet),
+      this.defaultImages.loadAsset(defaultImages),
+      this.spriteSheet.loadAsset(spriteSheet, true),
+      this.popup.loadAsset(popup),
+      this.font.loadAsset(font),
+    ]);
   }
 
   public get zones(): Zones {
