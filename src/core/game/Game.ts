@@ -35,7 +35,7 @@ export default class {
     this.world.activeZone = zone;
   }
 
-  public async update(): Promise<void> {
-    await this.world.update();
+  public update(): void {
+    this.world.update();
   }
 }

@@ -5,7 +5,7 @@ export default class {
   ) {}
   // This method exists for the future possible separation of various methods of cycling objects:
   // quad tree, spatial hash etc. For now it is just brute forcing all of them.
-  public processBroadPhase(entities: Entity[]): Promise<any[]> {
+  public processBroadPhase(entities: Entity[]): Entity[][] {
     return this.bruteForce(entities);
   }
 
@@ -86,7 +86,7 @@ export default class {
     }
   }
 
-  private async routePlayerVsDoor(player: Player, door: Entity): Promise<void> {
+  private routePlayerVsDoor(player: Player, door: Entity): void {
     const { target } = door.properties;
     const offset = parseInt(door.properties.offset);
     const destinationX = door.properties.destinationX
@@ -115,7 +115,7 @@ export default class {
     }
     payload.name = target;
 
-    await this.bus.publish(this.bus.LOAD_ZONE, payload);
+    this.bus.publish(this.bus.LOAD_ZONE, payload);
   }
 
   // this router separates collisions of a player with an enemy
@@ -190,7 +190,7 @@ export default class {
     return e1.right > e2.left && e1.oldRight <= e2.left;
   }
 
-  private async bruteForce(entities: Entity[]): Promise<any[]> {
+  private bruteForce(entities: Entity[]): Entity[][] {
     // based on https://github.com/reu/broadphase.js/blob/master/src/brute-force.js
     const length = entities.length;
     const collisions = [];
@@ -203,7 +203,7 @@ export default class {
           let e2 = entities[k];
 
           if (this.broadPhaseComparator(e1, e2)) {
-            await this.broadPhaseResolver(e1, e2);
+            this.broadPhaseResolver(e1, e2);
             collisions.push([e1, e2]);
 
             e1.collisionType = e2.group;
@@ -241,7 +241,7 @@ export default class {
 
   // Resolves which router use for the collision
   // TODO: refactor types
-  private async broadPhaseResolver(
+  private broadPhaseResolver(
     e1: any,
     e2: any,
   ): Promise<void> {
@@ -256,7 +256,7 @@ export default class {
       }
     } else if (e1.group === 'characters' && e2.group === 'doors') {
       if (e1.type === 'player') {
-        await this.routePlayerVsDoor(e1, e2);
+        this.routePlayerVsDoor(e1, e2);
       }
     } else if (e1.group === 'characters' && e2.group === 'collectables') {
       if (e1.type === 'player') {

@@ -11,6 +11,7 @@ interface Bus {
   DISABLE_CONTROLS: string;
   ENABLE_CONTROLS: string;
   LOAD_ZONE: string;
+  APP_RESTART: string;
   subscribe(event: string, callback: Callback): string;
   unsubscribe(event: string, id: string): void;
   publish(event: string, arg?: any): void;

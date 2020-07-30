@@ -18,7 +18,7 @@ export default class {
   public middleFrontMap: number[];
   public middleMap: number[];
   public frontMap: number[];
-  public collisionDebugMap: (number | string)[];
+  public collisionDebugMap: Entity[][];
   public columns: number;
   public rows: number;
   public activeZone: keyof Zones;
@@ -56,7 +56,7 @@ export default class {
     this.collider = new Collider(bus);
   }
 
-  public async update(): Promise<void> {
+  public update(): void {
     // TODO: Fix condition, as last frame of jumping is taken for falling
     this.collection.characters.forEach((character: Character) => {
       if (character.isVanished) {
@@ -71,14 +71,14 @@ export default class {
       }
       collectable.update();
     });
-    const collisions = await this.collider.processBroadPhase([
+    const collisions = this.collider.processBroadPhase([
       ...this.collection.characters,
       ...this.collisions,
       ...this.doors,
       ...this.collection.collectables,
       ...this.ropes,
     ]);
-    this.collisionDebugMap = collisions;
+    this.collisionDebugMap = <Entity[][]>collisions;
     this.brain.update();
   }
 

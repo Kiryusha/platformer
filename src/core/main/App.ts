@@ -26,6 +26,11 @@ export default class {
     this.init();
   }
 
+  public restart(): void {
+    this.game = new Game(this.bus, this.display.library.zones, this.startingZone);
+    this.updateZoneAssets();
+  }
+
   public async init(): Promise<any> {
     this.bus = new Bus();
     this.controller = new Controller();
@@ -46,7 +51,7 @@ export default class {
 
     await this.display.library.initAssets();
 
-    this.updateZoneAssets(),
+    this.updateZoneAssets();
 
     this.resize();
     this.engine.start();
@@ -67,6 +72,7 @@ export default class {
     this.bus.subscribe(this.bus.DISABLE_CONTROLS, this.disableControls.bind(this));
     this.bus.subscribe(this.bus.ENABLE_CONTROLS, this.enableControls.bind(this));
     this.bus.subscribe(this.bus.LOAD_ZONE, this.loadZone.bind(this));
+    this.bus.subscribe(this.bus.APP_RESTART, this.restart.bind(this));
   }
 
   private disableControls() {
@@ -218,7 +224,7 @@ export default class {
     );
   }
 
-  private async update(): Promise<void> {
+  private update(): void {
     this.game.player.isJumpActive = this.controller.jump.isActive;
     this.game.player.isUpActive = this.controller.up.isActive;
 
@@ -233,7 +239,7 @@ export default class {
       }
     }
 
-    await this.game.update();
+    this.game.update();
   }
 
   private loadZone(payload: ZonePayload): void {
@@ -258,7 +264,7 @@ export default class {
     this.engine.start();
   }
 
-  private async updateZoneAssets(): Promise<any> {
+  private updateZoneAssets(): void {
     this.display.backgrounds = this.display.library.zones[this.game.world.activeZone].backgrounds;
     this.display.mapTileset = this.display.library.zones[this.game.world.activeZone].tileset;
     this.display.mapTileset.tileSize = this.display.library.zones[this.game.world.activeZone].config.tilesets[0].tilewidth;

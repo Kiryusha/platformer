@@ -12,6 +12,8 @@ export default class Bus implements Bus {
   public readonly ENABLE_CONTROLS: string = 'app.enableControls';
   // Event is triggered on entering doors
   public readonly LOAD_ZONE: string = 'app.loadZone';
+  // Load the whole game
+  public readonly APP_RESTART: string = 'app.restart';
 
   private subscriptions: Subscriptions = {};
   private lastId: number = 0;
