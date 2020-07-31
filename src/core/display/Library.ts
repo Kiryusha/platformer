@@ -16,6 +16,7 @@ import defaultImagesMap from '../../assets/sprite-maps/default/images.json';
 import spriteSheet from '../../assets/images/sprites.png';
 import popup from '../../assets/images/popup.png';
 import font from '../../assets/images/font.png';
+import { promiseAllProgress } from '../../util';
 
 export default class Library implements Library {
   public cloudsBack: AssetsManager;
@@ -29,6 +30,7 @@ export default class Library implements Library {
   public spriteSheet: AssetsManager;
   public popup: AssetsManager;
   public font: AssetsManager;
+  public loadingProgress: number = 0;
 
   constructor(buffer: WebGLRenderingContext) {
     this.cloudsBack = new AssetsManager(buffer);
@@ -45,7 +47,7 @@ export default class Library implements Library {
   }
 
   public initAssets(): Promise<void[]> {
-    return Promise.all([
+    const promises: Promise<void>[] = [
       this.cloudsBack.loadAsset(cloudsBack),
       this.cloudsFront.loadAsset(cloudsFront),
       this.bgBack.loadAsset(bgBack),
@@ -56,7 +58,11 @@ export default class Library implements Library {
       this.spriteSheet.loadAsset(spriteSheet, true),
       this.popup.loadAsset(popup),
       this.font.loadAsset(font),
-    ]);
+    ];
+
+    return promiseAllProgress(promises, progress => {
+      this.loadingProgress = progress;
+    });
   }
 
   public get zones(): Zones {
