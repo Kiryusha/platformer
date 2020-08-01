@@ -1,10 +1,4 @@
 import AssetsManager from '../display/AssetsManager';
-import zoneA0 from '../../assets/levels/zoneA0.json';
-import zoneA1 from '../../assets/levels/zoneA1.json';
-import zoneB0 from '../../assets/levels/zoneB0.json';
-import zoneB1 from '../../assets/levels/zoneB1.json';
-import zoneB2 from '../../assets/levels/zoneB2.json';
-import zoneB3 from '../../assets/levels/zoneB3.json';
 import cloudsBack from '../../assets/images/default/background/clouds-back.png';
 import cloudsFront from '../../assets/images/default/background/clouds-front.png';
 import bgBack from '../../assets/images/default/background/bg-back.png';
@@ -16,20 +10,32 @@ import defaultImagesMap from '../../assets/sprite-maps/default/images.json';
 import spriteSheet from '../../assets/images/sprites.png';
 import popup from '../../assets/images/popup.png';
 import font from '../../assets/images/font.png';
-import { promiseAllProgress } from '../../util';
+import { promiseAllProgress, get } from '../../util';
+
+declare global {
+  interface Window {
+    ASSETS_URL: string;
+  }
+}
 
 export default class Library implements Library {
-  public cloudsBack: AssetsManager;
-  public cloudsFront: AssetsManager;
-  public bgBack: AssetsManager;
-  public bgFront: AssetsManager;
-  public defaultTileSet: AssetsManager;
-  public sunnyLandTileSet: AssetsManager;
-  public defaultImages: AssetsManager;
-  public defaultImagesMap: SpriteMap;
-  public spriteSheet: AssetsManager;
-  public popup: AssetsManager;
-  public font: AssetsManager;
+  private cloudsBack: AssetsManager;
+  private cloudsFront: AssetsManager;
+  private bgBack: AssetsManager;
+  private bgFront: AssetsManager;
+  private defaultTileSet: AssetsManager;
+  private sunnyLandTileSet: AssetsManager;
+  private defaultImages: AssetsManager;
+  private defaultImagesMap: SpriteMap;
+  private spriteSheet: AssetsManager;
+  private popup: AssetsManager;
+  private font: AssetsManager;
+  private zoneA0: GameMap;
+  private zoneA1: GameMap;
+  private zoneB0: GameMap;
+  private zoneB1: GameMap;
+  private zoneB2: GameMap;
+  private zoneB3: GameMap;
   public loadingProgress: number = 0;
 
   constructor(buffer: WebGLRenderingContext) {
@@ -46,7 +52,7 @@ export default class Library implements Library {
     this.defaultImagesMap = defaultImagesMap;
   }
 
-  public initAssets(): Promise<void[]> {
+  public async initAssets(): Promise<void[]> {
     const promises: Promise<void>[] = [
       this.cloudsBack.loadAsset(cloudsBack),
       this.cloudsFront.loadAsset(cloudsFront),
@@ -58,6 +64,12 @@ export default class Library implements Library {
       this.spriteSheet.loadAsset(spriteSheet, true),
       this.popup.loadAsset(popup),
       this.font.loadAsset(font),
+      get(`${ASSETS_URL}/levels/zoneA0.json`).then(r => this.zoneA0 = r),
+      get(`${ASSETS_URL}/levels/zoneA1.json`).then(r => this.zoneA1 = r),
+      get(`${ASSETS_URL}/levels/zoneB0.json`).then(r => this.zoneB0 = r),
+      get(`${ASSETS_URL}/levels/zoneB1.json`).then(r => this.zoneB1 = r),
+      get(`${ASSETS_URL}/levels/zoneB2.json`).then(r => this.zoneB2 = r),
+      get(`${ASSETS_URL}/levels/zoneB3.json`).then(r => this.zoneB3 = r),
     ];
 
     return promiseAllProgress(promises, progress => {
@@ -68,7 +80,7 @@ export default class Library implements Library {
   public get zones(): Zones {
     return {
       'zoneA0': {
-        config: zoneA0,
+        config: this.zoneA0,
         tileset: this.defaultTileSet,
         backgrounds: [
           this.cloudsBack,
@@ -82,7 +94,7 @@ export default class Library implements Library {
         }
       },
       'zoneA1': {
-        config: zoneA1,
+        config: this.zoneA1,
         tileset: this.defaultTileSet,
         backgrounds: [
           this.cloudsBack,
@@ -94,25 +106,25 @@ export default class Library implements Library {
         }
       },
       'zoneB0': {
-        config: zoneB0,
+        config: this.zoneB0,
         tileset: this.sunnyLandTileSet,
         backgrounds: [],
         images: {},
       },
       'zoneB1': {
-        config: zoneB1,
+        config: this.zoneB1,
         tileset: this.sunnyLandTileSet,
         backgrounds: [],
         images: {},
       },
       'zoneB2': {
-        config: zoneB2,
+        config: this.zoneB2,
         tileset: this.sunnyLandTileSet,
         backgrounds: [],
         images: {},
       },
       'zoneB3': {
-        config: zoneB3,
+        config: this.zoneB3,
         tileset: this.sunnyLandTileSet,
         backgrounds: [],
         images: {},

@@ -41,12 +41,7 @@ export default class {
       256,
       144,
     );
-    this.game = new Game(this.bus, this.display.library.zones, this.startingZone);
     this.engine = new Engine(this.fps, this.render.bind(this), this.update.bind(this));
-
-    // Synchronize display buffer size with the world size
-    this.display.buffer.canvas.height = this.game.world.height;
-    this.display.buffer.canvas.width = this.game.world.width;
 
     this.subscribeToEvents();
 
@@ -56,6 +51,12 @@ export default class {
     this.engine.start();
 
     await this.display.library.initAssets();
+
+    this.game = new Game(this.bus, this.display.library.zones, this.startingZone);
+
+    // Synchronize display buffer size with the world size
+    this.display.buffer.canvas.height = this.game.world.height;
+    this.display.buffer.canvas.width = this.game.world.width;
 
     this.state = 'game';
 
@@ -168,11 +169,13 @@ export default class {
       this.aspectRatio,
     );
     this.display.render();
-    this.display.camera.adjustCamera(
-      this.game.player,
-      this.game.world.width,
-      this.game.world.height
-    );
+    if (this.game) {
+      this.display.camera.adjustCamera(
+        this.game.player,
+        this.game.world.width,
+        this.game.world.height
+      );
+    }
   }
 
   private render(): void {
