@@ -37,6 +37,21 @@ export default class {
     this.buffer.canvas.height = stageHeight;
   }
 
+  public drawLoading() {
+    const loaderHeight = 10;
+    const width =  (this.camera.width / 100) * this.library.loadingProgress;
+    const posX = (this.camera.width / 2) - (width / 2);
+    const color = [255, 255, 255, 1];
+
+    this.renderer.drawRect([
+      posX, (this.camera.height / 2) - loaderHeight, // upper-left corner
+      posX + width, (this.camera.height / 2) - loaderHeight,
+      posX, (this.camera.height / 2) + loaderHeight,
+      posX, (this.camera.height / 2) + loaderHeight, // bottom-left corner
+      posX + width, (this.camera.height / 2) - loaderHeight,
+      posX + width, (this.camera.height / 2) + loaderHeight, // bottom-right corner
+    ], color);
+  }
 
   public drawPopup(
     x: number = 10,
@@ -324,9 +339,9 @@ export default class {
         if (map[i][k].group === 'collisions') {
           this.renderer.drawRect([
             map[i][k].x, map[i][k].y, // upper-left corner
-            map[i][k].x + map[i][k].width, map[i][k].y,
+            map[i][k].x + map[i][k].width, map[i][k].y, // upper-right corner
             map[i][k].x, map[i][k].y + map[i][k].height,
-            map[i][k].x, map[i][k].y + map[i][k].height, // bottom-right corner
+            map[i][k].x, map[i][k].y + map[i][k].height, // bottom-left corner
             map[i][k].x + map[i][k].width, map[i][k].y,
             map[i][k].x + map[i][k].width, map[i][k].y + map[i][k].height, // bottom-right corner
           ], colorsDictionary[map[i][k].type]);

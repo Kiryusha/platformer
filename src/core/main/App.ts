@@ -21,6 +21,7 @@ export default class {
   engine: Engine;
   bus: Bus;
   areControlsDisabled: boolean = false;
+  state: 'loading' | 'game';
 
   constructor() {
     this.init();
@@ -49,12 +50,16 @@ export default class {
 
     this.subscribeToEvents();
 
-    await this.display.library.initAssets();
-
-    this.updateZoneAssets();
+    this.state = 'loading';
 
     this.resize();
     this.engine.start();
+
+    await this.display.library.initAssets();
+
+    this.state = 'game';
+
+    this.updateZoneAssets();
 
     setTimeout(async () => {
       this.bus.publish(
@@ -171,75 +176,86 @@ export default class {
   }
 
   private render(): void {
-    const imagesTilesData = this.display.library.zones[this.game.world.activeZone].config.tilesets
-      .filter(tileset => tileset.name === 'images')[0];
-
     this.display.renderer.clear();
+    switch (this.state) {
+      case 'loading':
+        this.display.drawLoading();
+        this.display.render();
+        break;
+      case 'game':
+        const imagesTilesData = this.display.library.zones[this.game.world.activeZone].config.tilesets
+          .filter(tileset => tileset.name === 'images')[0];
 
-    this.display.drawBackgrounds();
-    this.display.drawMap(
-      this.game.world.backgroundMap,
-      this.game.world.columns,
-      imagesTilesData
-    );
-    if (this.game.world.middleBackgroundMap) {
-      this.display.drawMap(
-        this.game.world.middleBackgroundMap,
-        this.game.world.columns,
-        imagesTilesData
-      );
-    }
-    this.display.drawMap(
-      this.game.world.middleMap,
-      this.game.world.columns,
-      imagesTilesData
-    );
-    if (this.game.world.middleFrontMap) {
-      this.display.drawMap(
-        this.game.world.middleFrontMap,
-        this.game.world.columns,
-        imagesTilesData
-      );
-    }
-    this.display.drawCharacters(this.game.objects[this.game.world.activeZone].characters);
-    this.display.drawCollectables(this.game.objects[this.game.world.activeZone].collectables);
-    this.display.drawMap(
-      this.game.world.frontMap,
-      this.game.world.columns,
-      imagesTilesData
-    );
+        this.display.drawBackgrounds();
+        this.display.drawMap(
+          this.game.world.backgroundMap,
+          this.game.world.columns,
+          imagesTilesData
+        );
+        if (this.game.world.middleBackgroundMap) {
+          this.display.drawMap(
+            this.game.world.middleBackgroundMap,
+            this.game.world.columns,
+            imagesTilesData
+          );
+        }
+        this.display.drawMap(
+          this.game.world.middleMap,
+          this.game.world.columns,
+          imagesTilesData
+        );
+        if (this.game.world.middleFrontMap) {
+          this.display.drawMap(
+            this.game.world.middleFrontMap,
+            this.game.world.columns,
+            imagesTilesData
+          );
+        }
+        this.display.drawCharacters(this.game.objects[this.game.world.activeZone].characters);
+        this.display.drawCollectables(this.game.objects[this.game.world.activeZone].collectables);
+        this.display.drawMap(
+          this.game.world.frontMap,
+          this.game.world.columns,
+          imagesTilesData
+        );
 
-    // Collisions debugging tool: to visualise collisions type window.SHOW_COLLISIONS = true
-    // in browser console
-    if (window.SHOW_COLLISIONS) {
-      this.display.drawCollisionDebugMap(this.game.world.collisionDebugMap);
+        // Collisions debugging tool: to visualise collisions type window.SHOW_COLLISIONS = true
+        // in browser console
+        if (window.SHOW_COLLISIONS) {
+          this.display.drawCollisionDebugMap(this.game.world.collisionDebugMap);
+        }
+        this.display.drawHud(this.game.player, this.game.spriteMap);
+        this.display.drawPopup();
+        this.display.render();
+        this.display.camera.adjustCamera(
+          this.game.player,
+          this.game.world.width,
+          this.game.world.height
+        );
+        break;
     }
-    this.display.drawHud(this.game.player, this.game.spriteMap);
-    this.display.drawPopup();
-    this.display.render();
-    this.display.camera.adjustCamera(
-      this.game.player,
-      this.game.world.width,
-      this.game.world.height
-    );
   }
 
   private update(): void {
-    this.game.player.isJumpActive = this.controller.jump.isActive;
-    this.game.player.isUpActive = this.controller.up.isActive;
+    switch (this.state) {
+      case 'game':
+        this.game.player.isJumpActive = this.controller.jump.isActive;
+        this.game.player.isUpActive = this.controller.up.isActive;
 
-    if (!this.areControlsDisabled) {
-      if (this.controller.isAnyKeyIsActive) {
-        this.bus.publish(this.bus.HIDE_POPUP);
-      }
-      if (this.game.player.isClimbing) {
-        this.adjustClimbingControls();
-      } else {
-        this.adjustMovingControls();
-      }
+        if (!this.areControlsDisabled) {
+          if (this.controller.isAnyKeyIsActive) {
+            this.bus.publish(this.bus.HIDE_POPUP);
+          }
+          if (this.game.player.isClimbing) {
+            this.adjustClimbingControls();
+          } else {
+            this.adjustMovingControls();
+          }
+        }
+
+        this.game.update();
+        break;
     }
-
-    this.game.update();
   }
 
   private loadZone(payload: ZonePayload): void {
