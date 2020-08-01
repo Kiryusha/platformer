@@ -1,3 +1,5 @@
+declare var ASSETS_URL: string;
+
 interface Tileset {
   firstgid: number;
   tiles: any[];

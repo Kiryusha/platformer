@@ -12,13 +12,10 @@ import popup from '../../assets/images/popup.png';
 import font from '../../assets/images/font.png';
 import { promiseAllProgress, get } from '../../util';
 
-declare global {
-  interface Window {
-    ASSETS_URL: string;
-  }
-}
-
 export default class Library implements Library {
+  public font: AssetsManager;
+  public spriteSheet: AssetsManager;
+  public popup: AssetsManager;
   private cloudsBack: AssetsManager;
   private cloudsFront: AssetsManager;
   private bgBack: AssetsManager;
@@ -27,9 +24,6 @@ export default class Library implements Library {
   private sunnyLandTileSet: AssetsManager;
   private defaultImages: AssetsManager;
   private defaultImagesMap: SpriteMap;
-  private spriteSheet: AssetsManager;
-  private popup: AssetsManager;
-  private font: AssetsManager;
   private zoneA0: GameMap;
   private zoneA1: GameMap;
   private zoneB0: GameMap;
