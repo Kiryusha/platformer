@@ -1,7 +1,7 @@
 interface Library {
-  font: AssetsManager;
-  spriteSheet: AssetsManager;
-  popup: AssetsManager;
+  font: ImageManager;
+  spriteSheet: ImageManager;
+  popup: ImageManager;
   loadingProgress: number;
   buffer: WebGLRenderingContext;
   context: CanvasRenderingContext2D;
@@ -9,7 +9,7 @@ interface Library {
   initAssets(): void;
 }
 
-interface AssetsManager {
+interface ImageManager {
   image: HTMLImageElement;
   tileSize: number;
   columns: number;
@@ -28,10 +28,10 @@ interface AssetsManager {
 interface Zones {
   [key: string]: {
     config: GameMap;
-    tileset: AssetsManager;
-    backgrounds: AssetsManager[];
+    tileset: ImageManager;
+    backgrounds: ImageManager[];
     images: {
-      spriteSheet?: AssetsManager;
+      spriteSheet?: ImageManager;
       spriteMap?: SpriteMap;
     }
   }

@@ -11,9 +11,9 @@ export default class {
   buffer: WebGLRenderingContext;
   imagesMap: SpriteMap;
   popup: Popup;
-  backgrounds: AssetsManager[];
-  mapTileset: AssetsManager;
-  images: AssetsManager;
+  backgrounds: ImageManager[];
+  mapTileset: ImageManager;
+  images: ImageManager;
 
   constructor(
     private bus: Bus,
@@ -78,7 +78,7 @@ export default class {
 
     this.drawObject(
       false,
-      <AssetsManager>this.library.popup,
+      <ImageManager>this.library.popup,
       0,
       0,
       this.camera.x + x,
@@ -232,7 +232,7 @@ export default class {
 
   public drawObject(
     isFlipped: boolean,
-    asset: AssetsManager,
+    asset: ImageManager,
     sourceX: number,
     sourceY: number,
     destinationX: number,

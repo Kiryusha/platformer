@@ -7,7 +7,7 @@ export default class Popup implements Popup {
   public readonly yPadding: number = 13;
   public readonly offsetMax: number = 70;
   public readonly offsetStep: number = 5;
-  public background: AssetsManager;
+  public background: ImageManager;
   public offset: number = 70;
   public text: string = '';
   public fontSize: number = 1;

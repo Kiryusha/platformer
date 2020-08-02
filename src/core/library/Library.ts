@@ -1,4 +1,4 @@
-import AssetsManager from './AssetsManager';
+import ImageManager from './ImageManager';
 import cloudsBack from '../../assets/images/default/background/clouds-back.png';
 import cloudsFront from '../../assets/images/default/background/clouds-front.png';
 import bgBack from '../../assets/images/default/background/bg-back.png';
@@ -13,19 +13,19 @@ import font from '../../assets/images/font.png';
 import { promiseAllProgress, get } from '../../util';
 
 export default class Library implements Library {
-  public font: AssetsManager;
-  public spriteSheet: AssetsManager;
-  public popup: AssetsManager;
+  public font: ImageManager;
+  public spriteSheet: ImageManager;
+  public popup: ImageManager;
   public loadingProgress: number = 0;
   public buffer: WebGLRenderingContext;
   public context: CanvasRenderingContext2D;
-  private cloudsBack: AssetsManager;
-  private cloudsFront: AssetsManager;
-  private bgBack: AssetsManager;
-  private bgFront: AssetsManager;
-  private defaultTileSet: AssetsManager;
-  private sunnyLandTileSet: AssetsManager;
-  private defaultImages: AssetsManager;
+  private cloudsBack: ImageManager;
+  private cloudsFront: ImageManager;
+  private bgBack: ImageManager;
+  private bgFront: ImageManager;
+  private defaultTileSet: ImageManager;
+  private sunnyLandTileSet: ImageManager;
+  private defaultImages: ImageManager;
   private defaultImagesMap: SpriteMap;
   private zoneA0: GameMap;
   private zoneA1: GameMap;
@@ -34,20 +34,20 @@ export default class Library implements Library {
   private zoneB2: GameMap;
   private zoneB3: GameMap;
 
-  constructor(canvas: HTMLCanvasElement,) {
+  constructor(canvas: HTMLCanvasElement) {
     this.context = canvas.getContext('2d');
     this.buffer = document.createElement('canvas').getContext('webgl');
 
-    this.cloudsBack = new AssetsManager(this.buffer);
-    this.cloudsFront = new AssetsManager(this.buffer);
-    this.bgBack = new AssetsManager(this.buffer);
-    this.bgFront = new AssetsManager(this.buffer);
-    this.defaultTileSet = new AssetsManager(this.buffer);
-    this.sunnyLandTileSet = new AssetsManager(this.buffer);
-    this.defaultImages = new AssetsManager(this.buffer);
-    this.spriteSheet = new AssetsManager(this.buffer);
-    this.popup = new AssetsManager(this.buffer);
-    this.font = new AssetsManager(this.buffer);
+    this.cloudsBack = new ImageManager(this.buffer);
+    this.cloudsFront = new ImageManager(this.buffer);
+    this.bgBack = new ImageManager(this.buffer);
+    this.bgFront = new ImageManager(this.buffer);
+    this.defaultTileSet = new ImageManager(this.buffer);
+    this.sunnyLandTileSet = new ImageManager(this.buffer);
+    this.defaultImages = new ImageManager(this.buffer);
+    this.spriteSheet = new ImageManager(this.buffer);
+    this.popup = new ImageManager(this.buffer);
+    this.font = new ImageManager(this.buffer);
     this.defaultImagesMap = defaultImagesMap;
   }
 

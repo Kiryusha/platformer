@@ -1,5 +1,5 @@
 // the class is responsible for creating tilesheets
-export default class AssetsManager implements AssetsManager {
+export default class ImageManager implements ImageManager {
   public image: HTMLImageElement;
   public tileSize: number;
   public columns: number;

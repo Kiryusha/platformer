@@ -27,7 +27,7 @@ interface Popup {
   height: number;
   xPadding: number;
   yPadding: number;
-  background: AssetsManager;
+  background: ImageManager;
   isVisible: boolean;
   offset: number;
   offsetMax: number;
