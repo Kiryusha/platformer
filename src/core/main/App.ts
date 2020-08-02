@@ -4,6 +4,7 @@ import Display from '../display/Display';
 import Game from '../game/Game';
 import Engine from '../engine/Engine';
 import Bus from '../main/Bus';
+import Library from '../library/Library';
 
 declare global {
   interface Window {
@@ -20,6 +21,7 @@ export default class {
   display: Display;
   engine: Engine;
   bus: Bus;
+  library: Library;
   areControlsDisabled: boolean = false;
   state: 'loading' | 'game';
 
@@ -28,16 +30,17 @@ export default class {
   }
 
   public restart(): void {
-    this.game = new Game(this.bus, this.display.library.zones, this.startingZone);
+    this.game = new Game(this.bus, this.library.zones, this.startingZone);
     this.updateZoneAssets();
   }
 
   public async init(): Promise<any> {
     this.bus = new Bus();
+    this.library = new Library(<HTMLCanvasElement>document.getElementById('game'));
     this.controller = new Controller();
     this.display = new Display(
       this.bus,
-      document.getElementById('game') as HTMLCanvasElement,
+      this.library,
       256,
       144,
     );
@@ -50,9 +53,9 @@ export default class {
     this.resize();
     this.engine.start();
 
-    await this.display.library.initAssets();
+    await this.library.initAssets();
 
-    this.game = new Game(this.bus, this.display.library.zones, this.startingZone);
+    this.game = new Game(this.bus, this.library.zones, this.startingZone);
 
     // Synchronize display buffer size with the world size
     this.display.buffer.canvas.height = this.game.world.height;
@@ -186,7 +189,7 @@ export default class {
         this.display.render();
         break;
       case 'game':
-        const imagesTilesData = this.display.library.zones[this.game.world.activeZone].config.tilesets
+        const imagesTilesData = this.library.zones[this.game.world.activeZone].config.tilesets
           .filter(tileset => tileset.name === 'images')[0];
 
         this.display.drawBackgrounds();
@@ -284,12 +287,12 @@ export default class {
   }
 
   private updateZoneAssets(): void {
-    this.display.backgrounds = this.display.library.zones[this.game.world.activeZone].backgrounds;
-    this.display.mapTileset = this.display.library.zones[this.game.world.activeZone].tileset;
-    this.display.mapTileset.tileSize = this.display.library.zones[this.game.world.activeZone].config.tilesets[0].tilewidth;
-    this.display.mapTileset.columns = this.display.library.zones[this.game.world.activeZone].config.tilesets[0].columns;
-    this.display.images = this.display.library.zones[this.game.world.activeZone].images.spriteSheet;
-    this.display.imagesMap = this.display.library.zones[this.game.world.activeZone].images.spriteMap;
+    this.display.backgrounds = this.library.zones[this.game.world.activeZone].backgrounds;
+    this.display.mapTileset = this.library.zones[this.game.world.activeZone].tileset;
+    this.display.mapTileset.tileSize = this.library.zones[this.game.world.activeZone].config.tilesets[0].tilewidth;
+    this.display.mapTileset.columns = this.library.zones[this.game.world.activeZone].config.tilesets[0].columns;
+    this.display.images = this.library.zones[this.game.world.activeZone].images.spriteSheet;
+    this.display.imagesMap = this.library.zones[this.game.world.activeZone].images.spriteMap;
     // By default, the size of the buffer canvas is equal to the size of the first zone, so we need
     // to update it when changing the zone, so its size may not be enough for the new zone
     this.display.adjustBufferCanvasSize(this.game.world.width, this.game.world.height);

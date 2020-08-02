@@ -1,4 +1,4 @@
-import AssetsManager from '../display/AssetsManager';
+import AssetsManager from './AssetsManager';
 import cloudsBack from '../../assets/images/default/background/clouds-back.png';
 import cloudsFront from '../../assets/images/default/background/clouds-front.png';
 import bgBack from '../../assets/images/default/background/bg-back.png';
@@ -16,6 +16,9 @@ export default class Library implements Library {
   public font: AssetsManager;
   public spriteSheet: AssetsManager;
   public popup: AssetsManager;
+  public loadingProgress: number = 0;
+  public buffer: WebGLRenderingContext;
+  public context: CanvasRenderingContext2D;
   private cloudsBack: AssetsManager;
   private cloudsFront: AssetsManager;
   private bgBack: AssetsManager;
@@ -30,19 +33,21 @@ export default class Library implements Library {
   private zoneB1: GameMap;
   private zoneB2: GameMap;
   private zoneB3: GameMap;
-  public loadingProgress: number = 0;
 
-  constructor(buffer: WebGLRenderingContext) {
-    this.cloudsBack = new AssetsManager(buffer);
-    this.cloudsFront = new AssetsManager(buffer);
-    this.bgBack = new AssetsManager(buffer);
-    this.bgFront = new AssetsManager(buffer);
-    this.defaultTileSet = new AssetsManager(buffer);
-    this.sunnyLandTileSet = new AssetsManager(buffer);
-    this.defaultImages = new AssetsManager(buffer);
-    this.spriteSheet = new AssetsManager(buffer);
-    this.popup = new AssetsManager(buffer);
-    this.font = new AssetsManager(buffer);
+  constructor(canvas: HTMLCanvasElement,) {
+    this.context = canvas.getContext('2d');
+    this.buffer = document.createElement('canvas').getContext('webgl');
+
+    this.cloudsBack = new AssetsManager(this.buffer);
+    this.cloudsFront = new AssetsManager(this.buffer);
+    this.bgBack = new AssetsManager(this.buffer);
+    this.bgFront = new AssetsManager(this.buffer);
+    this.defaultTileSet = new AssetsManager(this.buffer);
+    this.sunnyLandTileSet = new AssetsManager(this.buffer);
+    this.defaultImages = new AssetsManager(this.buffer);
+    this.spriteSheet = new AssetsManager(this.buffer);
+    this.popup = new AssetsManager(this.buffer);
+    this.font = new AssetsManager(this.buffer);
     this.defaultImagesMap = defaultImagesMap;
   }
 

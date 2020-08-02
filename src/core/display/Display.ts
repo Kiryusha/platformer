@@ -2,7 +2,6 @@
 import Camera from './Camera';
 import Renderer from './Renderer';
 import Popup from './Popup';
-import Library from './Library';
 import fontMap from '../../assets/sprite-maps/font.json';
 
 export default class {
@@ -12,24 +11,22 @@ export default class {
   buffer: WebGLRenderingContext;
   imagesMap: SpriteMap;
   popup: Popup;
-  library: Library;
   backgrounds: AssetsManager[];
   mapTileset: AssetsManager;
   images: AssetsManager;
 
   constructor(
     private bus: Bus,
-    canvas: HTMLCanvasElement,
+    private library: Library,
     cameraWidth: number,
     cameraHeight: number,
   ) {
-    this.context = canvas.getContext('2d');
-    this.buffer = document.createElement('canvas').getContext('webgl');
+    this.context = this.library.context;
+    this.buffer = this.library.buffer;
     this.backgrounds = [];
     this.camera = new Camera(cameraWidth, cameraHeight);
     this.renderer = new Renderer(this.buffer);
     this.popup = new Popup(this.bus);
-    this.library = new Library(this.buffer);
   }
 
   public adjustBufferCanvasSize(stageWidth: number, stageHeight: number): void {

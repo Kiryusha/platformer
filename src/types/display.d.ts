@@ -22,22 +22,6 @@ interface Backgrounds {
   [key: string]: HTMLImageElement;
 }
 
-interface AssetsManager {
-  image: HTMLImageElement;
-  tileSize: number;
-  columns: number;
-  flippedImage: CanvasImageSource;
-  texture: WebGLTexture;
-  flippedTexture: WebGLTexture;
-  url: any;
-  loadAsset(
-    url: any,
-    makeFlipped: boolean,
-    tileSize?: number,
-    columns?: number,
-  ): Promise<any>
-}
-
 interface Popup {
   width: number;
   height: number;
@@ -59,21 +43,4 @@ interface Popup {
 interface PopupPayload {
   text: string;
   fontSize?: number;
-}
-
-interface Zones {
-  [key: string]: {
-    config: GameMap;
-    tileset: AssetsManager;
-    backgrounds: AssetsManager[];
-    images: {
-      spriteSheet?: AssetsManager;
-      spriteMap?: SpriteMap;
-    }
-  }
-}
-
-interface Library {
-  zones: Zones;
-  initAssets(): void;
 }
