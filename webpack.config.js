@@ -56,6 +56,17 @@ module.exports = {
           }
         ]
       },
+      {
+        test: /\.(ico)$/,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: '[name].[ext]',
+            }
+          }
+        ]
+      },
     ]
   },
 
@@ -76,7 +87,8 @@ module.exports = {
       }),
     ] : [],
     new HtmlWebpackPlugin({
-      template: 'index.html'
+      template: 'index.html',
+      favicon: 'favicon.ico',
     }),
     new webpack.DefinePlugin({
       'ASSETS_URL': ASSETS_URL[environment],
