@@ -45,6 +45,17 @@ module.exports = {
           }
         ]
       },
+      {
+        test: /\.(ogg|mp3)$/,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: 'assets/sounds/[name].[ext]',
+            }
+          }
+        ]
+      },
     ]
   },
 

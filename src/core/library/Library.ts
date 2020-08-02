@@ -1,4 +1,5 @@
 import ImageManager from './ImageManager';
+import AudioManager from './AudioManager';
 import cloudsBack from '../../assets/images/default/background/clouds-back.png';
 import cloudsFront from '../../assets/images/default/background/clouds-front.png';
 import bgBack from '../../assets/images/default/background/bg-back.png';
@@ -10,65 +11,61 @@ import defaultImagesMap from '../../assets/sprite-maps/default/images.json';
 import spriteSheet from '../../assets/images/sprites.png';
 import popup from '../../assets/images/popup.png';
 import font from '../../assets/images/font.png';
+import jumpOgg from '../../assets/sounds/jump.ogg';
 import { promiseAllProgress, get } from '../../util';
 
 export default class Library implements Library {
-  public font: ImageManager;
-  public spriteSheet: ImageManager;
-  public popup: ImageManager;
   public loadingProgress: number = 0;
   public buffer: WebGLRenderingContext;
   public context: CanvasRenderingContext2D;
-  private cloudsBack: ImageManager;
-  private cloudsFront: ImageManager;
-  private bgBack: ImageManager;
-  private bgFront: ImageManager;
-  private defaultTileSet: ImageManager;
-  private sunnyLandTileSet: ImageManager;
-  private defaultImages: ImageManager;
+  public images: ImagesCollection = {};
+  public sounds: SoundsCollection = {};
+  public gameMaps: GameMapsCollection = {};
   private defaultImagesMap: SpriteMap;
-  private zoneA0: GameMap;
-  private zoneA1: GameMap;
-  private zoneB0: GameMap;
-  private zoneB1: GameMap;
-  private zoneB2: GameMap;
-  private zoneB3: GameMap;
 
   constructor(canvas: HTMLCanvasElement) {
     this.context = canvas.getContext('2d');
     this.buffer = document.createElement('canvas').getContext('webgl');
 
-    this.cloudsBack = new ImageManager(this.buffer);
-    this.cloudsFront = new ImageManager(this.buffer);
-    this.bgBack = new ImageManager(this.buffer);
-    this.bgFront = new ImageManager(this.buffer);
-    this.defaultTileSet = new ImageManager(this.buffer);
-    this.sunnyLandTileSet = new ImageManager(this.buffer);
-    this.defaultImages = new ImageManager(this.buffer);
-    this.spriteSheet = new ImageManager(this.buffer);
-    this.popup = new ImageManager(this.buffer);
-    this.font = new ImageManager(this.buffer);
+    this.images = {
+      cloudsBack: new ImageManager(this.buffer),
+      cloudsFront: new ImageManager(this.buffer),
+      bgBack: new ImageManager(this.buffer),
+      bgFront: new ImageManager(this.buffer),
+      defaultTileSet: new ImageManager(this.buffer),
+      sunnyLandTileSet: new ImageManager(this.buffer),
+      defaultImages: new ImageManager(this.buffer),
+      spriteSheet: new ImageManager(this.buffer),
+      popup: new ImageManager(this.buffer),
+      font: new ImageManager(this.buffer),
+    };
+
+    this.sounds = {
+      jump: new AudioManager(),
+    };
+
     this.defaultImagesMap = defaultImagesMap;
   }
 
   public async initAssets(): Promise<void[]> {
     const promises: Promise<void>[] = [
-      this.cloudsBack.loadAsset(cloudsBack),
-      this.cloudsFront.loadAsset(cloudsFront),
-      this.bgBack.loadAsset(bgBack),
-      this.bgFront.loadAsset(bgFront),
-      this.defaultTileSet.loadAsset(defaultTileSet),
-      this.sunnyLandTileSet.loadAsset(sunnyLandTileSet),
-      this.defaultImages.loadAsset(defaultImages),
-      this.spriteSheet.loadAsset(spriteSheet, true),
-      this.popup.loadAsset(popup),
-      this.font.loadAsset(font),
-      get(`${ASSETS_URL}/levels/zoneA0.json`).then(r => this.zoneA0 = r),
-      get(`${ASSETS_URL}/levels/zoneA1.json`).then(r => this.zoneA1 = r),
-      get(`${ASSETS_URL}/levels/zoneB0.json`).then(r => this.zoneB0 = r),
-      get(`${ASSETS_URL}/levels/zoneB1.json`).then(r => this.zoneB1 = r),
-      get(`${ASSETS_URL}/levels/zoneB2.json`).then(r => this.zoneB2 = r),
-      get(`${ASSETS_URL}/levels/zoneB3.json`).then(r => this.zoneB3 = r),
+      this.images.cloudsBack.loadAsset(cloudsBack),
+      this.images.cloudsFront.loadAsset(cloudsFront),
+      this.images.bgBack.loadAsset(bgBack),
+      this.images.bgFront.loadAsset(bgFront),
+      this.images.defaultTileSet.loadAsset(defaultTileSet),
+      this.images.sunnyLandTileSet.loadAsset(sunnyLandTileSet),
+      this.images.defaultImages.loadAsset(defaultImages),
+      this.images.spriteSheet.loadAsset(spriteSheet, true),
+      this.images.popup.loadAsset(popup),
+      this.images.font.loadAsset(font),
+      get(`${ASSETS_URL}/levels/zoneA0.json`).then(r => this.gameMaps.zoneA0 = r),
+      get(`${ASSETS_URL}/levels/zoneA1.json`).then(r => this.gameMaps.zoneA1 = r),
+      get(`${ASSETS_URL}/levels/zoneB0.json`).then(r => this.gameMaps.zoneB0 = r),
+      get(`${ASSETS_URL}/levels/zoneB1.json`).then(r => this.gameMaps.zoneB1 = r),
+      get(`${ASSETS_URL}/levels/zoneB2.json`).then(r => this.gameMaps.zoneB2 = r),
+      get(`${ASSETS_URL}/levels/zoneB3.json`).then(r => this.gameMaps.zoneB3 = r),
+      this.sounds.jump.loadAsset(jumpOgg),
     ];
 
     return promiseAllProgress(promises, progress => {
@@ -79,52 +76,52 @@ export default class Library implements Library {
   public get zones(): Zones {
     return {
       'zoneA0': {
-        config: this.zoneA0,
-        tileset: this.defaultTileSet,
+        config: this.gameMaps.zoneA0,
+        tileset: this.images.defaultTileSet,
         backgrounds: [
-          this.cloudsBack,
-          this.cloudsFront,
-          this.bgBack,
-          this.bgFront,
+          this.images.cloudsBack,
+          this.images.cloudsFront,
+          this.images.bgBack,
+          this.images.bgFront,
         ],
         images: {
-          spriteSheet: this.defaultImages,
+          spriteSheet: this.images.defaultImages,
           spriteMap: this.defaultImagesMap,
         }
       },
       'zoneA1': {
-        config: this.zoneA1,
-        tileset: this.defaultTileSet,
+        config: this.gameMaps.zoneA1,
+        tileset: this.images.defaultTileSet,
         backgrounds: [
-          this.cloudsBack,
-          this.cloudsFront,
+          this.images.cloudsBack,
+          this.images.cloudsFront,
         ],
         images: {
-          spriteSheet: this.defaultImages,
+          spriteSheet: this.images.defaultImages,
           spriteMap: this.defaultImagesMap,
         }
       },
       'zoneB0': {
-        config: this.zoneB0,
-        tileset: this.sunnyLandTileSet,
+        config: this.gameMaps.zoneB0,
+        tileset: this.images.sunnyLandTileSet,
         backgrounds: [],
         images: {},
       },
       'zoneB1': {
-        config: this.zoneB1,
-        tileset: this.sunnyLandTileSet,
+        config: this.gameMaps.zoneB1,
+        tileset: this.images.sunnyLandTileSet,
         backgrounds: [],
         images: {},
       },
       'zoneB2': {
-        config: this.zoneB2,
-        tileset: this.sunnyLandTileSet,
+        config: this.gameMaps.zoneB2,
+        tileset: this.images.sunnyLandTileSet,
         backgrounds: [],
         images: {},
       },
       'zoneB3': {
-        config: this.zoneB3,
-        tileset: this.sunnyLandTileSet,
+        config: this.gameMaps.zoneB3,
+        tileset: this.images.sunnyLandTileSet,
         backgrounds: [],
         images: {},
       },

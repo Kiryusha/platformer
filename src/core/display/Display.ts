@@ -78,7 +78,7 @@ export default class {
 
     this.drawObject(
       false,
-      <ImageManager>this.library.popup,
+      <ImageManager>this.library.images.popup,
       0,
       0,
       this.camera.x + x,
@@ -140,7 +140,7 @@ export default class {
 
       this.drawObject(
         false,
-        this.library.font,
+        this.library.images.font,
         letter.x,
         // The font tile y + margin to the letter itself
         letter.y + letter.m,
@@ -172,7 +172,7 @@ export default class {
 
       this.drawObject(
         character.isFacingLeft,
-        this.library.spriteSheet,
+        this.library.images.spriteSheet,
         frame.x,
         frame.y,
         character.left + Math.floor(character.width * 0.5 - frame.w * 0.5),
@@ -193,7 +193,7 @@ export default class {
 
       this.drawObject(
         false,
-        this.library.spriteSheet,
+        this.library.images.spriteSheet,
         frame.x,
         frame.y,
         collectable.left,
@@ -217,7 +217,7 @@ export default class {
 
     this.drawObject(
       false,
-      this.library.spriteSheet,
+      this.library.images.spriteSheet,
       frame.x,
       frame.y,
       this.camera.x + margin,

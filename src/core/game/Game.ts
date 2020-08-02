@@ -13,15 +13,21 @@ export default class {
   private maximumStars: number = 14;
   private zones: Zones;
 
-  constructor(private bus: Bus, zones: Zones, startingZone: keyof Zones) {
+  constructor(private bus: Bus, private library: Library, startingZone: keyof Zones) {
     this.spriteMap = spriteMap;
-    this.zones = zones;
+    this.zones = this.library.zones;
     this.player = this.createPlayer();
     this.loadZone(startingZone);
   }
 
   private createPlayer(): Player {
-    return new Player(this.bus, playerConfig, this.spriteMap, this.maximumStars);
+    return new Player(
+      this.bus,
+      this.library,
+      playerConfig,
+      this.spriteMap,
+      this.maximumStars
+    );
   }
 
   public loadZone(zone: keyof Zones | keyof ZoneObjectsCollections): void {

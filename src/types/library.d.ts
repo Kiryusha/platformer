@@ -1,11 +1,16 @@
+declare module '*.ogg' {
+  const src: string;
+  export default src;
+}
+
 interface Library {
-  font: ImageManager;
-  spriteSheet: ImageManager;
-  popup: ImageManager;
   loadingProgress: number;
   buffer: WebGLRenderingContext;
   context: CanvasRenderingContext2D;
   zones: Zones;
+  images: ImagesCollection;
+  sounds: SoundsCollection;
+  gameMaps: GameMapsCollection;
   initAssets(): void;
 }
 
@@ -19,10 +24,27 @@ interface ImageManager {
   url: any;
   loadAsset(
     url: any,
-    makeFlipped: boolean,
-    tileSize?: number,
-    columns?: number,
-  ): Promise<any>
+    makeFlipped?: boolean,
+  ): Promise<any>;
+}
+
+interface AudioManager {
+  audio: HTMLAudioElement;
+  loadAsset(
+    url: any,
+  ): Promise<void>;
+}
+
+interface SoundsCollection {
+  [key: string]: AudioManager;
+}
+
+interface ImagesCollection {
+  [key: string]: ImageManager;
+}
+
+interface GameMapsCollection {
+  [key: string]: GameMap;
 }
 
 interface Zones {

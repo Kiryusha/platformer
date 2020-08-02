@@ -25,6 +25,7 @@ export default class Player extends Character implements Player {
 
   constructor(
     bus: Bus,
+    private library: Library,
     playerConfig: CharacterConfig,
     playerSpriteMap: SpriteMap,
     maximumStars: number,
@@ -34,6 +35,11 @@ export default class Player extends Character implements Player {
     this.currentHealth = this.maxHealth;
     this.currentStars = 0;
     this.maximumStars = maximumStars;
+  }
+
+  public startJumping(): void {
+    super.startJumping();
+    this.library.sounds.jump.audio.play();
   }
 
   public obtainStar(): void {

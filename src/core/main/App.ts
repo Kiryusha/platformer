@@ -30,7 +30,7 @@ export default class {
   }
 
   public restart(): void {
-    this.game = new Game(this.bus, this.library.zones, this.startingZone);
+    this.game = new Game(this.bus, this.library, this.startingZone);
     this.updateZoneAssets();
   }
 
@@ -55,7 +55,7 @@ export default class {
 
     await this.library.initAssets();
 
-    this.game = new Game(this.bus, this.library.zones, this.startingZone);
+    this.game = new Game(this.bus, this.library, this.startingZone);
 
     // Synchronize display buffer size with the world size
     this.display.buffer.canvas.height = this.game.world.height;
