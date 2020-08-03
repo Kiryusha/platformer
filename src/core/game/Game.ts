@@ -34,6 +34,7 @@ export default class {
     this.objects[zone] = this.objects[zone] || <ZoneObjectsCollection>{};
     this.world = new World(
       this.bus,
+      this.library,
       this.player,
       this.zones[zone].config,
       this.objects[zone],

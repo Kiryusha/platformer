@@ -58,8 +58,8 @@ export default class {
     this.game = new Game(this.bus, this.library, this.startingZone);
 
     // Synchronize display buffer size with the world size
-    this.display.buffer.canvas.height = this.game.world.height;
-    this.display.buffer.canvas.width = this.game.world.width;
+    this.display.contextWebGL.canvas.height = this.game.world.height;
+    this.display.contextWebGL.canvas.width = this.game.world.width;
 
     this.state = 'game';
 

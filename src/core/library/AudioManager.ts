@@ -3,22 +3,23 @@
 import { get } from '../../util';
 
 export default class AudioManager implements AudioManager {
-  private buffer: AudioBuffer;
   private context: AudioContext;
+  private buffer: AudioBuffer;
   private isAlreadyPlaying: boolean;
 
-  constructor() {
-    this.context = new AudioContext();
+  constructor(context: AudioContext) {
+    this.context = context;
   }
 
   public async loadAsset(url: string): Promise<void> {
     return get(url, 'arrayBuffer').then(response => this.decodeAudioData(response));
   }
 
-  public play() {
-    if (this.isAlreadyPlaying) return;
+  public play(simultaneous: boolean = false) {
+    if (this.isAlreadyPlaying && !simultaneous) return;
     this.isAlreadyPlaying = true;
 
+    // AudioBufferSourceNode - is single use entity. It can be played only once.
     const source = this.context.createBufferSource();
     source.buffer = this.buffer;
     source.connect(this.context.destination);

@@ -5,8 +5,9 @@ declare module '*.ogg' {
 
 interface Library {
   loadingProgress: number;
-  buffer: WebGLRenderingContext;
-  context: CanvasRenderingContext2D;
+  contextWebGL: WebGLRenderingContext;
+  context2D: CanvasRenderingContext2D;
+  contextAudio: AudioContext;
   zones: Zones;
   images: ImagesCollection;
   sounds: SoundsCollection;
@@ -32,7 +33,7 @@ interface AudioManager {
   loadAsset(
     url: any,
   ): Promise<void>;
-  play(): void;
+  play(simultaneous?: boolean): void;
 }
 
 interface SoundsCollection {

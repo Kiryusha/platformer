@@ -2,6 +2,7 @@
 export default class {
   constructor (
     private bus: Bus,
+    private library: Library,
   ) {}
   // This method exists for the future possible separation of various methods of cycling objects:
   // quad tree, spatial hash etc. For now it is just brute forcing all of them.
@@ -133,6 +134,7 @@ export default class {
     ) {
       enemy.isDeathTriggered = true;
       player.throwUp('attacker');
+      this.library.sounds.hit.play();
       return;
     } else if (
       this.isCollidingFromRight(player, enemy)
@@ -142,12 +144,14 @@ export default class {
     ) {
       player.collisionXDirection = 'right';
       player.isHurtTriggered = true;
+      this.library.sounds.hurt.play();
     } else if (
       this.isCollidingFromLeft(player, enemy)
       || this.isCollidingFromRight(enemy, player)
     ) {
       player.collisionXDirection = 'left';
       player.isHurtTriggered = true;
+      this.library.sounds.hurt.play();
     }
   }
 
@@ -157,10 +161,12 @@ export default class {
         case 'carrot':
           e2.isVanished = true;
           e1.restoreHealth();
+          this.library.sounds.carrot.play(true);
           break;
         case 'star':
           e2.isVanished = true;
           e1.obtainStar();
+          this.library.sounds.star.play(true);
       }
     }
   }

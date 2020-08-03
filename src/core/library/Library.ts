@@ -12,36 +12,46 @@ import spriteSheet from '../../assets/images/sprites.png';
 import popup from '../../assets/images/popup.png';
 import font from '../../assets/images/font.png';
 import jumpOgg from '../../assets/sounds/jump.ogg';
+import hitOgg from '../../assets/sounds/hit.ogg';
+import carrotOgg from '../../assets/sounds/carrot.ogg';
+import starOgg from '../../assets/sounds/star.ogg';
+import hurtOgg from '../../assets/sounds/hurt.ogg';
 import { promiseAllProgress, get } from '../../util';
 
 export default class Library implements Library {
   public loadingProgress: number = 0;
-  public buffer: WebGLRenderingContext;
-  public context: CanvasRenderingContext2D;
+  public contextWebGL: WebGLRenderingContext;
+  public context2D: CanvasRenderingContext2D;
+  public contextAudio: AudioContext;
   public images: ImagesCollection = {};
   public sounds: SoundsCollection = {};
   public gameMaps: GameMapsCollection = {};
   private defaultImagesMap: SpriteMap;
 
   constructor(canvas: HTMLCanvasElement) {
-    this.context = canvas.getContext('2d');
-    this.buffer = document.createElement('canvas').getContext('webgl');
+    this.context2D = canvas.getContext('2d');
+    this.contextWebGL = document.createElement('canvas').getContext('webgl');
+    this.contextAudio = new AudioContext();
 
     this.images = {
-      cloudsBack: new ImageManager(this.buffer),
-      cloudsFront: new ImageManager(this.buffer),
-      bgBack: new ImageManager(this.buffer),
-      bgFront: new ImageManager(this.buffer),
-      defaultTileSet: new ImageManager(this.buffer),
-      sunnyLandTileSet: new ImageManager(this.buffer),
-      defaultImages: new ImageManager(this.buffer),
-      spriteSheet: new ImageManager(this.buffer),
-      popup: new ImageManager(this.buffer),
-      font: new ImageManager(this.buffer),
+      cloudsBack: new ImageManager(this.contextWebGL),
+      cloudsFront: new ImageManager(this.contextWebGL),
+      bgBack: new ImageManager(this.contextWebGL),
+      bgFront: new ImageManager(this.contextWebGL),
+      defaultTileSet: new ImageManager(this.contextWebGL),
+      sunnyLandTileSet: new ImageManager(this.contextWebGL),
+      defaultImages: new ImageManager(this.contextWebGL),
+      spriteSheet: new ImageManager(this.contextWebGL),
+      popup: new ImageManager(this.contextWebGL),
+      font: new ImageManager(this.contextWebGL),
     };
 
     this.sounds = {
-      jump: new AudioManager(),
+      jump: new AudioManager(this.contextAudio),
+      hit: new AudioManager(this.contextAudio),
+      carrot: new AudioManager(this.contextAudio),
+      star: new AudioManager(this.contextAudio),
+      hurt: new AudioManager(this.contextAudio),
     };
 
     this.defaultImagesMap = defaultImagesMap;
@@ -66,6 +76,10 @@ export default class Library implements Library {
       get(`${ASSETS_URL}/levels/zoneB2.json`).then(r => this.gameMaps.zoneB2 = r),
       get(`${ASSETS_URL}/levels/zoneB3.json`).then(r => this.gameMaps.zoneB3 = r),
       this.sounds.jump.loadAsset(jumpOgg),
+      this.sounds.hit.loadAsset(hitOgg),
+      this.sounds.carrot.loadAsset(carrotOgg),
+      this.sounds.star.loadAsset(starOgg),
+      this.sounds.hurt.loadAsset(hurtOgg),
     ];
 
     return promiseAllProgress(promises, progress => {

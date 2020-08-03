@@ -4,11 +4,11 @@ import Renderer from './Renderer';
 import Popup from './Popup';
 import fontMap from '../../assets/sprite-maps/font.json';
 
-export default class {
-  context: CanvasRenderingContext2D;
+export default class Display {
+  context2D: CanvasRenderingContext2D;
   camera: Camera;
   renderer: Renderer;
-  buffer: WebGLRenderingContext;
+  contextWebGL: WebGLRenderingContext;
   imagesMap: SpriteMap;
   popup: Popup;
   backgrounds: ImageManager[];
@@ -21,17 +21,17 @@ export default class {
     cameraWidth: number,
     cameraHeight: number,
   ) {
-    this.context = this.library.context;
-    this.buffer = this.library.buffer;
+    this.context2D = this.library.context2D;
+    this.contextWebGL = this.library.contextWebGL;
     this.backgrounds = [];
     this.camera = new Camera(cameraWidth, cameraHeight);
-    this.renderer = new Renderer(this.buffer);
+    this.renderer = new Renderer(this.contextWebGL);
     this.popup = new Popup(this.bus);
   }
 
   public adjustBufferCanvasSize(stageWidth: number, stageHeight: number): void {
-    this.buffer.canvas.width = stageWidth;
-    this.buffer.canvas.height = stageHeight;
+    this.contextWebGL.canvas.width = stageWidth;
+    this.contextWebGL.canvas.height = stageHeight;
   }
 
   public drawLoading() {
@@ -398,16 +398,16 @@ export default class {
   }
 
   public render(): void {
-    this.context.drawImage(
-      this.buffer.canvas,
+    this.context2D.drawImage(
+      this.contextWebGL.canvas,
       this.camera.x,
       this.camera.y,
       this.camera.width,
       this.camera.height,
       0,
       0,
-      this.context.canvas.width,
-      this.context.canvas.height,
+      this.context2D.canvas.width,
+      this.context2D.canvas.height,
     );
   }
 
@@ -417,14 +417,14 @@ export default class {
     ratio: number,
   ): void {
     if (height / width > ratio) {
-      this.context.canvas.height = width * ratio;
-      this.context.canvas.width = width;
+      this.context2D.canvas.height = width * ratio;
+      this.context2D.canvas.width = width;
     } else {
-      this.context.canvas.height = height;
-      this.context.canvas.width = height / ratio;
+      this.context2D.canvas.height = height;
+      this.context2D.canvas.width = height / ratio;
     }
 
-    this.context.imageSmoothingEnabled = false;
+    this.context2D.imageSmoothingEnabled = false;
   }
 
   private isObjectWithinCamera(

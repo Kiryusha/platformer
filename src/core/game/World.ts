@@ -33,6 +33,7 @@ export default class {
 
   constructor (
     private bus: Bus,
+    private library: Library,
     public player: Player,
     private map: GameMap,
     private collection: ZoneObjectsCollection,
@@ -53,7 +54,7 @@ export default class {
 
     this.processMap(this.map);
 
-    this.collider = new Collider(bus);
+    this.collider = new Collider(bus, this.library);
   }
 
   public update(): void {
