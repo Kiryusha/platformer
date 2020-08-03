@@ -1,4 +1,12 @@
-export async function get(url: string) {
+export async function get(
+  url: string,
+  type: 'json' | 'arrayBuffer' = 'json',
+) {
   const response = await fetch(url);
-  return response.json();
+  switch (type) {
+    case 'json':
+      return response.json();
+    case 'arrayBuffer':
+      return response.arrayBuffer();
+  }
 }
