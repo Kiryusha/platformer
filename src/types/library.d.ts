@@ -29,10 +29,10 @@ interface ImageManager {
 }
 
 interface AudioManager {
-  audio: HTMLAudioElement;
   loadAsset(
     url: any,
   ): Promise<void>;
+  play(): void;
 }
 
 interface SoundsCollection {

@@ -39,7 +39,9 @@ export default class Player extends Character implements Player {
 
   public startJumping(): void {
     super.startJumping();
-    this.library.sounds.jump.audio.play();
+    if (!this.isJumping) {
+      this.library.sounds.jump.play();
+    }
   }
 
   public obtainStar(): void {
