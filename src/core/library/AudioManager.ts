@@ -6,26 +6,40 @@ export default class AudioManager implements AudioManager {
   private context: AudioContext;
   private buffer: AudioBuffer;
   private isAlreadyPlaying: boolean;
+  private gainNode: GainNode;
 
-  constructor(context: AudioContext) {
+  constructor(
+    context: AudioContext,
+    private defaultVolume: number = 1,
+  ) {
     this.context = context;
+    this.gainNode = this.context.createGain();
   }
 
   public async loadAsset(url: string): Promise<void> {
     return get(url, 'arrayBuffer').then(response => this.decodeAudioData(response));
   }
 
-  public play(simultaneous: boolean = false) {
-    if (this.isAlreadyPlaying && !simultaneous) return;
+  public play({
+    isSimultaneous = false,
+    volume = this.defaultVolume,
+  } = <PlayParams>{}) {
+    if (this.isAlreadyPlaying && !isSimultaneous) return;
     this.isAlreadyPlaying = true;
 
     // AudioBufferSourceNode - is single use entity. It can be played only once.
     const source = this.context.createBufferSource();
     source.buffer = this.buffer;
-    source.connect(this.context.destination);
+
     source.addEventListener('ended', () => {
       this.isAlreadyPlaying = false;
     });
+
+    this.gainNode.gain.value = volume;
+    this.gainNode.connect(this.context.destination);
+
+    source.connect(this.gainNode);
+
     source.start();
   }
 

@@ -33,7 +33,12 @@ interface AudioManager {
   loadAsset(
     url: any,
   ): Promise<void>;
-  play(simultaneous?: boolean): void;
+  play(params?: PlayParams): void;
+}
+
+interface PlayParams {
+  isSimultaneous?: boolean;
+  volume?: number;
 }
 
 interface SoundsCollection {

@@ -47,11 +47,11 @@ export default class Library implements Library {
     };
 
     this.sounds = {
-      jump: new AudioManager(this.contextAudio),
-      hit: new AudioManager(this.contextAudio),
-      carrot: new AudioManager(this.contextAudio),
-      star: new AudioManager(this.contextAudio),
-      hurt: new AudioManager(this.contextAudio),
+      jump: new AudioManager(this.contextAudio, 0.5),
+      hit: new AudioManager(this.contextAudio, 0.3),
+      carrot: new AudioManager(this.contextAudio, 0.5),
+      star: new AudioManager(this.contextAudio, 0.3),
+      hurt: new AudioManager(this.contextAudio, 0.3),
     };
 
     this.defaultImagesMap = defaultImagesMap;

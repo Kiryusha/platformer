@@ -161,12 +161,16 @@ export default class {
         case 'carrot':
           e2.isVanished = true;
           e1.restoreHealth();
-          this.library.sounds.carrot.play(true);
+          this.library.sounds.carrot.play({
+            isSimultaneous: true,
+          });
           break;
         case 'star':
           e2.isVanished = true;
           e1.obtainStar();
-          this.library.sounds.star.play(true);
+          this.library.sounds.star.play({
+            isSimultaneous: true,
+          });
       }
     }
   }
