@@ -12,6 +12,7 @@ import spriteSheet from '../../assets/images/sprites.png';
 import popup from '../../assets/images/popup.png';
 import font from '../../assets/images/font.png';
 import jumpOgg from '../../assets/sounds/jump.ogg';
+import landOgg from '../../assets/sounds/land.ogg';
 import hitOgg from '../../assets/sounds/hit.ogg';
 import carrotOgg from '../../assets/sounds/carrot.ogg';
 import starOgg from '../../assets/sounds/star.ogg';
@@ -47,7 +48,8 @@ export default class Library implements Library {
     };
 
     this.sounds = {
-      jump: new AudioManager(this.contextAudio, 0.5),
+      jump: new AudioManager(this.contextAudio, 0.1),
+      land: new AudioManager(this.contextAudio, 0.1),
       hit: new AudioManager(this.contextAudio, 0.3),
       carrot: new AudioManager(this.contextAudio, 0.5),
       star: new AudioManager(this.contextAudio, 0.3),
@@ -80,6 +82,7 @@ export default class Library implements Library {
       this.sounds.carrot.loadAsset(carrotOgg),
       this.sounds.star.loadAsset(starOgg),
       this.sounds.hurt.loadAsset(hurtOgg),
+      this.sounds.land.loadAsset(landOgg),
     ];
 
     return promiseAllProgress(promises, progress => {

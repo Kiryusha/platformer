@@ -284,6 +284,9 @@ export default class {
     character: Character,
     collision: Entity,
   ): void {
+    if (character.type === 'player' && character.isFalling) {
+      this.library.sounds.land.play();
+    }
     character.bottom = collision.top - 0.01;
     character.velocityY = 0;
     character.isJumping = false;
