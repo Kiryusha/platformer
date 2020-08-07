@@ -9,7 +9,7 @@ export default class Popup implements Popup {
   public readonly offsetStep: number = 5;
   public background: ImageManager;
   public offset: number = 70;
-  public text: string = '';
+  public text: string | string[] = '';
   public fontSize: number = 1;
   // The resolving method of the current popup calling.
   public resolve: Callback;

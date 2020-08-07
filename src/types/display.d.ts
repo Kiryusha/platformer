@@ -32,7 +32,7 @@ interface Popup {
   offset: number;
   offsetMax: number;
   offsetStep: number;
-  text: string;
+  text: string | string[];
   fontSize: number;
   resolve: Callback;
   isResolved: boolean;

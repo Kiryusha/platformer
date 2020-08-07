@@ -54,6 +54,7 @@ export default class Display {
     x: number = 10,
     y: number = 68,
   ): void {
+    const lineHeight = 11;
     // Popup is off-screen, if its offset is greater than offsetMax, so we skip the rest
     if (!this.popup.isVisible && this.popup.offset > this.popup.offsetMax) {
       // Popup is off-screen, but its promise is not resolved
@@ -88,54 +89,67 @@ export default class Display {
     );
 
     // Drawing text
-    this.drawText(
-      this.popup.text,
-      x + this.popup.xPadding,
-      y + this.popup.yPadding + this.popup.offset,
-      'left',
-      this.popup.fontSize,
-    );
+    // console.log(this.popup.text)
+    if (!this.popup.text) return;
+
+    if (Array.isArray(this.popup.text)) {
+      for (let i = 0; i < this.popup.text.length; i += 1) {
+        this.drawText(
+          this.popup.text[i],
+          x + this.popup.xPadding,
+          y + this.popup.yPadding + this.popup.offset + (lineHeight * i),
+          'left',
+          this.popup.fontSize,
+        );
+      }
+    } else {
+      this.drawText(
+        this.popup.text,
+        x + this.popup.xPadding,
+        y + this.popup.yPadding + this.popup.offset,
+        'left',
+        this.popup.fontSize,
+      );
+    }
   }
 
   public drawText(
     word: string,
     x: number = 0,
-    rawY: number = 0,
+    y: number = 0,
     align: string = 'left',
     fontSize: number = 1,
   ): void {
-    let y = rawY;
-    const lineHeight = 11;
     // Font sprite map
     const dictionary: FontMap = fontMap;
     // Letters to draw
     let letters: string[] = word.split('');
     // Margin between letters
     const leftMargin: number = 1;
-    // Cumulative string length
-    let width: number = 0;
+    // Cumulative string length for each letter
+    let currentWidth: number = 0;
 
     if (align === 'right') {
       letters = letters.reverse();
     }
 
     for (let i = 0; i < letters.length; i += 1) {
-      if (letters[i] === '|') {
-        y += lineHeight;
-        width = -leftMargin;
-        continue;
-      }
       const letter: any = dictionary[letters[i]];
-      // Width of previous letter
-      const shouldAddWidth = letters[i - 1] && letters[i - 1] !== '|';
+      // currentWidth of previous letter
+      const shouldAddWidth = !!letters[i - 1];
       const prevWidth: number = shouldAddWidth ? dictionary[letters[i - 1]].w : 0;
       // Left margin is only need after first letter
-      if (i) width += prevWidth + leftMargin;
+      if (i) currentWidth += prevWidth + leftMargin;
       // The position of the letter on the x-axis
-      let posX = this.camera.x + x + (width * fontSize);
+      let posX;
 
-      if (align === 'right') {
-        posX = this.camera.x + x - (width * fontSize);
+      switch (align) {
+        case 'left':
+          posX = this.camera.x + x + (currentWidth * fontSize);
+          break;
+        case 'right':
+          posX = this.camera.x + x - (currentWidth * fontSize);
+          break;
       }
 
       this.drawObject(
@@ -439,7 +453,7 @@ export default class Display {
 
     // Do not draw what does not get into the camera right now, plus a margin of two tiles.
     // Margin is needed in order to avoid glitches during fast movement
-    const margin = this.mapTileset.tileSize * 2;
+    const margin = this.mapTileset ? this.mapTileset.tileSize * 2 : 32;
 
     return !(y > this.camera.y + this.camera.height + margin
       || h < this.camera.y - margin

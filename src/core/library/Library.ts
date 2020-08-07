@@ -61,6 +61,7 @@ export default class Library implements Library {
 
   public async initAssets(): Promise<void[]> {
     const promises: Promise<void>[] = [
+      this.images.font.loadAsset(font),
       this.images.cloudsBack.loadAsset(cloudsBack),
       this.images.cloudsFront.loadAsset(cloudsFront),
       this.images.bgBack.loadAsset(bgBack),
@@ -70,7 +71,6 @@ export default class Library implements Library {
       this.images.defaultImages.loadAsset(defaultImages),
       this.images.spriteSheet.loadAsset(spriteSheet, true),
       this.images.popup.loadAsset(popup),
-      this.images.font.loadAsset(font),
       get(`${ASSETS_URL}/levels/zoneA0.json`).then(r => this.gameMaps.zoneA0 = r),
       get(`${ASSETS_URL}/levels/zoneA1.json`).then(r => this.gameMaps.zoneA1 = r),
       get(`${ASSETS_URL}/levels/zoneB0.json`).then(r => this.gameMaps.zoneB0 = r),

@@ -68,7 +68,13 @@ export default class {
     setTimeout(async () => {
       this.bus.publish(
         this.bus.SHOW_POPUP,
-        'Welcome!|Movement: arrow buttons. Jump: Z. Sprint: Shift.|Find some stars! Eat lots of carrots!'
+        {
+          text: [
+            'Welcome!',
+            'Movement: arrow buttons. Jump: Z. Sprint: Shift.',
+            'Find some stars! Eat lots of carrots!',
+          ],
+        },
       );
     }, 300);
   }
