@@ -36,6 +36,7 @@ export default class Display {
 
   public drawLoading() {
     const loaderHeight = 10;
+    const visibleProgress = Math.ceil(this.library.loadingProgress);
     const width =  (this.camera.width / 100) * this.library.loadingProgress;
     const posX = (this.camera.width / 2) - (width / 2);
     const color = [255, 255, 255, 1];
@@ -48,6 +49,27 @@ export default class Display {
       posX + width, (this.camera.height / 2) - loaderHeight,
       posX + width, (this.camera.height / 2) + loaderHeight, // bottom-right corner
     ], color);
+
+    // If the texture hasn't loaded yet, don't call the method.
+    if (this.library.images.font.texture) {
+      this.drawText(
+        `${Math.ceil(visibleProgress)}%`,
+        (this.camera.width / 2),
+        (this.camera.height / 2) - 7,
+        'center',
+        2,
+      );
+
+      if (this.library.loadingProgress === 100) {
+        this.drawText(
+          'Press any key',
+          (this.camera.width / 2),
+          (this.camera.height / 2) + 42,
+          'center',
+          3,
+        );
+      }
+    }
   }
 
   public drawPopup(

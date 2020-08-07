@@ -61,22 +61,7 @@ export default class {
     this.display.contextWebGL.canvas.height = this.game.world.height;
     this.display.contextWebGL.canvas.width = this.game.world.width;
 
-    this.state = 'game';
-
     this.updateZoneAssets();
-
-    setTimeout(async () => {
-      this.bus.publish(
-        this.bus.SHOW_POPUP,
-        {
-          text: [
-            'Welcome!',
-            'Movement: arrow buttons. Jump: Z. Sprint: Shift.',
-            'Find some stars! Eat lots of carrots!',
-          ],
-        },
-      );
-    }, 300);
   }
 
   private subscribeToEvents(): void {
@@ -98,7 +83,27 @@ export default class {
     this.areControlsDisabled = false;
   }
 
+  private startGame(): void {
+    this.state = 'game';
+
+    setTimeout(async () => {
+      this.bus.publish(
+        this.bus.SHOW_POPUP,
+        {
+          text: [
+            'Welcome!',
+            'Movement: arrow buttons. Jump: Z. Sprint: Shift.',
+            'Find some stars! Eat lots of carrots!',
+          ],
+        },
+      );
+    }, 300);
+  }
+
   private handleKeyEvent(event: { type: string; keyCode: number; }): void {
+    if (this.state === 'loading' && this.library.loadingProgress === 100) {
+      this.startGame();
+    }
     this.controller.handleKeyEvent(event.type, event.keyCode);
   }
 
