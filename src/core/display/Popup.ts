@@ -11,6 +11,7 @@ export default class Popup implements Popup {
   public offset: number = 70;
   public text: string | string[] = '';
   public fontSize: number = 1;
+  public align: Align = 'center';
   // The resolving method of the current popup calling.
   public resolve: Callback;
   // Flags to avoid triggering bus events multiple times.
@@ -20,6 +21,8 @@ export default class Popup implements Popup {
   public isVisible: boolean = false;
   // The ID of the subscription created on the fly.
   private id: string;
+  private readonly fontSizeDefault: number = 1;
+  private readonly alignDefault: Align = 'center';
 
   constructor(private bus: Bus) {
     this.subscribeToEvents();
@@ -45,15 +48,11 @@ export default class Popup implements Popup {
 
       if (typeof payload === 'object') {
         this.text = payload.text;
-
-        if (payload.fontSize) {
-          this.fontSize = payload.fontSize;
-        } else {
-          this.fontSize = 1;
-        }
+        this.fontSize = payload.fontSize ? payload.fontSize :  this.fontSizeDefault;
+        this.align = payload.align ? payload.align :  this.alignDefault;
       } else {
         this.text = payload;
-        this.fontSize = 1;
+        this.fontSize = this.fontSizeDefault;
       }
 
       this.id = this.bus.subscribe(this.bus.HIDE_POPUP, () => this.startHiding(resolve));

@@ -34,13 +34,17 @@ interface Popup {
   offsetStep: number;
   text: string | string[];
   fontSize: number;
+  align: Align;
   resolve: Callback;
   isResolved: boolean;
   isWaiting: boolean;
   startWaiting(): void;
 }
 
+type Align = 'left' | 'right' | 'center';
+
 interface PopupPayload {
   text: string;
   fontSize?: number;
+  align?: Align;
 }

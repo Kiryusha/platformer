@@ -109,7 +109,7 @@ export default class Player extends Character implements Player {
         setTimeout(async () => {
           await this.bus.publish(this.bus.SHOW_POPUP, {
             text: 'YOU DIED',
-            fontSize: 6,
+            fontSize: 3,
           });
           this.isVanished = true;
           this.bus.publish(this.bus.APP_RESTART);

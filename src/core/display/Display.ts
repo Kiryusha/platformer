@@ -64,7 +64,7 @@ export default class Display {
         this.drawText(
           'Press any key',
           (this.camera.width / 2),
-          (this.camera.height / 2) + 42,
+          (this.camera.height / 2) + 28,
           'center',
           3,
         );
@@ -76,7 +76,9 @@ export default class Display {
     x: number = 10,
     y: number = 68,
   ): void {
-    const lineHeight = 11;
+    // We will conventionally assume that the line height increases by one and a half times for
+    // each step of the font size greater than one.
+    const lineHeight = 11 + (0.5 * 11 * (this.popup.fontSize - 1));
     // Popup is off-screen, if its offset is greater than offsetMax, so we skip the rest
     if (!this.popup.isVisible && this.popup.offset > this.popup.offsetMax) {
       // Popup is off-screen, but its promise is not resolved
@@ -114,22 +116,44 @@ export default class Display {
     // console.log(this.popup.text)
     if (!this.popup.text) return;
 
+    let posX = 0;
+    let posY = 0;
+
+    switch (this.popup.align) {
+      case 'left':
+        posX = x + this.popup.xPadding;
+        posY = y + this.popup.yPadding + this.popup.offset;
+        break;
+      case 'right':
+        posX = x + this.popup.width - this.popup.xPadding;
+        posY = y + this.popup.yPadding + this.popup.offset;
+        break;
+      case 'center':
+        posX = x + (this.popup.width / 2);
+        posY = y + this.popup.offset + (this.popup.height / 2);
+        break;
+    }
+
     if (Array.isArray(this.popup.text)) {
       for (let i = 0; i < this.popup.text.length; i += 1) {
         this.drawText(
           this.popup.text[i],
-          x + this.popup.xPadding,
-          y + this.popup.yPadding + this.popup.offset + (lineHeight * i),
-          'left',
+          posX,
+          this.popup.align === 'center'
+            ? posY - (((lineHeight * this.popup.text.length) / 2) - (lineHeight * i))
+            : posY + (lineHeight * i),
+          this.popup.align,
           this.popup.fontSize,
         );
       }
     } else {
       this.drawText(
         this.popup.text,
-        x + this.popup.xPadding,
-        y + this.popup.yPadding + this.popup.offset,
-        'left',
+        posX,
+        this.popup.align === 'center'
+          ? posY - (lineHeight / 2)
+          : posY,
+        this.popup.align,
         this.popup.fontSize,
       );
     }
@@ -139,7 +163,7 @@ export default class Display {
     word: string,
     x: number = 0,
     y: number = 0,
-    align: string = 'left',
+    align: Align = 'left',
     fontSize: number = 1,
   ): void {
     // Font sprite map

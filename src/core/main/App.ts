@@ -95,6 +95,7 @@ export default class {
             'Movement: arrow buttons. Jump: Z. Sprint: Shift.',
             'Find some stars! Eat lots of carrots!',
           ],
+          align: 'center',
         },
       );
     }, 300);
