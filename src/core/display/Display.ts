@@ -128,9 +128,20 @@ export default class Display {
     const leftMargin: number = 1;
     // Cumulative string length for each letter
     let currentWidth: number = 0;
+    // Modificator for align center
+    let fullWidth: number = 0;
 
-    if (align === 'right') {
-      letters = letters.reverse();
+    switch (align) {
+      case 'right':
+        letters = letters.reverse();
+        break;
+      case 'center':
+        for (let i = 1; i <= letters.length; i += 1) {
+          const letter: any = dictionary[letters[i - 1]];
+
+          fullWidth += i === letters.length ? letter.w * fontSize : (letter.w + leftMargin) * fontSize;
+        }
+        break;
     }
 
     for (let i = 0; i < letters.length; i += 1) {
@@ -149,6 +160,9 @@ export default class Display {
           break;
         case 'right':
           posX = this.camera.x + x - (currentWidth * fontSize);
+          break;
+        case 'center':
+          posX = (this.camera.x + x + (currentWidth * fontSize) - (fullWidth / 2));
           break;
       }
 
