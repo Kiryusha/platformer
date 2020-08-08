@@ -14,6 +14,10 @@ I am trying to create a 2d platformer game only using typescript.
 - https://managore.itch.io/m3x6
 - https://void1gaming.itch.io/halftone-sound-effects-pack-lite
 
+## Music used:
+
+- OST from Knytt Stories (https://nifflas.fandom.com/wiki/Knytt_Stories)
+
 ## Programs used:
 
 - https://www.mapeditor.org/
