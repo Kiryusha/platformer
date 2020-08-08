@@ -3,6 +3,11 @@ declare module '*.ogg' {
   export default src;
 }
 
+declare module '*.mp3' {
+  const src: string;
+  export default src;
+}
+
 interface Library {
   loadingProgress: number;
   contextWebGL: WebGLRenderingContext;
@@ -34,11 +39,13 @@ interface AudioManager {
     url: any,
   ): Promise<void>;
   play(params?: PlayParams): void;
+  stop(): void;
 }
 
 interface PlayParams {
   isSimultaneous?: boolean;
   volume?: number;
+  loop?: boolean;
 }
 
 interface SoundsCollection {
@@ -61,6 +68,10 @@ interface Zones {
     images: {
       spriteSheet?: ImageManager;
       spriteMap?: SpriteMap;
+    }
+    audio?: {
+      bgm?: AudioManager;
+      ambient?: AudioManager;
     }
   }
 }

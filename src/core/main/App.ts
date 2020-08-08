@@ -86,6 +86,13 @@ export default class {
   private startGame(): void {
     this.state = 'game';
 
+    if (this.library.zones[this.game.world.activeZone].audio.ambient) {
+      this.library.zones[this.game.world.activeZone].audio.ambient.play({ loop: true });
+    }
+    if (this.library.zones[this.game.world.activeZone].audio.bgm) {
+      this.library.zones[this.game.world.activeZone].audio.bgm.play({ loop: true });
+    }
+
     setTimeout(async () => {
       this.bus.publish(
         this.bus.SHOW_POPUP,
@@ -283,8 +290,10 @@ export default class {
     this.game.player.destination.x = payload.x;
     this.game.player.destination.y = payload.y;
     this.game.player.destination.name = payload.name;
+    this.updateAudio(this.game.world.activeZone, payload.name);
     // load new zone schemes
     this.game.loadZone(payload.name);
+
     // position the camera in advance to prevent one frame flicking since it has not yet had
     // time to position itself in the new zone
     this.display.camera.adjustCamera(
@@ -296,6 +305,30 @@ export default class {
     this.updateZoneAssets();
     // now we can start engine again
     this.engine.start();
+  }
+
+  private updateAudio(oldZone: keyof Zones, newZone: keyof Zones) {
+    const oldAmbient = this.library.zones[oldZone].audio.ambient;
+    const newAmbient = this.library.zones[newZone].audio.ambient;
+    const oldBgm = this.library.zones[oldZone].audio.bgm;
+    const newBgm = this.library.zones[newZone].audio.bgm;
+
+    if (oldAmbient !== newAmbient) {
+      if (oldAmbient) {
+        oldAmbient.stop();
+      }
+      if (newAmbient) {
+        newAmbient.play({ loop: true });
+      }
+    }
+    if (oldBgm !== newBgm) {
+      if (oldBgm) {
+        oldBgm.stop();
+      }
+      if (newBgm) {
+        newBgm.play({ loop: true });
+      }
+    }
   }
 
   private updateZoneAssets(): void {
