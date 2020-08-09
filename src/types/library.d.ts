@@ -39,13 +39,15 @@ interface AudioManager {
     url: any,
   ): Promise<void>;
   play(params?: PlayParams): void;
-  stop(): void;
+  resume(params?: PlayParams): void;
+  pause(): void;
 }
 
 interface PlayParams {
-  isSimultaneous?: boolean;
-  volume?: number;
-  loop?: boolean;
+  isSimultaneous?: boolean; // Should it be allowed to play similar sounds at the same time
+  volume?: number; // Volume of the current play
+  loop?: boolean; // Should sound repeat
+  startTime?: number; // timestamp
 }
 
 interface SoundsCollection {

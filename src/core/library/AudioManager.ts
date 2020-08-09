@@ -8,12 +8,15 @@ export default class AudioManager implements AudioManager {
   private isAlreadyPlaying: boolean;
   private gainNode: GainNode;
   private source: AudioBufferSourceNode;
+  private params: PlayParams;
+  private pausedTime: number = 0;
 
   constructor(
     context: AudioContext,
     private defaultVolume: number = 1,
   ) {
     this.context = context;
+    // An intermediate node to help control the volume
     this.gainNode = this.context.createGain();
   }
 
@@ -25,8 +28,15 @@ export default class AudioManager implements AudioManager {
     isSimultaneous = false,
     volume = this.defaultVolume,
     loop = false,
+    startTime = 0,
   } = <PlayParams>{}) {
     if (this.isAlreadyPlaying && !isSimultaneous) return;
+    this.params = {
+      isSimultaneous,
+      volume,
+      loop,
+      startTime
+    };
     this.isAlreadyPlaying = true;
 
     // AudioBufferSourceNode - is single use entity. It can be played only once.
@@ -42,12 +52,24 @@ export default class AudioManager implements AudioManager {
 
     this.source.connect(this.gainNode);
 
-    this.source.start();
+    // the source needs seconds
+    this.source.start(0, startTime / 1000);
+    this.params.startTime = startTime;
     this.source.loop = loop;
   }
 
-  public stop() {
+  // Unlike play(), resume() reproduces sound from the moment it stopped.
+  public resume(params?: PlayParams): void {
+    this.params = { ...this.params, ...params };
+    this.pausedTime = this.pausedTime ? this.pausedTime : Date.now();
+    this.params.startTime = Date.now() - this.pausedTime;
+    this.play(this.params);
+  }
+
+  // Pausing actually stops the sound, but also saves the timestep it was stopped.
+  public pause(): void {
     this.source.stop();
+    this.pausedTime = Date.now() - this.params.startTime;
   }
 
   private decodeAudioData(data: ArrayBuffer) {

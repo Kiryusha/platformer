@@ -307,26 +307,30 @@ export default class {
     this.engine.start();
   }
 
+  // The method that helps control background sounds during zone transitions
   private updateAudio(oldZone: keyof Zones, newZone: keyof Zones) {
+    // Background from the old zome
     const oldAmbient = this.library.zones[oldZone].audio.ambient;
-    const newAmbient = this.library.zones[newZone].audio.ambient;
     const oldBgm = this.library.zones[oldZone].audio.bgm;
+    // Background from the new one
+    const newAmbient = this.library.zones[newZone].audio.ambient;
     const newBgm = this.library.zones[newZone].audio.bgm;
 
+    // Do something only if the new zone bgm/ambient is different from the old one's
     if (oldAmbient !== newAmbient) {
       if (oldAmbient) {
-        oldAmbient.stop();
+        oldAmbient.pause();
       }
       if (newAmbient) {
-        newAmbient.play({ loop: true });
+        newAmbient.resume({ loop: true });
       }
     }
     if (oldBgm !== newBgm) {
       if (oldBgm) {
-        oldBgm.stop();
+        oldBgm.pause();
       }
       if (newBgm) {
-        newBgm.play({ loop: true });
+        newBgm.resume({ loop: true });
       }
     }
   }
