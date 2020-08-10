@@ -14,6 +14,9 @@ export default class Bus implements Bus {
   public readonly LOAD_ZONE: string = 'app.loadZone';
   // Load the whole game
   public readonly APP_RESTART: string = 'app.restart';
+  // pause game
+  public readonly APP_PAUSE: string = 'app.pause';
+  public readonly APP_RESUME: string = 'app.resume';
 
   private subscriptions: Subscriptions = {};
   private lastId: number = 0;

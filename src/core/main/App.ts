@@ -68,11 +68,15 @@ export default class {
     window.addEventListener('keydown', this.handleKeyEvent.bind(this));
     window.addEventListener('keyup', this.handleKeyEvent.bind(this));
     window.addEventListener('resize', this.resize.bind(this));
+    window.addEventListener('blur', () => this.bus.publish(this.bus.APP_PAUSE));
+    window.addEventListener('focus', () => this.bus.publish(this.bus.APP_RESUME));
 
     this.bus.subscribe(this.bus.DISABLE_CONTROLS, this.disableControls.bind(this));
     this.bus.subscribe(this.bus.ENABLE_CONTROLS, this.enableControls.bind(this));
     this.bus.subscribe(this.bus.LOAD_ZONE, this.loadZone.bind(this));
     this.bus.subscribe(this.bus.APP_RESTART, this.restart.bind(this));
+    this.bus.subscribe(this.bus.APP_PAUSE, this.pauseGame.bind(this));
+    this.bus.subscribe(this.bus.APP_RESUME, this.resumeGame.bind(this));
   }
 
   private disableControls() {
@@ -106,6 +110,16 @@ export default class {
         },
       );
     }, 300);
+  }
+
+  private pauseGame(): void {
+    this.engine.stop();
+    this.library.contextAudio.suspend();
+  }
+
+  private resumeGame(): void {
+    this.engine.start();
+    this.library.contextAudio.resume();
   }
 
   private handleKeyEvent(event: { type: string; keyCode: number; }): void {
