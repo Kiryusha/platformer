@@ -39,7 +39,7 @@ export default class Display {
     const visibleProgress = Math.ceil(this.library.loadingProgress);
     const width =  (this.camera.width / 100) * this.library.loadingProgress;
     const posX = (this.camera.width / 2) - (width / 2);
-    const color = [255, 255, 255, 1];
+    const color = [65, 43, 15, 1];
 
     this.renderer.drawRect([
       posX, (this.camera.height / 2) - loaderHeight, // upper-left corner
