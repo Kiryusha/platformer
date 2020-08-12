@@ -2,6 +2,7 @@
 import Camera from './Camera';
 import Renderer from './Renderer';
 import Popup from './Popup';
+import ZoneTitle from './ZoneTitle';
 import fontMap from '../../assets/sprite-maps/font.json';
 
 export default class Display {
@@ -14,6 +15,7 @@ export default class Display {
   backgrounds: ImageManager[];
   mapTileset: ImageManager;
   images: ImageManager;
+  zoneTitle: ZoneTitle;
 
   constructor(
     private bus: Bus,
@@ -27,11 +29,24 @@ export default class Display {
     this.camera = new Camera(cameraWidth, cameraHeight);
     this.renderer = new Renderer(this.contextWebGL);
     this.popup = new Popup(this.bus);
+    this.zoneTitle = new ZoneTitle(this.bus);
   }
 
   public adjustBufferCanvasSize(stageWidth: number, stageHeight: number): void {
     this.contextWebGL.canvas.width = stageWidth;
     this.contextWebGL.canvas.height = stageHeight;
+  }
+
+  public drawZoneTitle(): void {
+    if (!this.zoneTitle.isVisible) return;
+
+    this.drawText(
+      `- ${this.zoneTitle.text} -`,
+      (this.camera.width / 2),
+      (this.camera.height / 5),
+      'center',
+      2,
+    );
   }
 
   public drawLoading() {

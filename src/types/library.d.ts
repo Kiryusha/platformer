@@ -64,6 +64,8 @@ interface GameMapsCollection {
 
 interface Zones {
   [key: string]: {
+    title: string;
+    group: string;
     config: GameMap;
     tileset: ImageManager;
     backgrounds: ImageManager[];

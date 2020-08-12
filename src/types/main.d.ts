@@ -14,6 +14,7 @@ interface Bus {
   APP_RESTART: string;
   APP_PAUSE: string;
   APP_RESUME: string;
+  SHOW_ZONE_TITLE: string;
   subscribe(event: string, callback: Callback): string;
   unsubscribe(event: string, id: string): void;
   publish(event: string, arg?: any): void;

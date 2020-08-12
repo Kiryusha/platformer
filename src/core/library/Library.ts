@@ -102,6 +102,8 @@ export default class Library implements Library {
   public get zones(): Zones {
     return {
       'zoneA0': {
+        title: 'GrassHills',
+        group: 'zoneA',
         config: this.gameMaps.zoneA0,
         tileset: this.images.defaultTileSet,
         backgrounds: [
@@ -120,6 +122,8 @@ export default class Library implements Library {
         },
       },
       'zoneA1': {
+        title: 'GrassHills',
+        group: 'zoneA',
         config: this.gameMaps.zoneA1,
         tileset: this.images.defaultTileSet,
         backgrounds: [
@@ -136,6 +140,8 @@ export default class Library implements Library {
         },
       },
       'zoneB0': {
+        title: 'Caverns',
+        group: 'zoneB',
         config: this.gameMaps.zoneB0,
         tileset: this.images.sunnyLandTileSet,
         backgrounds: [],
@@ -145,6 +151,8 @@ export default class Library implements Library {
         },
       },
       'zoneB1': {
+        title: 'Caverns',
+        group: 'zoneB',
         config: this.gameMaps.zoneB1,
         tileset: this.images.sunnyLandTileSet,
         backgrounds: [],
@@ -154,6 +162,8 @@ export default class Library implements Library {
         },
       },
       'zoneB2': {
+        title: 'Caverns',
+        group: 'zoneB',
         config: this.gameMaps.zoneB2,
         tileset: this.images.sunnyLandTileSet,
         backgrounds: [],
@@ -163,6 +173,8 @@ export default class Library implements Library {
         },
       },
       'zoneB3': {
+        title: 'Caverns',
+        group: 'zoneB',
         config: this.gameMaps.zoneB3,
         tileset: this.images.sunnyLandTileSet,
         backgrounds: [],

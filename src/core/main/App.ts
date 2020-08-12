@@ -98,7 +98,7 @@ export default class {
     }
 
     setTimeout(async () => {
-      this.bus.publish(
+      await this.bus.publish(
         this.bus.SHOW_POPUP,
         {
           text: [
@@ -109,6 +109,7 @@ export default class {
           align: 'center',
         },
       );
+      this.bus.publish(this.bus.SHOW_ZONE_TITLE, this.library.zones[this.game.world.activeZone].title);
     }, 300);
   }
 
@@ -265,6 +266,7 @@ export default class {
         }
         this.display.drawHud(this.game.player, this.game.spriteMap);
         this.display.drawPopup();
+        this.display.drawZoneTitle();
         this.display.render();
         this.display.camera.adjustCamera(
           this.game.player,
@@ -305,6 +307,14 @@ export default class {
     this.game.player.destination.y = payload.y;
     this.game.player.destination.name = payload.name;
     this.updateAudio(this.game.world.activeZone, payload.name);
+
+    if (
+      this.library.zones[this.game.world.activeZone].group !==
+      this.library.zones[payload.name].group
+    ) {
+      this.bus.publish(this.bus.SHOW_ZONE_TITLE, this.library.zones[payload.name].title);
+    }
+
     // load new zone schemes
     this.game.loadZone(payload.name);
 
