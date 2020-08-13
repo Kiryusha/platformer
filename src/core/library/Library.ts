@@ -17,7 +17,6 @@ import hitOgg from '../../assets/sounds/hit.ogg';
 import carrotOgg from '../../assets/sounds/carrot.ogg';
 import starOgg from '../../assets/sounds/star.ogg';
 import hurtOgg from '../../assets/sounds/hurt.ogg';
-import windOgg from '../../assets/sounds/wind.ogg';
 import confiantMp3 from '../../assets/sounds/confiant.mp3';
 import soliditeNaturelleMp3 from '../../assets/sounds/soliditeNaturelle.mp3';
 import { promiseAllProgress, get } from '../../util';
@@ -57,7 +56,6 @@ export default class Library implements Library {
       carrot: new AudioManager(this.contextAudio, 0.5),
       star: new AudioManager(this.contextAudio, 0.3),
       hurt: new AudioManager(this.contextAudio, 0.3),
-      wind: new AudioManager(this.contextAudio, 0.3),
       confiant: new AudioManager(this.contextAudio, 1),
       soliditeNaturelle: new AudioManager(this.contextAudio, 1),
     };
@@ -89,7 +87,6 @@ export default class Library implements Library {
       this.sounds.star.loadAsset(starOgg),
       this.sounds.hurt.loadAsset(hurtOgg),
       this.sounds.land.loadAsset(landOgg),
-      this.sounds.wind.loadAsset(windOgg),
       this.sounds.confiant.loadAsset(confiantMp3),
       this.sounds.soliditeNaturelle.loadAsset(soliditeNaturelleMp3),
     ];
@@ -118,7 +115,6 @@ export default class Library implements Library {
         },
         audio: {
           bgm: this.sounds.confiant,
-          ambient: this.sounds.wind,
         },
       },
       'zoneA1': {
@@ -136,7 +132,6 @@ export default class Library implements Library {
         },
         audio: {
           bgm: this.sounds.confiant,
-          ambient: this.sounds.wind,
         },
       },
       'zoneB0': {
