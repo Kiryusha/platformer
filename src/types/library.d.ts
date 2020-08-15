@@ -40,7 +40,7 @@ interface AudioManager {
   ): Promise<void>;
   play(params?: PlayParams): void;
   resume(params?: PlayParams): void;
-  pause(): void;
+  pause(fadeOutTime?: number): void;
 }
 
 interface PlayParams {
@@ -48,6 +48,7 @@ interface PlayParams {
   volume?: number; // Volume of the current play
   loop?: boolean; // Should sound repeat
   startTime?: number; // timestamp
+  fadeInTime?: number; // smooth start, it is used in bgm
 }
 
 interface SoundsCollection {

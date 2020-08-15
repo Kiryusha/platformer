@@ -91,10 +91,16 @@ export default class {
     this.state = 'game';
 
     if (this.library.zones[this.game.world.activeZone].audio.ambient) {
-      this.library.zones[this.game.world.activeZone].audio.ambient.play({ loop: true });
+      this.library.zones[this.game.world.activeZone].audio.ambient.play({
+        loop: true,
+        fadeInTime: 2000,
+      });
     }
     if (this.library.zones[this.game.world.activeZone].audio.bgm) {
-      this.library.zones[this.game.world.activeZone].audio.bgm.play({ loop: true });
+      this.library.zones[this.game.world.activeZone].audio.bgm.play({
+        loop: true,
+        fadeInTime: 2000,
+      });
     }
 
     setTimeout(async () => {
@@ -343,18 +349,24 @@ export default class {
     // Do something only if the new zone bgm/ambient is different from the old one's
     if (oldAmbient !== newAmbient) {
       if (oldAmbient) {
-        oldAmbient.pause();
+        oldAmbient.pause(2000);
       }
       if (newAmbient) {
-        newAmbient.resume({ loop: true });
+        newAmbient.resume({
+          loop: true,
+          fadeInTime: 2000,
+        });
       }
     }
     if (oldBgm !== newBgm) {
       if (oldBgm) {
-        oldBgm.pause();
+        oldBgm.pause(2000);
       }
       if (newBgm) {
-        newBgm.resume({ loop: true });
+        newBgm.resume({
+          loop: true,
+          fadeInTime: 2000,
+        });
       }
     }
   }

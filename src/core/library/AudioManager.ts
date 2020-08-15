@@ -29,6 +29,7 @@ export default class AudioManager implements AudioManager {
     volume = this.defaultVolume,
     loop = false,
     startTime = 0,
+    fadeInTime = 0,
   } = <PlayParams>{}) {
     if (this.isAlreadyPlaying && !isSimultaneous) return;
     this.params = {
@@ -47,13 +48,21 @@ export default class AudioManager implements AudioManager {
       this.isAlreadyPlaying = false;
     });
 
-    this.gainNode.gain.value = volume;
+    this.source.connect(this.gainNode);
     this.gainNode.connect(this.context.destination);
 
-    this.source.connect(this.gainNode);
+    if (fadeInTime) {
+      this.gainNode.gain.value = 0;
+      this.gainNode.gain.linearRampToValueAtTime(
+        volume,
+        this.context.currentTime + fadeInTime / 1000
+      );
+    } else {
+      this.gainNode.gain.value = volume;
+    }
 
-    // the source needs seconds
-    this.source.start(0, startTime / 1000);
+    this.source.start(0, startTime / 1000); // the source needs seconds
+
     this.params.startTime = startTime;
     this.source.loop = loop;
   }
@@ -67,8 +76,18 @@ export default class AudioManager implements AudioManager {
   }
 
   // Pausing actually stops the sound, but also saves the timestep it was stopped.
-  public pause(): void {
-    this.source.stop();
+  public pause(fadeOutTime: number = 0): void {
+    if (fadeOutTime) {
+      this.gainNode.gain.linearRampToValueAtTime(
+        0,
+        this.context.currentTime + fadeOutTime / 1000
+      );
+      setTimeout(() => {
+        this.source.stop();
+      }, fadeOutTime);
+    } else {
+      this.source.stop();
+    }
     this.pausedTime = Date.now() - this.params.startTime;
   }
 
