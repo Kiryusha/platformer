@@ -39,7 +39,7 @@ export default class Player extends Character implements Player {
 
   public startJumping(): void {
     super.startJumping();
-    if (!this.isJumping) {
+    if (!this.isJumping && !this.isFalling) {
       this.library.sounds.jump.play();
     }
   }
