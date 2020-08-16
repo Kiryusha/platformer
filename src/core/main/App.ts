@@ -30,6 +30,7 @@ export default class {
   }
 
   public restart(): void {
+    this.updateZoneAudio(this.game.world.activeZone, this.startingZone);
     this.game = new Game(this.bus, this.library, this.startingZone);
     this.updateZoneAssets();
   }
@@ -90,18 +91,7 @@ export default class {
   private startGame(): void {
     this.state = 'game';
 
-    if (this.library.zones[this.game.world.activeZone].audio.ambient) {
-      this.library.zones[this.game.world.activeZone].audio.ambient.play({
-        loop: true,
-        fadeInTime: 2000,
-      });
-    }
-    if (this.library.zones[this.game.world.activeZone].audio.bgm) {
-      this.library.zones[this.game.world.activeZone].audio.bgm.play({
-        loop: true,
-        fadeInTime: 2000,
-      });
-    }
+    this.updateZoneAudio(null, this.game.world.activeZone);
 
     setTimeout(async () => {
       await this.bus.publish(
@@ -312,7 +302,7 @@ export default class {
     this.game.player.destination.x = payload.x;
     this.game.player.destination.y = payload.y;
     this.game.player.destination.name = payload.name;
-    this.updateAudio(this.game.world.activeZone, payload.name);
+    this.updateZoneAudio(this.game.world.activeZone, payload.name);
 
     if (
       this.library.zones[this.game.world.activeZone].group !==
@@ -338,13 +328,15 @@ export default class {
   }
 
   // The method that helps control background sounds during zone transitions
-  private updateAudio(oldZone: keyof Zones, newZone: keyof Zones) {
+  private updateZoneAudio(oldZoneName: keyof Zones | null, newZoneName: keyof Zones) {
+    const oldZone = this.library.zones[oldZoneName];
+    const newZone = this.library.zones[newZoneName];
     // Background from the old zome
-    const oldAmbient = this.library.zones[oldZone].audio.ambient;
-    const oldBgm = this.library.zones[oldZone].audio.bgm;
+    const oldAmbient = oldZone ? oldZone.audio.ambient : null;
+    const oldBgm = oldZone ? oldZone.audio.bgm : null;
     // Background from the new one
-    const newAmbient = this.library.zones[newZone].audio.ambient;
-    const newBgm = this.library.zones[newZone].audio.bgm;
+    const newAmbient = newZone ? newZone.audio.ambient : null;
+    const newBgm = newZone ? newZone.audio.bgm : null;
 
     // Do something only if the new zone bgm/ambient is different from the old one's
     if (oldAmbient !== newAmbient) {
