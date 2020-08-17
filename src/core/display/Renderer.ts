@@ -2,17 +2,22 @@
 import ShaderProgram from './ShaderProgram';
 import rectangleShaders from '../../assets/shaders/rectangle';
 import imageShaders from '../../assets/shaders/image';
+import layerShaders from '../../assets/shaders/layer';
 
 export default class {
   gl: WebGLRenderingContext;
   rectangleProgram: ShaderProgram;
   imageProgram: ShaderProgram;
+  layerProgram: ShaderProgram;
   aPosition: number;
   uResolution: WebGLUniformLocation;
   uColor: WebGLUniformLocation;
 
   constructor(
-    gl: WebGLRenderingContext
+    gl: WebGLRenderingContext,
+    sceneWidth: number,
+    sceneHeight: number,
+    tileSize: number,
   ) {
     this.gl = gl;
     this.rectangleProgram = new ShaderProgram(
@@ -28,9 +33,19 @@ export default class {
       imageShaders.fragmentShaderSource,
       'image'
     );
+
+    this.layerProgram = new ShaderProgram(
+      this.gl,
+      layerShaders.vertexShaderSource,
+      layerShaders.fragmentShaderSource,
+      'layer',
+      sceneWidth,
+      sceneHeight,
+      tileSize,
+    );
   }
 
-  drawRect(
+  public drawRect(
     positions: number[] | Iterable<number>,
     color: number[],
   ): void {
@@ -67,7 +82,7 @@ export default class {
     this.gl.drawArrays(this.gl.TRIANGLES, 0, 6);
   }
 
-  drawImage(
+  public drawImage(
     texture: WebGLTexture,
     width: number,
     height: number,
@@ -135,6 +150,76 @@ export default class {
 
     // draw the quad (2 triangles, 6 vertices)
     this.gl.drawArrays(this.gl.TRIANGLES, 0, 6);
+  }
+
+  public drawLayer(
+    texture: WebGLTexture,
+    width: number,
+    height: number,
+    srcX: number,
+    srcY: number,
+    srcWidth?: number,
+    srcHeight?: number,
+    dstX?: number,
+    dstY?: number,
+    dstWidth?: number,
+    dstHeight?: number
+  ) {
+    if (dstX === undefined) {
+      dstX = srcX;
+    }
+
+    if (dstY === undefined) {
+      dstY = srcY;
+    }
+
+    if (srcWidth === undefined) {
+      srcWidth = width;
+    }
+
+    if (srcHeight === undefined) {
+      srcHeight = height;
+    }
+
+    if (dstWidth === undefined) {
+      dstWidth = srcWidth;
+    }
+
+    if (dstHeight === undefined) {
+      dstHeight = srcHeight;
+    }
+
+    this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
+
+    // Tell WebGL to use our shader program pair
+    this.gl.useProgram(this.layerProgram.program);
+
+    // Setup the attributes to pull data from our buffers
+    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.layerProgram.positionBuffer);
+    this.gl.enableVertexAttribArray(this.layerProgram.aPosition);
+    this.gl.vertexAttribPointer(this.layerProgram.aPosition, 2, this.gl.FLOAT, false, 0, 0);
+    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.layerProgram.textureCoordBuffer);
+    this.gl.enableVertexAttribArray(this.layerProgram.aTextureCoord);
+    this.gl.vertexAttribPointer(this.layerProgram.aTextureCoord, 2, this.gl.FLOAT, false, 0, 0);
+
+    // set the resolution
+    this.gl.uniform2f(this.layerProgram.uResolution, this.gl.canvas.width, this.gl.canvas.height);
+    // Set the translation.
+    this.gl.uniform2f(this.layerProgram.uTranslation, dstX, dstY);
+    // Set the scale.
+    this.gl.uniform2f(this.layerProgram.uScale, dstWidth, dstHeight);
+
+    let texMatrix = this.translation(srcX / width, srcY / height);
+    texMatrix = this.scale(texMatrix, srcWidth / width, srcHeight / height);
+
+    // Set the matrix.
+    this.gl.uniformMatrix3fv(this.layerProgram.uTextureMatrix, false, texMatrix);
+
+    // Tell the shader to get the texture from texture unit 0
+    this.gl.uniform1i(this.layerProgram.uTexture, 0);
+
+    // draw the quad (2 triangles, 6 vertices)
+    this.gl.drawArrays(this.gl.TRIANGLES, 0, 6 * 2);
   }
 
   private translation(tx: number, ty: number) {

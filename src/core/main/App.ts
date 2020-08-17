@@ -254,6 +254,11 @@ export default class {
           this.game.world.columns,
           imagesTilesData
         );
+        // this.display.drawLayer(
+        //   this.game.world.frontMap,
+        //   this.game.world.columns,
+        //   imagesTilesData
+        // );
 
         // Collisions debugging tool: to visualise collisions type window.SHOW_COLLISIONS = true
         // in browser console

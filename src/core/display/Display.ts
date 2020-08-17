@@ -27,9 +27,34 @@ export default class Display {
     this.contextWebGL = this.library.contextWebGL;
     this.backgrounds = [];
     this.camera = new Camera(cameraWidth, cameraHeight);
-    this.renderer = new Renderer(this.contextWebGL);
+    this.renderer = new Renderer(
+      this.contextWebGL,
+      cameraWidth,
+      cameraHeight,
+      16,
+    );
     this.popup = new Popup(this.bus);
     this.zoneTitle = new ZoneTitle(this.bus);
+  }
+
+  public drawLayer(
+    map: number[],
+    mapColumns: number,
+    imagesTilesData: Tileset,
+  ): void {
+    this.renderer.drawLayer(
+      this.mapTileset.texture,
+      this.mapTileset.image.width,
+      this.mapTileset.image.height,
+      0,
+      0,
+      this.mapTileset.tileSize,
+      this.mapTileset.tileSize,
+      this.camera.x,
+      this.camera.y,
+      this.camera.width,
+      this.camera.height,
+    );
   }
 
   public adjustBufferCanvasSize(stageWidth: number, stageHeight: number): void {

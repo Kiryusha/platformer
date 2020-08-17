@@ -48,3 +48,11 @@ interface PopupPayload {
   fontSize?: number;
   align?: Align;
 }
+
+interface LayerTile {
+  sourceX: number;
+  sourceY: number;
+  mapX: number;
+  mapY: number;
+  tileSize: number;
+}

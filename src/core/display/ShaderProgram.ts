@@ -19,6 +19,9 @@ export default class {
     vertexShaderSource: string,
     fragmentShaderSource: string,
     type: string,
+    width?: number,
+    height?: number,
+    tileSize?: number,
   ) {
     this.vertexShader = this.compileShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
     this.fragmentShader = this.compileShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
@@ -61,6 +64,60 @@ export default class {
         gl.bufferData(
           gl.ARRAY_BUFFER,
           new Float32Array([
+            0,  0,
+            1,  0,
+            0,  1,
+            0,  1,
+            1,  0,
+            1,  1,
+          ]),
+          gl.STREAM_DRAW
+        );
+        break;
+
+      case 'layer':
+        this.aPosition = gl.getAttribLocation(this.program, 'aPosition');
+        this.aTextureCoord = gl.getAttribLocation(this.program, 'aTextureCoord');
+
+        this.uResolution = gl.getUniformLocation(this.program, 'uResolution');
+        this.uTranslation = gl.getUniformLocation(this.program, 'uTranslation');
+        this.uScale = gl.getUniformLocation(this.program, 'uScale');
+        this.uTextureMatrix = gl.getUniformLocation(this.program, 'uTextureMatrix');
+
+        this.positionBuffer = gl.createBuffer();
+        this.textureCoordBuffer = gl.createBuffer();
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.positionBuffer);
+        gl.bufferData(
+          gl.ARRAY_BUFFER,
+          new Float32Array([
+            0,  0,
+            1,  0,
+            0,  0.5,
+            0,  0.5,
+            1,  0,
+            1,  0.5,
+
+            0,  0.5,
+            1,  0.5,
+            0,  1,
+            0,  1,
+            1,  0.5,
+            1,  1,
+          ]),
+          gl.STATIC_DRAW,
+        );
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.textureCoordBuffer);
+        gl.bufferData(
+          gl.ARRAY_BUFFER,
+          new Float32Array([
+            0,  0,
+            1,  0,
+            0,  1,
+            0,  1,
+            1,  0,
+            1,  1,
             0,  0,
             1,  0,
             0,  1,
