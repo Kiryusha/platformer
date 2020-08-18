@@ -42,18 +42,51 @@ export default class Display {
     mapColumns: number,
     imagesTilesData: Tileset,
   ): void {
+    const processedTiles: LayerTile[] = [];
+
+    for (let i: number = 0; i < map.length; i += 1) {
+      if (!map[i]) continue;
+
+      const id = map[i];
+      const position = i;
+      const remainder = id % this.mapTileset.columns;
+
+      let sourceRow = remainder
+        ? Math.floor(id / this.mapTileset.columns)
+        : (id / this.mapTileset.columns) - 1;
+      let sourceColumn = remainder
+        ? remainder - 1
+        : this.mapTileset.columns - 1;
+
+      const mapRow = Math.floor(position / mapColumns);
+      const mapColumn = position % mapColumns;
+
+      const sourceX = this.mapTileset.tileSize * sourceColumn;
+      const sourceY = this.mapTileset.tileSize * sourceRow;
+
+      const mapX = this.mapTileset.tileSize * mapColumn;
+      const mapY = this.mapTileset.tileSize * mapRow;
+
+      if (imagesTilesData && (id >= imagesTilesData.firstgid)) {
+        this.drawLargeTiles(imagesTilesData, id, mapX, mapY);
+      } else if (this.isObjectWithinCamera(mapX, mapY)) {
+        processedTiles.push({
+          sourceX,
+          sourceY,
+          mapX,
+          mapY,
+          tileSize: this.mapTileset.tileSize,
+        })
+      }
+    }
+
+    // console.log(processedTiles)
+
     this.renderer.drawLayer(
       this.mapTileset.texture,
       this.mapTileset.image.width,
       this.mapTileset.image.height,
-      0,
-      0,
-      this.mapTileset.tileSize,
-      this.mapTileset.tileSize,
-      this.camera.x,
-      this.camera.y,
-      this.camera.width,
-      this.camera.height,
+      processedTiles,
     );
   }
 

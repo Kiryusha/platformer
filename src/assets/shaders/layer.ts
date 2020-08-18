@@ -16,7 +16,7 @@ export default {
       vec2 scaledPosition = aPosition * uScale;
 
       // Add in the translation.
-      vec2 position = scaledPosition + uTranslation;
+      vec2 position = scaledPosition;
 
       // convert the position from pixels to clipspace
       vec2 clipSpace = ((position / uResolution) * 2.0) - 1.0;

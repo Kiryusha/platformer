@@ -156,38 +156,31 @@ export default class {
     texture: WebGLTexture,
     width: number,
     height: number,
-    srcX: number,
-    srcY: number,
-    srcWidth?: number,
-    srcHeight?: number,
-    dstX?: number,
-    dstY?: number,
-    dstWidth?: number,
-    dstHeight?: number
+    tiles: LayerTile[]
   ) {
-    if (dstX === undefined) {
-      dstX = srcX;
+    let tileCoords: any[] = [];
+    let tileTextureCoords: any[] = [];
+    let amount = 0;
+
+    for (let i: number = 0; i < tiles.length; i += 1) {
+      tileCoords = tileCoords.concat(this.layerProgram.tileCoords[i])
+      tileTextureCoords = tileTextureCoords.concat(this.layerProgram.tileTextureCoords[i])
+      amount += 1;
     }
 
-    if (dstY === undefined) {
-      dstY = srcY;
-    }
+    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.layerProgram.positionBuffer);
+    this.gl.bufferData(
+      this.gl.ARRAY_BUFFER,
+      new Float32Array(tileCoords),
+      this.gl.STATIC_DRAW,
+    );
 
-    if (srcWidth === undefined) {
-      srcWidth = width;
-    }
-
-    if (srcHeight === undefined) {
-      srcHeight = height;
-    }
-
-    if (dstWidth === undefined) {
-      dstWidth = srcWidth;
-    }
-
-    if (dstHeight === undefined) {
-      dstHeight = srcHeight;
-    }
+    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.layerProgram.textureCoordBuffer);
+    this.gl.bufferData(
+      this.gl.ARRAY_BUFFER,
+      new Float32Array(tileTextureCoords),
+      this.gl.STREAM_DRAW
+    );
 
     this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
 
@@ -205,12 +198,12 @@ export default class {
     // set the resolution
     this.gl.uniform2f(this.layerProgram.uResolution, this.gl.canvas.width, this.gl.canvas.height);
     // Set the translation.
-    this.gl.uniform2f(this.layerProgram.uTranslation, dstX, dstY);
+    this.gl.uniform2f(this.layerProgram.uTranslation, tiles[0].mapX, tiles[0].mapY);
     // Set the scale.
-    this.gl.uniform2f(this.layerProgram.uScale, dstWidth, dstHeight);
+    this.gl.uniform2f(this.layerProgram.uScale, tiles[0].tileSize, tiles[0].tileSize);
 
-    let texMatrix = this.translation(srcX / width, srcY / height);
-    texMatrix = this.scale(texMatrix, srcWidth / width, srcHeight / height);
+    let texMatrix = this.translation(tiles[0].sourceX / width, tiles[0].sourceY / height);
+    texMatrix = this.scale(texMatrix, tiles[0].tileSize / width, tiles[0].tileSize / height);
 
     // Set the matrix.
     this.gl.uniformMatrix3fv(this.layerProgram.uTextureMatrix, false, texMatrix);
@@ -219,7 +212,7 @@ export default class {
     this.gl.uniform1i(this.layerProgram.uTexture, 0);
 
     // draw the quad (2 triangles, 6 vertices)
-    this.gl.drawArrays(this.gl.TRIANGLES, 0, 6 * 2);
+    this.gl.drawArrays(this.gl.TRIANGLES, 0, 6 * amount);
   }
 
   private translation(tx: number, ty: number) {
