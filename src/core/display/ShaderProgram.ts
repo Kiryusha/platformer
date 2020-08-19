@@ -14,7 +14,6 @@ export default class {
   textureCoordBuffer: WebGLBuffer;
   uTextureMatrix: WebGLUniformLocation;
   tileCoords: any[];
-  tileTextureCoords: any[];
 
   constructor(
     gl: WebGLRenderingContext,
@@ -92,7 +91,6 @@ export default class {
         const tilesInRow = width / tileSize;
         const tilesInColumn = height / tileSize;
         this.tileCoords = [];
-        this.tileTextureCoords = [];
 
         for (let y = 0; y < tilesInColumn; y += 1) {
           for (let x = 0; x < tilesInRow; x += 1) {
@@ -116,16 +114,22 @@ export default class {
               ((y * tileSize) + tileSize) / height,
             ]);
 
-            this.tileTextureCoords.push([
-              0,  0,
-              1,  0,
-              0,  1,
-              0,  1,
-              1,  0,
-              1,  1,
-            ]);
           }
         }
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.positionBuffer);
+        gl.bufferData(
+          gl.ARRAY_BUFFER,
+          new Float32Array([
+            0,  0,
+            1,  0,
+            0,  1,
+            0,  1,
+            1,  0,
+            1,  1,
+          ]),
+          gl.STATIC_DRAW,
+        );
     }
   }
 

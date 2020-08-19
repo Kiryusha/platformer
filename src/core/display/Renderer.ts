@@ -161,10 +161,13 @@ export default class {
     let tileCoords: any[] = [];
     let tileTextureCoords: any[] = [];
     let amount = 0;
+    let texMatrix = [];
 
     for (let i: number = 0; i < tiles.length; i += 1) {
       tileCoords = tileCoords.concat(this.layerProgram.tileCoords[i])
       tileTextureCoords = tileTextureCoords.concat(this.layerProgram.tileTextureCoords[i])
+      texMatrix[i] = this.translation(tiles[0].sourceX / width, tiles[0].sourceY / height);
+      texMatrix[i] = this.scale(texMatrix[i], tiles[0].tileSize / width, tiles[0].tileSize / height);
       amount += 1;
     }
 
@@ -201,9 +204,6 @@ export default class {
     this.gl.uniform2f(this.layerProgram.uTranslation, tiles[0].mapX, tiles[0].mapY);
     // Set the scale.
     this.gl.uniform2f(this.layerProgram.uScale, tiles[0].tileSize, tiles[0].tileSize);
-
-    let texMatrix = this.translation(tiles[0].sourceX / width, tiles[0].sourceY / height);
-    texMatrix = this.scale(texMatrix, tiles[0].tileSize / width, tiles[0].tileSize / height);
 
     // Set the matrix.
     this.gl.uniformMatrix3fv(this.layerProgram.uTextureMatrix, false, texMatrix);
