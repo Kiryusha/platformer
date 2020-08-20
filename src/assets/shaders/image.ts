@@ -1,7 +1,6 @@
 export default {
   vertexShaderSource: `
     attribute vec2 aPosition;
-    attribute vec2 aTextureCoord;
 
     uniform vec2 uResolution;
     uniform vec2 uTranslation;
@@ -23,7 +22,7 @@ export default {
 
       gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);
 
-      vTextureCoord = (uTextureMatrix * vec3(aTextureCoord, 1)).xy;
+      vTextureCoord = (uTextureMatrix * vec3(aPosition, 1)).xy;
     }
   `,
   fragmentShaderSource: `

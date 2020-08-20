@@ -60,20 +60,6 @@ export default class {
           ]),
           gl.STATIC_DRAW,
         );
-
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.textureCoordBuffer);
-        gl.bufferData(
-          gl.ARRAY_BUFFER,
-          new Float32Array([
-            0,  0,
-            1,  0,
-            0,  1,
-            0,  1,
-            1,  0,
-            1,  1,
-          ]),
-          gl.STREAM_DRAW
-        );
         break;
 
       case 'layer':

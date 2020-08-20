@@ -128,9 +128,6 @@ export default class {
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.imageProgram.positionBuffer);
     this.gl.enableVertexAttribArray(this.imageProgram.aPosition);
     this.gl.vertexAttribPointer(this.imageProgram.aPosition, 2, this.gl.FLOAT, false, 0, 0);
-    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.imageProgram.textureCoordBuffer);
-    this.gl.enableVertexAttribArray(this.imageProgram.aTextureCoord);
-    this.gl.vertexAttribPointer(this.imageProgram.aTextureCoord, 2, this.gl.FLOAT, false, 0, 0);
 
     // set the resolution
     this.gl.uniform2f(this.imageProgram.uResolution, this.gl.canvas.width, this.gl.canvas.height);
@@ -159,29 +156,18 @@ export default class {
     tiles: LayerTile[]
   ) {
     let tileCoords: any[] = [];
-    let tileTextureCoords: any[] = [];
-    let amount = 0;
     let texMatrix = [];
 
     for (let i: number = 0; i < tiles.length; i += 1) {
       tileCoords = tileCoords.concat(this.layerProgram.tileCoords[i])
-      tileTextureCoords = tileTextureCoords.concat(this.layerProgram.tileTextureCoords[i])
       texMatrix[i] = this.translation(tiles[0].sourceX / width, tiles[0].sourceY / height);
       texMatrix[i] = this.scale(texMatrix[i], tiles[0].tileSize / width, tiles[0].tileSize / height);
-      amount += 1;
     }
-
-    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.layerProgram.positionBuffer);
-    this.gl.bufferData(
-      this.gl.ARRAY_BUFFER,
-      new Float32Array(tileCoords),
-      this.gl.STATIC_DRAW,
-    );
 
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.layerProgram.textureCoordBuffer);
     this.gl.bufferData(
       this.gl.ARRAY_BUFFER,
-      new Float32Array(tileTextureCoords),
+      new Float32Array(tileCoords),
       this.gl.STREAM_DRAW
     );
 
@@ -212,7 +198,7 @@ export default class {
     this.gl.uniform1i(this.layerProgram.uTexture, 0);
 
     // draw the quad (2 triangles, 6 vertices)
-    this.gl.drawArrays(this.gl.TRIANGLES, 0, 6 * amount);
+    this.gl.drawArrays(this.gl.TRIANGLES, 0, 6);
   }
 
   private translation(tx: number, ty: number) {
