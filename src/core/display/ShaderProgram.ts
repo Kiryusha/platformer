@@ -80,7 +80,7 @@ export default class {
 
         for (let y = 0; y < tilesInColumn; y += 1) {
           for (let x = 0; x < tilesInRow; x += 1) {
-            this.tileCoords.push([
+            this.tileCoords.push(
               (x * tileSize) / width,
               (y * tileSize) / height,
 
@@ -98,7 +98,7 @@ export default class {
 
               ((x * tileSize) + tileSize) / width,
               ((y * tileSize) + tileSize) / height,
-            ]);
+            );
 
           }
         }

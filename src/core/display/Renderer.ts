@@ -155,26 +155,28 @@ export default class {
     height: number,
     tiles: LayerTile[]
   ) {
-    let tileCoords: any[] = [];
-    let texMatrix = [];
+    // Tell WebGL to use our shader program pair
+    this.gl.useProgram(this.layerProgram.program);
+
+    let amount = 0;
 
     for (let i: number = 0; i < tiles.length; i += 1) {
-      tileCoords = tileCoords.concat(this.layerProgram.tileCoords[i])
-      texMatrix[i] = this.translation(tiles[0].sourceX / width, tiles[0].sourceY / height);
-      texMatrix[i] = this.scale(texMatrix[i], tiles[0].tileSize / width, tiles[0].tileSize / height);
+      let texMatrix;
+      texMatrix = this.translation(tiles[0].sourceX / width, tiles[0].sourceY / height);
+      texMatrix = this.scale(texMatrix, tiles[0].tileSize / width, tiles[0].tileSize / height);
+
+      this.gl.uniformMatrix3fv(this.layerProgram.uTextureMatrix, false, texMatrix);
+      amount += 1;
     }
 
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.layerProgram.textureCoordBuffer);
     this.gl.bufferData(
       this.gl.ARRAY_BUFFER,
-      new Float32Array(tileCoords),
+      new Float32Array(this.layerProgram.tileCoords),
       this.gl.STREAM_DRAW
     );
 
     this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
-
-    // Tell WebGL to use our shader program pair
-    this.gl.useProgram(this.layerProgram.program);
 
     // Setup the attributes to pull data from our buffers
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.layerProgram.positionBuffer);
@@ -187,12 +189,11 @@ export default class {
     // set the resolution
     this.gl.uniform2f(this.layerProgram.uResolution, this.gl.canvas.width, this.gl.canvas.height);
     // Set the translation.
-    this.gl.uniform2f(this.layerProgram.uTranslation, tiles[0].mapX, tiles[0].mapY);
+    this.gl.uniform2f(this.layerProgram.uTranslation, 0, 0);
     // Set the scale.
-    this.gl.uniform2f(this.layerProgram.uScale, tiles[0].tileSize, tiles[0].tileSize);
-
+    this.gl.uniform2f(this.layerProgram.uScale, 256, 144);
+    // console.log(texMatrix)
     // Set the matrix.
-    this.gl.uniformMatrix3fv(this.layerProgram.uTextureMatrix, false, texMatrix);
 
     // Tell the shader to get the texture from texture unit 0
     this.gl.uniform1i(this.layerProgram.uTexture, 0);

@@ -240,11 +240,6 @@ export default class {
           this.game.world.columns,
           imagesTilesData
         );
-        // this.display.drawLayer(
-        //   this.game.world.middleMap,
-        //   this.game.world.columns,
-        //   imagesTilesData
-        // );
         if (this.game.world.middleFrontMap) {
           this.display.drawMap(
             this.game.world.middleFrontMap,
@@ -268,6 +263,12 @@ export default class {
         this.display.drawHud(this.game.player, this.game.spriteMap);
         this.display.drawPopup();
         this.display.drawZoneTitle();
+
+        // this.display.drawLayer(
+        //   this.game.world.middleMap,
+        //   this.game.world.columns,
+        //   imagesTilesData
+        // );
         this.display.render();
         this.display.camera.adjustCamera(
           this.game.player,

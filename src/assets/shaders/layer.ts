@@ -7,9 +7,15 @@ export default {
     uniform vec2 uTranslation;
     uniform vec2 uScale;
 
-    uniform mat3 uTextureMatrix;
+    uniform int uTilesAmount;
 
-    varying vec2 vTextureCoord;
+    #define numTextures 144
+
+    uniform mat3 uTextureMatrix[numTextures];
+
+    varying vec4 vTexture;
+
+    uniform sampler2D uTexture;
 
     void main() {
       // Scale the position
@@ -23,18 +29,18 @@ export default {
 
       gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);
 
-      vTextureCoord = (uTextureMatrix * vec3(aTextureCoord, 1)).xy;
+      for (int i = 0; i < numTextures; ++i) {
+        vTexture += vec4(0);
+      }
     }
   `,
   fragmentShaderSource: `
     precision mediump float;
 
-    uniform sampler2D uTexture;
-
-    varying vec2 vTextureCoord;
+    varying vec4 vTexture;
 
     void main() {
-      gl_FragColor = texture2D(uTexture, vTextureCoord);
+      gl_FragColor = vTexture;
     }
   `,
 };
