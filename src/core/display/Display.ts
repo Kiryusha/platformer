@@ -76,7 +76,7 @@ export default class Display {
           mapX,
           mapY,
           tileSize: this.mapTileset.tileSize,
-        })
+        });
       }
     }
 

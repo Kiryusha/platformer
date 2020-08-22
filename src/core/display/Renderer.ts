@@ -155,6 +155,7 @@ export default class {
     height: number,
     tiles: LayerTile[]
   ) {
+    this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
     // Tell WebGL to use our shader program pair
     this.gl.useProgram(this.layerProgram.program);
 
@@ -162,29 +163,19 @@ export default class {
 
     for (let i: number = 0; i < tiles.length; i += 1) {
       let texMatrix;
-      texMatrix = this.translation(tiles[0].sourceX / width, tiles[0].sourceY / height);
-      texMatrix = this.scale(texMatrix, tiles[0].tileSize / width, tiles[0].tileSize / height);
+      texMatrix = this.translation(tiles[i].sourceX / width, tiles[i].sourceY / height);
+      texMatrix = this.scale(texMatrix, tiles[i].tileSize / width, tiles[i].tileSize / height);
 
       this.gl.uniformMatrix3fv(this.layerProgram.uTextureMatrix, false, texMatrix);
       amount += 1;
     }
 
-    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.layerProgram.textureCoordBuffer);
-    this.gl.bufferData(
-      this.gl.ARRAY_BUFFER,
-      new Float32Array(this.layerProgram.tileCoords),
-      this.gl.STREAM_DRAW
-    );
-
-    this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
+    this.gl.uniform1i(this.layerProgram.uTilesAmount, amount);
 
     // Setup the attributes to pull data from our buffers
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.layerProgram.positionBuffer);
     this.gl.enableVertexAttribArray(this.layerProgram.aPosition);
     this.gl.vertexAttribPointer(this.layerProgram.aPosition, 2, this.gl.FLOAT, false, 0, 0);
-    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.layerProgram.textureCoordBuffer);
-    this.gl.enableVertexAttribArray(this.layerProgram.aTextureCoord);
-    this.gl.vertexAttribPointer(this.layerProgram.aTextureCoord, 2, this.gl.FLOAT, false, 0, 0);
 
     // set the resolution
     this.gl.uniform2f(this.layerProgram.uResolution, this.gl.canvas.width, this.gl.canvas.height);
