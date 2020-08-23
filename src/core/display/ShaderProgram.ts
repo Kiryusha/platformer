@@ -74,7 +74,7 @@ export default class {
         this.uTilesAmount = gl.getUniformLocation(this.program, 'uTilesAmount');
         this.uTextureCoord = gl.getUniformLocation(this.program, 'uTextureCoord');
 
-        this.positionBuffer = gl.createBuffer();
+        this.textureCoordBuffer = gl.createBuffer();
 
         const tilesInRow = width / tileSize;
         const tilesInColumn = height / tileSize;
@@ -82,44 +82,27 @@ export default class {
 
         for (let y = 0; y < tilesInColumn; y += 1) {
           for (let x = 0; x < tilesInRow; x += 1) {
-            gl.uniform2f(this.uTextureCoord, (x * tileSize) / width, (y * tileSize) / height);
-            // this.tileCoords.push([
-            //   (x * tileSize) / width,
-            //   (y * tileSize) / height,
-            //
-            //   ((x * tileSize) + tileSize) / width,
-            //   (y * tileSize) / height,
-            //
-            //   (x * tileSize) / width,
-            //   ((y * tileSize) + tileSize) / height,
-            //
-            //   (x * tileSize) / width,
-            //   ((y * tileSize) + tileSize) / height,
-            //
-            //   ((x * tileSize) + tileSize) / width,
-            //   (y * tileSize) / height,
-            //
-            //   ((x * tileSize) + tileSize) / width,
-            //   ((y * tileSize) + tileSize) / height,
-            // ]);
+            this.tileCoords.push([
+              (x * tileSize) / width,
+              (y * tileSize) / height,
+
+              ((x * tileSize) + tileSize) / width,
+              (y * tileSize) / height,
+
+              (x * tileSize) / width,
+              ((y * tileSize) + tileSize) / height,
+
+              (x * tileSize) / width,
+              ((y * tileSize) + tileSize) / height,
+
+              ((x * tileSize) + tileSize) / width,
+              (y * tileSize) / height,
+
+              ((x * tileSize) + tileSize) / width,
+              ((y * tileSize) + tileSize) / height,
+            ]);
           }
         }
-
-
-
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.positionBuffer);
-        gl.bufferData(
-          gl.ARRAY_BUFFER,
-          new Float32Array([
-            0,  0,
-            1,  0,
-            0,  1,
-            0,  1,
-            1,  0,
-            1,  1,
-          ]),
-          gl.STATIC_DRAW,
-        );
     }
   }
 

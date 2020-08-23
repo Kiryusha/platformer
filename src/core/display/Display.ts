@@ -86,6 +86,7 @@ export default class Display {
       this.mapTileset.texture,
       this.mapTileset.image.width,
       this.mapTileset.image.height,
+      this.camera,
       processedTiles,
     );
   }

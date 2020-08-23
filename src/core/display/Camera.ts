@@ -1,13 +1,12 @@
 // the class is responsible for all the work with the camera
-export default class {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-  yDiff: number;
-  velocity: number;
-  velocityModifier: number;
-  maxVelocity: number;
+export default class Camera implements Camera {
+  public x: number;
+  public y: number;
+  public width: number;
+  public height: number;
+  private velocity: number;
+  private velocityModifier: number;
+  private maxVelocity: number;
 
   constructor(
     width: number,
@@ -17,13 +16,12 @@ export default class {
     this.y = 0;
     this.width = width;
     this.height = height;
-    this.yDiff = 0;
     this.velocity = 0;
     this.velocityModifier = 4;
     this.maxVelocity = this.height / 2.5;
   }
 
-  adjustCamera(
+  public adjustCamera(
     aim: Character,
     stageWidth: number,
     stageHeight: number,

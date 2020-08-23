@@ -56,3 +56,15 @@ interface LayerTile {
   mapY: number;
   tileSize: number;
 }
+
+interface Camera {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  adjustCamera(
+    aim: Character,
+    stageWidth: number,
+    stageHeight: number,
+  ): void
+}

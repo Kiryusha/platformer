@@ -1,48 +1,41 @@
 export default {
   vertexShaderSource: `
-    #define maxTextures 144
+    #define maxTiles 144
 
-    attribute vec2 aPosition;
+    attribute vec2 aTextureCoord;
 
-    uniform vec2 uTextureCoord[maxTextures];
     uniform vec2 uResolution;
     uniform vec2 uTranslation;
     uniform vec2 uScale;
-    uniform mat3 uTextureMatrix[maxTextures];
+    uniform mat3 uTextureMatrix[maxTiles];
     uniform int uTilesAmount;
-    uniform sampler2D uTexture;
 
-    varying vec4 vTexture;
+    varying vec2 vTextureCoord;
+
+    int index = 0;
 
     void main() {
-      // Scale the position
-      vec2 scaledPosition = aPosition * uScale;
-
-      // Add in the translation.
+      vec2 scaledPosition = aTextureCoord * uScale;
       vec2 position = scaledPosition;
-
-      // convert the position from pixels to clipspace
       vec2 clipSpace = ((position / uResolution) * 2.0) - 1.0;
 
       gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);
 
-      for (int i = 0; i < maxTextures; ++i) {
-        if (i <= uTilesAmount) {
-          vTexture += texture2D(uTexture, (uTextureMatrix[i] * vec3(uTextureCoord[i], 1)).xy);
-          // vTexture += texture2D(uTexture, aTextureCoord);
-        } else {
-          vTexture += vec4(0);
-        }
-      }
+      // vTextureCoord = (uTextureMatrix[gl_VertexID] * vec3(aTextureCoord, 1)).xy;
+      vTextureCoord = (vec3(aTextureCoord, 1)).xy;
+
+      ++index;
     }
   `,
   fragmentShaderSource: `
     precision mediump float;
 
-    varying vec4 vTexture;
+    uniform sampler2D uTexture;
+
+    varying vec2 vTextureCoord;
 
     void main() {
-      gl_FragColor = vTexture;
+      gl_FragColor = texture2D(uTexture, vTextureCoord);
     }
   `,
 };

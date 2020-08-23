@@ -153,16 +153,17 @@ export default class {
     texture: WebGLTexture,
     width: number,
     height: number,
+    camera: Camera,
     tiles: LayerTile[]
   ) {
-    this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
-    // Tell WebGL to use our shader program pair
     this.gl.useProgram(this.layerProgram.program);
 
+    let tileCoords: any[] = [];
     let amount = 0;
 
     for (let i: number = 0; i < tiles.length; i += 1) {
       let texMatrix;
+      tileCoords = tileCoords.concat(this.layerProgram.tileCoords[i]);
       texMatrix = this.translation(tiles[i].sourceX / width, tiles[i].sourceY / height);
       texMatrix = this.scale(texMatrix, tiles[i].tileSize / width, tiles[i].tileSize / height);
 
@@ -170,27 +171,26 @@ export default class {
       amount += 1;
     }
 
-    this.gl.uniform1i(this.layerProgram.uTilesAmount, amount);
+    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.layerProgram.textureCoordBuffer);
+    this.gl.bufferData(
+      this.gl.ARRAY_BUFFER,
+      new Float32Array(tileCoords),
+      this.gl.STREAM_DRAW
+    );
 
-    // Setup the attributes to pull data from our buffers
-    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.layerProgram.positionBuffer);
-    this.gl.enableVertexAttribArray(this.layerProgram.aPosition);
-    this.gl.vertexAttribPointer(this.layerProgram.aPosition, 2, this.gl.FLOAT, false, 0, 0);
+    this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
 
-    // set the resolution
+    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.layerProgram.textureCoordBuffer);
+    this.gl.enableVertexAttribArray(this.layerProgram.aTextureCoord);
+    this.gl.vertexAttribPointer(this.layerProgram.aTextureCoord, 2, this.gl.FLOAT, false, 0, 0);
+
     this.gl.uniform2f(this.layerProgram.uResolution, this.gl.canvas.width, this.gl.canvas.height);
-    // Set the translation.
-    this.gl.uniform2f(this.layerProgram.uTranslation, 0, 0);
-    // Set the scale.
-    this.gl.uniform2f(this.layerProgram.uScale, 256, 144);
-    // console.log(texMatrix)
-    // Set the matrix.
+    this.gl.uniform2f(this.layerProgram.uTranslation, camera.x , camera.y);
+    this.gl.uniform2f(this.layerProgram.uScale, camera.width, camera.height);
 
-    // Tell the shader to get the texture from texture unit 0
     this.gl.uniform1i(this.layerProgram.uTexture, 0);
 
-    // draw the quad (2 triangles, 6 vertices)
-    this.gl.drawArrays(this.gl.TRIANGLES, 0, 6);
+    this.gl.drawArrays(this.gl.TRIANGLES, 0, 6 * amount);
   }
 
   private translation(tx: number, ty: number) {
