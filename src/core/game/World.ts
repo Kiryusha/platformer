@@ -30,6 +30,7 @@ export default class {
   private collisions: Entity[];
   private brain: Brain;
   private ropes: Entity[];
+  private spikes: Entity[];
 
   constructor (
     private bus: Bus,
@@ -78,6 +79,7 @@ export default class {
       ...this.doors,
       ...this.collection.collectables,
       ...this.ropes,
+      ...this.spikes,
     ]);
     this.collisionDebugMap = <Entity[][]>collisions;
     this.brain.update();
@@ -116,6 +118,7 @@ export default class {
               case 'collisions':
               case 'doors':
               case 'ropes':
+              case 'spikes':
                 result[layer.name] = this.fillMapLayer(layer);
                 break;
               case 'collectables':
@@ -207,6 +210,8 @@ export default class {
     this.ropes = this.rawLayers.ropes ? [...this.rawLayers.ropes] : [];
     this.collection.collectables = this.rawLayers.collectables ?
       [...this.rawLayers.collectables] : [];
+    this.spikes = this.rawLayers.spikes ?
+      [...this.rawLayers.spikes] : [];
     this.collisionDebugMap = [];
   }
 

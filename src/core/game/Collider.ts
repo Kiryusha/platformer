@@ -183,6 +183,16 @@ export default class {
     }
   }
 
+  private routeCharacterVsSpikes (e1: Character) {
+    if (e1.type === 'player' && !e1.isHurtTriggered) {
+      e1.isHurtTriggered = true;
+      this.library.sounds.hurt.play();
+    } else {
+      e1.isDeathTriggered = true;
+      this.library.sounds.hit.play();
+    }
+  }
+
   // these methods determine the presence of a one-way collision of e1 with e2
   private isCollidingFromTop(e1: Entity, e2: Entity): boolean {
     return e1.bottom > e2.top && e1.oldBottom <= e2.top;
@@ -276,6 +286,8 @@ export default class {
       if (e1.type === 'player') {
         this.routePlayerVsRope(e1);
       }
+    } else if (e1.group === 'characters' && e2.group === 'spikes') {
+      this.routeCharacterVsSpikes(e1);
     }
   }
 
