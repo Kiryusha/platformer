@@ -9,8 +9,6 @@
     "type": "star"
   },
   "animation": {
-    "frameWidth": 13,
-    "frameHeight": 13,
     "animations": {
       "idle": {
         "delay": 6,

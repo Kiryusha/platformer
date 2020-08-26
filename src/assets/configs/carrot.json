@@ -9,8 +9,6 @@
     "type": "carrot"
   },
   "animation": {
-    "frameWidth": 17,
-    "frameHeight": 19,
     "animations": {
       "idle": {
         "delay": 6,

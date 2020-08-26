@@ -64,17 +64,22 @@ interface Entity {
 }
 
 interface Animator {
-  spriteMap: SpriteMap;
-  frameWidth: number;
-  frameHeight: number;
-  animations: any;
-  count: number;
-  delay: number;
-  mode: string;
-  activeFrameSet: string;
-  frameIndex: number;
   frameValue: string;
+  spriteMap: SpriteMap;
   flippedSpriteMap: SpriteMap;
+  changeFrameset(
+    set: string,
+    delay?: number,
+    mode?: string,
+    frameIndex?: number,
+  ): void;
+}
+
+interface AnimationsDictionary {
+  [key: string]: {
+    delay: number;
+    frames: string[];
+  }
 }
 
 interface Player extends Character {

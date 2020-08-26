@@ -9,8 +9,6 @@ export default class AnimatedEntity extends Entity implements AnimatedEntity {
     {
       entity,
       animation: {
-        frameWidth,
-        frameHeight,
         animations
       },
     }: AnimatedEntityConfig,
@@ -18,7 +16,7 @@ export default class AnimatedEntity extends Entity implements AnimatedEntity {
   ) {
     super(entity);
 
-    this.setAnimationDefaults(frameWidth, frameHeight, animations, spriteMap);
+    this.setAnimationDefaults(animations, spriteMap);
   }
 
   public update(): void {
@@ -26,15 +24,11 @@ export default class AnimatedEntity extends Entity implements AnimatedEntity {
   }
 
   private setAnimationDefaults(
-    frameWidth: number,
-    frameHeight: number,
     animations: {},
     playerSpriteMap: SpriteMap,
   ): void {
     this.animator = new Animator(
       playerSpriteMap,
-      frameWidth,
-      frameHeight,
       animations,
     );
   }

@@ -1,35 +1,20 @@
 // The class is responsible toggling player animations
-export default class {
-  spriteMap: SpriteMap;
-  frameWidth: number;
-  frameHeight: number;
-  animations: any;
-  count: number;
-  delay: number;
-  mode: string;
-  activeFrameSet: string;
-  frameIndex: number;
-  frameValue: string;
-  flippedSpriteMap: SpriteMap;
+export default class Animator implements Animator {
+  public frameValue: string = '';
+  public flippedSpriteMap: SpriteMap;
+  private count: number = 0;
+  private delay: number = 0;
+  private mode: string = 'pause';
+  private activeFrameSet: string = '';
+  private frameIndex: number = 0;
 
   constructor(
-    spriteMap: SpriteMap,
-    frameWidth: number,
-    frameHeight: number,
-    animations: {},
+    public spriteMap: SpriteMap,
+    private animations: AnimationsDictionary,
   ) {
     this.spriteMap = spriteMap;
     this.flippedSpriteMap = spriteMap;
-    this.frameWidth = frameWidth;
-    this.frameHeight = frameHeight;
     this.animations = animations;
-
-    this.count = 0;
-    this.delay = 0;
-    this.activeFrameSet = '';
-    this.mode = 'pause';
-    this.frameIndex = 0;
-    this.frameValue = '';
 
     this.getXFlippedCoords();
   }
@@ -49,7 +34,7 @@ export default class {
     mode: string = 'loop',
     frameIndex: number = 0,
   ): void {
-    let frameSet = set;
+    let frameSet: keyof AnimationsDictionary = set;
 
     // If entity does not have animation for this case, then we take its first animation
     if (!this.animations[frameSet]) {

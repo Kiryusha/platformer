@@ -38,8 +38,6 @@
     }
   },
   "animation": {
-    "frameWidth": 32,
-    "frameHeight": 21,
     "animations": {
       "skip": {
         "delay": 4,

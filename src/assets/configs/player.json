@@ -33,8 +33,6 @@
     "isFacingLeft": false
   },
   "animation": {
-    "frameWidth": 37,
-    "frameHeight": 32,
     "animations": {
       "idle": {
         "delay": 4,

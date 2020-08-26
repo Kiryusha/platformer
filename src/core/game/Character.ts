@@ -85,8 +85,6 @@ export default class Character extends Entity implements Character {
       entity,
       main,
       animation: {
-        frameWidth,
-        frameHeight,
         animations
       },
     }: CharacterConfig,
@@ -96,7 +94,7 @@ export default class Character extends Entity implements Character {
 
     Object.assign(this, main);
 
-    this.setAnimationDefaults(frameWidth, frameHeight, animations, spriteMap);
+    this.setAnimationDefaults(animations, spriteMap);
     this.subscribeToEvents();
   }
 
@@ -245,15 +243,11 @@ export default class Character extends Entity implements Character {
   }
 
   private setAnimationDefaults(
-    frameWidth: number,
-    frameHeight: number,
     animations: {},
     playerSpriteMap: SpriteMap,
   ): void {
     this.animator = new Animator(
       playerSpriteMap,
-      frameWidth,
-      frameHeight,
       animations,
     );
   }
