@@ -75,6 +75,21 @@ interface Animator {
   ): void;
 }
 
+interface Brain {
+  characters: AutomatedCharacter[];
+  update(): void;
+}
+
+interface AutomatedCharacter {
+  character: Character;
+  startingPoint: {
+    x: number;
+    y: number;
+  };
+  reachedLeftBorder: boolean;
+  reachedRightBorder: boolean;
+}
+
 interface AnimationsDictionary {
   [key: string]: {
     delay: number;

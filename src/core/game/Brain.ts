@@ -1,6 +1,6 @@
 // The class is responsible for processing AI for npc
-export default class {
-  characters: any[];
+export default class Brain implements Brain {
+  public characters: AutomatedCharacter[];
 
   constructor() {
     this.characters = [];
