@@ -1,14 +1,14 @@
 // the class is responsible for button events processing
 export default class {
-  isActive: boolean;
-  isHold: boolean;
+  public isActive: boolean;
+  public isHold: boolean;
 
   constructor() {
     this.isActive = false;
     this.isHold = false;
   }
 
-  getInput(type: string): void {
+  public getInput(type: string): void {
     // this prevents repeating actions, if button keeps beeing down
     switch (type) {
       case 'keydown':

@@ -1,21 +1,21 @@
 // the class is responsible for all the work with WebGL shaders
 export default class {
-  vertexShader: WebGLShader;
-  fragmentShader: WebGLShader;
-  program: WebGLProgram;
-  aPosition: number;
-  aTextureCoord: number;
-  uResolution: WebGLUniformLocation;
-  uColor: WebGLUniformLocation;
-  uTranslation: WebGLUniformLocation;
-  uScale: WebGLUniformLocation;
-  uTexture: WebGLUniformLocation;
-  positionBuffer: WebGLBuffer;
-  textureCoordBuffer: WebGLBuffer;
-  uTextureMatrix: WebGLUniformLocation;
-  uTilesAmount: WebGLUniformLocation;
-  uTextureCoord: WebGLUniformLocation;
-  tileCoords: any[];
+  public vertexShader: WebGLShader;
+  public fragmentShader: WebGLShader;
+  public program: WebGLProgram;
+  public aPosition: number;
+  public aTextureCoord: number;
+  public uResolution: WebGLUniformLocation;
+  public uColor: WebGLUniformLocation;
+  public uTranslation: WebGLUniformLocation;
+  public uScale: WebGLUniformLocation;
+  public uTexture: WebGLUniformLocation;
+  public positionBuffer: WebGLBuffer;
+  public textureCoordBuffer: WebGLBuffer;
+  public uTextureMatrix: WebGLUniformLocation;
+  public uTilesAmount: WebGLUniformLocation;
+  public uTextureCoord: WebGLUniformLocation;
+  public tileCoords: any[];
 
   constructor(
     gl: WebGLRenderingContext,

@@ -3,7 +3,7 @@ import Entity from './Entity';
 import Animator from './Animator';
 
 export default class AnimatedEntity extends Entity implements AnimatedEntity {
-  animator: Animator;
+  public animator: Animator;
 
   constructor(
     {

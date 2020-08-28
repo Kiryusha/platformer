@@ -13,17 +13,17 @@ declare global {
 }
 
 export default class {
-  aspectRatio = 9 / 16;
-  fps: number = 1000 / 30;
-  startingZone: string = 'zoneA1';
-  controller: Controller;
-  game: Game;
-  display: Display;
-  engine: Engine;
-  bus: Bus;
-  library: Library;
-  areControlsDisabled: boolean = false;
-  state: 'loading' | 'game';
+  private aspectRatio = 9 / 16;
+  private fps: number = 1000 / 30;
+  private startingZone: string = 'zoneA1';
+  private controller: Controller;
+  private game: Game;
+  private display: Display;
+  private engine: Engine;
+  private bus: Bus;
+  private library: Library;
+  private areControlsDisabled: boolean = false;
+  private state: 'loading' | 'game';
 
   constructor() {
     this.init();
