@@ -77,6 +77,7 @@ export default class Library implements Library {
       this.images.popup.loadAsset(popup),
       get(`${ASSETS_URL}/levels/zoneA0.json`).then(r => this.gameMaps.zoneA0 = r),
       get(`${ASSETS_URL}/levels/zoneA1.json`).then(r => this.gameMaps.zoneA1 = r),
+      get(`${ASSETS_URL}/levels/zoneA2.json`).then(r => this.gameMaps.zoneA2 = r),
       get(`${ASSETS_URL}/levels/zoneB0.json`).then(r => this.gameMaps.zoneB0 = r),
       get(`${ASSETS_URL}/levels/zoneB1.json`).then(r => this.gameMaps.zoneB1 = r),
       get(`${ASSETS_URL}/levels/zoneB2.json`).then(r => this.gameMaps.zoneB2 = r),
@@ -121,6 +122,23 @@ export default class Library implements Library {
         title: 'GrassHills',
         group: 'zoneA',
         config: this.gameMaps.zoneA1,
+        tileset: this.images.defaultTileSet,
+        backgrounds: [
+          this.images.cloudsBack,
+          this.images.cloudsFront,
+        ],
+        images: {
+          spriteSheet: this.images.defaultImages,
+          spriteMap: this.defaultImagesMap,
+        },
+        audio: {
+          bgm: this.sounds.confiant,
+        },
+      },
+      'zoneA2': {
+        title: 'GrassHills',
+        group: 'zoneA',
+        config: this.gameMaps.zoneA2,
         tileset: this.images.defaultTileSet,
         backgrounds: [
           this.images.cloudsBack,
