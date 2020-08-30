@@ -1,5 +1,6 @@
 // the class is responsible for all the work with WebGL context
 import ShaderProgram from './ShaderProgram';
+import Matrix from './Matrix';
 import rectangleShaders from '../../assets/shaders/rectangle';
 import imageShaders from '../../assets/shaders/image';
 import layerShaders from '../../assets/shaders/layer';
@@ -9,6 +10,7 @@ export default class {
   rectangleProgram: ShaderProgram;
   imageProgram: ShaderProgram;
   layerProgram: ShaderProgram;
+  matrix: Matrix;
   aPosition: number;
   uResolution: WebGLUniformLocation;
   uColor: WebGLUniformLocation;
@@ -20,6 +22,7 @@ export default class {
     tileSize: number,
   ) {
     this.gl = gl;
+    this.matrix = new Matrix();
     this.rectangleProgram = new ShaderProgram(
       this.gl,
       rectangleShaders.vertexShaderSource,
@@ -136,8 +139,8 @@ export default class {
     // Set the scale.
     this.gl.uniform2f(this.imageProgram.uScale, dstWidth, dstHeight);
 
-    let texMatrix = this.translation(srcX / width, srcY / height);
-    texMatrix = this.scale(texMatrix, srcWidth / width, srcHeight / height);
+    let texMatrix = this.matrix.translation(srcX / width, srcY / height);
+    texMatrix = this.matrix.scale(texMatrix, srcWidth / width, srcHeight / height);
 
     // Set the matrix.
     this.gl.uniformMatrix3fv(this.imageProgram.uTextureMatrix, false, texMatrix);
@@ -164,8 +167,8 @@ export default class {
     for (let i: number = 0; i < tiles.length; i += 1) {
       let texMatrix;
       tileCoords = tileCoords.concat(this.layerProgram.tileCoords[i]);
-      texMatrix = this.translation(tiles[i].sourceX / width, tiles[i].sourceY / height);
-      texMatrix = this.scale(texMatrix, tiles[i].tileSize / width, tiles[i].tileSize / height);
+      texMatrix = this.matrix.translation(tiles[i].sourceX / width, tiles[i].sourceY / height);
+      texMatrix = this.matrix.scale(texMatrix, tiles[i].tileSize / width, tiles[i].tileSize / height);
 
       this.gl.uniformMatrix3fv(this.layerProgram.uTextureMatrix, false, texMatrix);
       amount += 1;
@@ -175,7 +178,7 @@ export default class {
     this.gl.bufferData(
       this.gl.ARRAY_BUFFER,
       new Float32Array(tileCoords),
-      this.gl.STREAM_DRAW
+      this.gl.STATIC_DRAW
     );
 
     this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
@@ -191,42 +194,6 @@ export default class {
     this.gl.uniform1i(this.layerProgram.uTexture, 0);
 
     this.gl.drawArrays(this.gl.TRIANGLES, 0, 6 * amount);
-  }
-
-  private translation(tx: number, ty: number) {
-    let dst = new Float32Array(9);
-
-    dst[0] = 1;
-    dst[1] = 0;
-    dst[2] = 0;
-    dst[3] = 0;
-    dst[4] = 1;
-    dst[5] = 0;
-    dst[6] = tx;
-    dst[7] = ty;
-    dst[8] = 1;
-
-    return dst;
-  }
-
-  private scale(
-    m: Float32Array,
-    sx: number,
-    sy: number,
-  ) {
-    const dst = new Float32Array(9);
-
-    dst[0] = sx * m[0];
-    dst[1] = sx * m[1];
-    dst[2] = sx * m[2];
-    dst[3] = sy * m[3];
-    dst[4] = sy * m[4];
-    dst[5] = sy * m[5];
-    dst[6] = m[6];
-    dst[7] = m[7];
-    dst[8] = m[8];
-
-    return dst;
   }
 
   public clear(): void {
