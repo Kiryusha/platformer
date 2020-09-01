@@ -10,7 +10,7 @@ export default class {
   public spriteMap: SpriteMap;
   public world: World;
   // TODO: some way to get this amount
-  private maximumStars: number = 14;
+  private maximumStars: number = 16;
   private zones: Zones;
 
   constructor(private bus: Bus, private library: Library, startingZone: keyof Zones) {
