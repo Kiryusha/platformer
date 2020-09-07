@@ -78,6 +78,7 @@ export default class AudioManager implements AudioManager {
   // Pausing actually stops the sound, but also saves the timestep it was stopped.
   public pause(fadeOutTime: number = 0): void {
     if (fadeOutTime) {
+      this.isAlreadyPlaying = false;
       this.gainNode.gain.linearRampToValueAtTime(
         0,
         this.context.currentTime + fadeOutTime / 1000

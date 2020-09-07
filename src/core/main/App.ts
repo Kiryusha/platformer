@@ -24,6 +24,7 @@ export default class {
   private library: Library;
   private areControlsDisabled: boolean = false;
   private state: 'loading' | 'game';
+  private isMuted: boolean = false;
 
   constructor() {
     this.init();
@@ -100,6 +101,7 @@ export default class {
           text: [
             'Welcome!',
             'Movement: arrow buttons. Jump: Z. Sprint: Shift.',
+            'Mute: M.',
             'Find some stars! Eat lots of carrots!',
           ],
           align: 'center',
@@ -116,7 +118,9 @@ export default class {
 
   private resumeGame(): void {
     this.engine.start();
-    this.library.contextAudio.resume();
+    if (!this.isMuted) {
+      this.library.contextAudio.resume();
+    }
   }
 
   private handleKeyEvent(event: { type: string; keyCode: number; }): void {
@@ -124,6 +128,16 @@ export default class {
       this.startGame();
     }
     this.controller.handleKeyEvent(event.type, event.keyCode);
+
+    if (this.controller.mute.isActive && !this.controller.mute.isHold) {
+      if (!this.isMuted) {
+        this.isMuted = true;
+        this.library.contextAudio.suspend();
+      } else {
+        this.isMuted = false;
+        this.library.contextAudio.resume();
+      }
+    }
   }
 
   private adjustMovingControls(): void {

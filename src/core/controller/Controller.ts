@@ -8,6 +8,7 @@ export default class {
   public shift: Button;
   public down: Button;
   public jump: Button;
+  public mute: Button;
 
   constructor() {
     this.left = new Button();
@@ -16,6 +17,7 @@ export default class {
     this.shift = new Button();
     this.down = new Button();
     this.jump = new Button();
+    this.mute = new Button();
   }
 
   public get isAnyKeyIsActive(): boolean {
@@ -25,7 +27,8 @@ export default class {
       || this.shift.isActive
       || this.up.isActive
       || this.down.isActive
-      || this.jump.isActive;
+      || this.jump.isActive
+      || this.mute.isActive;
   }
 
   public handleKeyEvent(
@@ -50,6 +53,9 @@ export default class {
         break;
       case 90:
         this.jump.getInput(type);
+        break;
+      case 77:
+        this.mute.getInput(type);
         break;
     }
   }
