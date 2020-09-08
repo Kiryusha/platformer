@@ -25,12 +25,12 @@ export default class Player extends Character implements Player {
 
   constructor(
     bus: Bus,
-    private library: Library,
+    library: Library,
     playerConfig: CharacterConfig,
     playerSpriteMap: SpriteMap,
     maximumStars: number,
   ) {
-    super(bus, playerConfig, playerSpriteMap);
+    super(bus, library, playerConfig, playerSpriteMap);
     this.maxHealth = playerConfig.player.maxHealth;
     this.currentHealth = this.maxHealth;
     this.currentStars = 0;
@@ -88,39 +88,35 @@ export default class Player extends Character implements Player {
     }
   }
 
-  protected adjustHealth(): void {
-    // This prevents accidental movement if the navigation buttons were pre-clamped.
-    if (this.isHurt) {
-      this.stopMovingLeft();
-      this.stopMovingRight();
-    }
+  public getHurt() {
+    this.library.sounds.hurt.play();
+    this.bus.publish(this.bus.DISABLE_CONTROLS);
+    this.stopMovingLeft();
+    this.stopMovingRight();
+    this.isHurt = true;
+    this.currentHealth -= 1;
 
-    if (this.isHurtTriggered) {
-      this.isHurtTriggered = false;
-      this.isHurt = true;
+    if (this.currentHealth <= 0) {
+      this.isDeathTriggered = true;
 
-      this.currentHealth -= 1;
+      this.throwUp('death');
 
-      if (this.currentHealth <= 0) {
-        this.isDeathTriggered = true;
+      setTimeout(async () => {
+        await this.bus.publish(this.bus.SHOW_POPUP, {
+          text: 'YOU DIED',
+          fontSize: 3,
+        });
+        this.isVanished = true;
+        this.bus.publish(this.bus.APP_RESTART);
+        this.bus.publish(this.bus.ENABLE_CONTROLS);
+      }, 1200);
+    } else {
+      this.throwUp(this.collisionXDirection);
 
-        this.throwUp('death');
-
-        setTimeout(async () => {
-          await this.bus.publish(this.bus.SHOW_POPUP, {
-            text: 'YOU DIED',
-            fontSize: 3,
-          });
-          this.isVanished = true;
-          this.bus.publish(this.bus.APP_RESTART);
-        }, 1200);
-      } else {
-        this.throwUp(this.collisionXDirection);
-
-        setTimeout(() => {
-          this.isHurt = false;
-        }, 1000);
-      }
+      setTimeout(() => {
+        this.isHurt = false;
+        this.bus.publish(this.bus.ENABLE_CONTROLS);
+      }, 1000);
     }
   }
 }

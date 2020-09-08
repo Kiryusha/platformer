@@ -21,8 +21,7 @@ export default class Character extends Entity implements Character {
   public isClimbing: boolean;
   // Moving direction while climbing
   public climbingDirection: string;
-  // Flags for processing hurting of the character: start of animation and actual status
-  public isHurtTriggered: boolean;
+  // Flag for processing hurting of the character: start of animation and actual status
   public isHurt: boolean;
   // Flag for processing death of the character: start of animation and actual status
   public isDeathTriggered: boolean = false;
@@ -81,6 +80,7 @@ export default class Character extends Entity implements Character {
 
   constructor(
     protected bus: Bus,
+    protected library: Library,
     {
       entity,
       main,
@@ -186,8 +186,15 @@ export default class Character extends Entity implements Character {
     this.climbingDirection = null;
   }
 
+  public getHurt() {
+    this.isDeathTriggered = true;
+    this.library.sounds.hit.play();
+    setTimeout(() => {
+      this.isVanished = true;
+    }, 350);
+  }
+
   public update(gravity: number): void {
-    this.adjustHealth();
     this.adjustHorizontalMovement();
     this.adjustVerticalMovement(gravity);
     this.updateAnimation();
@@ -200,15 +207,6 @@ export default class Character extends Entity implements Character {
         this.isFalling = true;
       }
       this.isClimbing = false;
-    }
-  }
-
-  protected adjustHealth(): void {
-    // 350ms - time for death animation
-    if (this.isDeathTriggered) {
-      setTimeout(() => {
-        this.isVanished = true;
-      }, 350);
     }
   }
 
@@ -340,11 +338,7 @@ export default class Character extends Entity implements Character {
   }
 
   private adjustHorizontalMovement(): void {
-    if (this.isFreezed) {
-      return;
-    }
-
-    if (this.isDeathTriggered) {
+    if (this.isFreezed || this.isDeathTriggered) {
       return;
     }
 

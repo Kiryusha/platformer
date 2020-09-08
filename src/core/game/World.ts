@@ -173,7 +173,7 @@ export default class {
                               x: object.x,
                               y: object.y,
                             };
-                            const character = new Character(this.bus, slugStats, spriteMap);
+                            const character = new Character(this.bus, this.library, slugStats, spriteMap);
                             this.brain.bindCharacter(character);
                             return character;
                           }

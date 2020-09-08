@@ -132,9 +132,8 @@ export default class {
       this.isCollidingFromTop(player, enemy)
       || this.isCollidingFromBottom(enemy, player)
     ) {
-      enemy.isDeathTriggered = true;
+      enemy.getHurt();
       player.throwUp('attacker');
-      this.library.sounds.hit.play();
       return;
     } else if (
       this.isCollidingFromRight(player, enemy)
@@ -143,15 +142,13 @@ export default class {
       || this.isCollidingFromLeft(enemy, player)
     ) {
       player.collisionXDirection = 'right';
-      player.isHurtTriggered = true;
-      this.library.sounds.hurt.play();
+      player.getHurt();
     } else if (
       this.isCollidingFromLeft(player, enemy)
       || this.isCollidingFromRight(enemy, player)
     ) {
       player.collisionXDirection = 'left';
-      player.isHurtTriggered = true;
-      this.library.sounds.hurt.play();
+      player.getHurt();
     }
   }
 
@@ -184,13 +181,11 @@ export default class {
   }
 
   private routeCharacterVsSpikes (e1: Character) {
-    if (e1.type === 'player' && !e1.isHurtTriggered) {
-      e1.isHurtTriggered = true;
-      this.library.sounds.hurt.play();
-    } else {
-      e1.isDeathTriggered = true;
-      this.library.sounds.hit.play();
-    }
+    e1.getHurt();
+  }
+
+  private routePlayerVsSpikes (e1: Player) {
+    e1.getHurt();
   }
 
   // these methods determine the presence of a one-way collision of e1 with e2
@@ -287,7 +282,11 @@ export default class {
         this.routePlayerVsRope(e1);
       }
     } else if (e1.group === 'characters' && e2.group === 'spikes') {
-      this.routeCharacterVsSpikes(e1);
+      if (e1.type === 'player') {
+        this.routePlayerVsSpikes(e1);
+      } else {
+        this.routeCharacterVsSpikes(e1);
+      }
     }
   }
 

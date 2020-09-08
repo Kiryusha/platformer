@@ -126,7 +126,6 @@ interface Character extends Entity {
   isMovingLeft: boolean;
   isMovingRight: boolean;
   isFalling: boolean;
-  isHurtTriggered: boolean;
   isHurt: boolean;
   isJumpTriggered: boolean;
   isDeathTriggered: boolean;
@@ -152,6 +151,7 @@ interface Character extends Entity {
   stopJumping(): void;
   startClimbingAndMoving(direction: 'up' | 'right' | 'down' | 'left'): void;
   stopClimbingAndMoving(): void;
+  getHurt(): void;
   update(gravity: number): void;
 }
 
