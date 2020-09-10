@@ -30,7 +30,7 @@
     "isFacingLeft": false,
     "movingPattern": {
       "type": "roaming",
-      "length": 130,
+      "length": 230,
       "startingPoint": {
         "x": 0,
         "y": 0
