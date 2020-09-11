@@ -84,9 +84,7 @@ export default class Character extends Entity implements Character {
     {
       entity,
       main,
-      animation: {
-        animations
-      },
+      animations,
     }: CharacterConfig,
     spriteMap: SpriteMap,
   ) {

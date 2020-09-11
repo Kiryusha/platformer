@@ -32,8 +32,7 @@
     "isStuck": false,
     "isFacingLeft": false
   },
-  "animation": {
-    "animations": {
+  "animations": {
       "idle": {
         "delay": 4,
         "frames": [
@@ -112,5 +111,4 @@
         ]
       }
     }
-  }
 }

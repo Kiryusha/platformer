@@ -8,8 +8,7 @@
     "group": "collectables",
     "type": "carrot"
   },
-  "animation": {
-    "animations": {
+  "animations": {
       "idle": {
         "delay": 6,
         "frames": [
@@ -20,5 +19,4 @@
         ]
       }
     }
-  }
 }

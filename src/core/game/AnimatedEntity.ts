@@ -8,9 +8,7 @@ export default class AnimatedEntity extends Entity implements AnimatedEntity {
   constructor(
     {
       entity,
-      animation: {
-        animations
-      },
+      animations,
     }: AnimatedEntityConfig,
     spriteMap: SpriteMap,
   ) {

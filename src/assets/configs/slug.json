@@ -37,8 +37,7 @@
       }
     }
   },
-  "animation": {
-    "animations": {
+  "animations": {
       "skip": {
         "delay": 4,
         "frames": [
@@ -60,5 +59,4 @@
         ]
       }
     }
-  }
 }

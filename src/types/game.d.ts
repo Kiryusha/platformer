@@ -173,11 +173,7 @@ interface EntityConfig {
 
 interface AnimatedEntityConfig {
   entity: EntityConfig;
-  animation: {
-    frameWidth: number;
-    frameHeight: number;
-    animations: {};
-  }
+  animations: AnimationsDictionary;
 }
 
 interface CharacterConfig {
@@ -213,9 +209,5 @@ interface CharacterConfig {
       }
     }
   }
-  animation: {
-    frameWidth: number;
-    frameHeight: number;
-    animations: {};
-  }
+  animations: AnimationsDictionary;
 }
