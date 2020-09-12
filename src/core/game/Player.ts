@@ -88,7 +88,8 @@ export default class Player extends Character implements Player {
     }
   }
 
-  public getHurt() {
+  public getHurt(returnPointId?: string) {
+    if (this.isHurt) return;
     this.library.sounds.hurt.play();
     this.bus.publish(this.bus.DISABLE_CONTROLS);
     this.stopMovingLeft();
@@ -111,12 +112,15 @@ export default class Player extends Character implements Player {
         this.bus.publish(this.bus.ENABLE_CONTROLS);
       }, 1200);
     } else {
-      this.throwUp(this.collisionXDirection);
+      this.throwUp('death');
 
       setTimeout(() => {
         this.isHurt = false;
         this.bus.publish(this.bus.ENABLE_CONTROLS);
-      }, 1000);
+        if (returnPointId) {
+          this.bus.publish(this.bus.TELEPORT_PLAYER, returnPointId);
+        }
+      }, 600);
     }
   }
 }

@@ -19,6 +19,8 @@ export default class Bus implements Bus {
   public readonly APP_RESUME: string = 'app.resume';
   // show zone title
   public readonly SHOW_ZONE_TITLE: string = 'zoneTitle.show';
+  // teleport player to someplace on the zone
+  public readonly TELEPORT_PLAYER: string = 'world.teleport';
 
   private subscriptions: Subscriptions = {};
   private lastId: number = 0;

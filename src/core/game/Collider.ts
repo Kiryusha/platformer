@@ -184,8 +184,8 @@ export default class {
     e1.getHurt();
   }
 
-  private routePlayerVsSpikes (e1: Player) {
-    e1.getHurt();
+  private routePlayerVsSpikes (e1: Player, spike: Entity) {
+    e1.getHurt(spike.properties.target);
   }
 
   // these methods determine the presence of a one-way collision of e1 with e2
@@ -283,7 +283,7 @@ export default class {
       }
     } else if (e1.group === 'characters' && e2.group === 'spikes') {
       if (e1.type === 'player') {
-        this.routePlayerVsSpikes(e1);
+        this.routePlayerVsSpikes(e1, e2);
       } else {
         this.routeCharacterVsSpikes(e1);
       }

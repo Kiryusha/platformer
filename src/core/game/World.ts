@@ -31,6 +31,7 @@ export default class {
   private brain: Brain;
   private ropes: Entity[];
   private spikes: Entity[];
+  private 'return-points': Entity[];
 
   constructor (
     private bus: Bus,
@@ -56,6 +57,7 @@ export default class {
     this.processMap(this.map);
 
     this.collider = new Collider(bus, this.library);
+    this.subscribeToEvents();
   }
 
   public update(): void {
@@ -85,8 +87,15 @@ export default class {
     this.brain.update();
   }
 
+  private teleport(id: string) {
+    const [point] = this['return-points'].filter(point => point.id === id);
+    this.player.bottom = point.bottom;
+    this.player.left = point.left;
+  }
+
   private fillMapLayer(layer: GameLayer): Entity[] {
     return layer.objects.map((object: MapObject) => new Entity({
+      id: object.id,
       x: object.x,
       y: object.y,
       width: object.width,
@@ -119,6 +128,7 @@ export default class {
               case 'doors':
               case 'ropes':
               case 'spikes':
+              case 'return-points':
                 result[layer.name] = this.fillMapLayer(layer);
                 break;
               case 'collectables':
@@ -212,6 +222,8 @@ export default class {
       [...this.rawLayers.collectables] : [];
     this.spikes = this.rawLayers.spikes ?
       [...this.rawLayers.spikes] : [];
+    this['return-points'] = this.rawLayers['return-points'] ?
+      [...this.rawLayers['return-points']] : [];
     this.collisionDebugMap = [];
   }
 
@@ -246,5 +258,9 @@ export default class {
       object.top = this.height - object.height;
       object.velocityY = 0;
     }
+  }
+
+  private subscribeToEvents(): void {
+    this.bus.subscribe(this.bus.TELEPORT_PLAYER, this.teleport.bind(this));
   }
 }

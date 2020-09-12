@@ -27,6 +27,7 @@ interface SpriteMap {
 }
 
 interface MapObject {
+  id: string;
   name: string;
   type: string;
   x: number;
@@ -108,6 +109,7 @@ interface Player extends Character {
   currentStars: number;
   throwUp(direction?: string): void;
   restoreHealth(): void;
+  getHurt(returnPointId?: string): void;
   obtainStar(): void;
 }
 
