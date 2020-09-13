@@ -21,7 +21,14 @@ export default class Player extends Character implements Player {
   public maxHealth: number;
   // Property shows amount of all the obtained stars
   public currentStars: number;
+  public cameraPosition: CameraPosition = {
+    x: this.left,
+    y: this.top,
+  };
   private maximumStars: number;
+  private cameraVelocity: number = 0;
+  private cameraVelocityModifier: number = 4;
+  private cameraMaxVelocity: number = 100;
 
   constructor(
     bus: Bus,
@@ -122,5 +129,44 @@ export default class Player extends Character implements Player {
         }
       }, 600);
     }
+  }
+
+  public update(gravity: number) {
+    super.update(gravity);
+    this.updateCameraPosition();
+  }
+
+  private updateCameraPosition() {
+    // TODO: fix camera flicking on landing
+    // TODO: bug with first wrong frame on zone changing returned
+    if (this.isDeathTriggered) {
+      return;
+    }
+
+    let aimY;
+    let top = this.top;
+
+    if (this.isDucking) {
+      // This condition is necessary in order to keep the camera in the same place when the character
+      // begins to duck.
+      top = this.top - (this.defaults.height - this.height);
+
+      // But if the character continues ducking, gamera will smoothly moves down
+      if (this.isKeepDucking && (this.cameraVelocity <= this.cameraMaxVelocity)) {
+        this.cameraVelocity += this.cameraVelocityModifier;
+      }
+    } else {
+      if (this.cameraVelocity) {
+        this.cameraVelocity -= this.cameraVelocityModifier;
+      }
+    }
+
+    aimY = top + this.cameraVelocity;
+
+    const xCenter = this.left + (this.defaults.width / 2);
+    const yCenter = aimY + (this.defaults.height / 2);
+
+    this.cameraPosition.x = xCenter;
+    this.cameraPosition.y = yCenter;
   }
 }

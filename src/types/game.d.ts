@@ -98,6 +98,11 @@ interface AnimationsDictionary {
   }
 }
 
+interface CameraPosition {
+  x: number;
+  y: number;
+}
+
 interface Player extends Character {
   destination: {
     name: string;
@@ -107,6 +112,7 @@ interface Player extends Character {
   currentHealth: number;
   maxHealth: number;
   currentStars: number;
+  cameraPosition: CameraPosition;
   throwUp(direction?: string): void;
   restoreHealth(): void;
   getHurt(returnPointId?: string): void;

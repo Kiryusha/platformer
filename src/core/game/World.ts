@@ -89,8 +89,10 @@ export default class {
 
   private teleport(id: string) {
     const [point] = this['return-points'].filter(point => point.id === id);
-    this.player.bottom = point.bottom;
-    this.player.left = point.left;
+    if (point) {
+      this.player.bottom = point.bottom;
+      this.player.left = point.left;
+    }
   }
 
   private fillMapLayer(layer: GameLayer): Entity[] {

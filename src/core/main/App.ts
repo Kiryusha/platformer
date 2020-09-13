@@ -218,7 +218,7 @@ export default class {
     this.display.render();
     if (this.game) {
       this.display.camera.adjustCamera(
-        this.game.player,
+        this.game.player.cameraPosition,
         this.game.world.width,
         this.game.world.height
       );
@@ -285,7 +285,7 @@ export default class {
         // );
         this.display.render();
         this.display.camera.adjustCamera(
-          this.game.player,
+          this.game.player.cameraPosition,
           this.game.world.width,
           this.game.world.height
         );
@@ -337,7 +337,7 @@ export default class {
     // position the camera in advance to prevent one frame flicking since it has not yet had
     // time to position itself in the new zone
     this.display.camera.adjustCamera(
-      this.game.player,
+      this.game.player.cameraPosition,
       this.game.world.width,
       this.game.world.height
     );
