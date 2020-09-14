@@ -2,25 +2,27 @@
 export default class Bus implements Bus {
   // Constants for various events
   // Only movement adjusting is stopped
-  public readonly FREEZE_CHARACTERS: string = 'character.freeze';
-  public readonly UNFREEZE_CHARACTERS: string = 'character.unfreeze';
+  public readonly FREEZE_CHARACTERS = 'character.freeze';
+  public readonly UNFREEZE_CHARACTERS = 'character.unfreeze';
   // Call popup
-  public readonly SHOW_POPUP: string = 'popup.callPopup';
-  public readonly HIDE_POPUP: string = 'popup.startHiding';
+  public readonly SHOW_POPUP = 'popup.callPopup';
+  public readonly HIDE_POPUP = 'popup.startHiding';
   // Disable player controls
-  public readonly DISABLE_CONTROLS: string = 'app.disableControls';
-  public readonly ENABLE_CONTROLS: string = 'app.enableControls';
+  public readonly DISABLE_CONTROLS = 'app.disableControls';
+  public readonly ENABLE_CONTROLS = 'app.enableControls';
   // Event is triggered on entering doors
-  public readonly LOAD_ZONE: string = 'app.loadZone';
+  public readonly LOAD_ZONE = 'app.loadZone';
   // Load the whole game
-  public readonly APP_RESTART: string = 'app.restart';
+  public readonly APP_RESTART = 'app.restart';
   // pause game
-  public readonly APP_PAUSE: string = 'app.pause';
-  public readonly APP_RESUME: string = 'app.resume';
+  public readonly APP_PAUSE = 'app.pause';
+  public readonly APP_RESUME = 'app.resume';
   // show zone title
-  public readonly SHOW_ZONE_TITLE: string = 'zoneTitle.show';
+  public readonly SHOW_ZONE_TITLE = 'zoneTitle.show';
   // teleport player to someplace on the zone
-  public readonly TELEPORT_PLAYER: string = 'world.teleport';
+  public readonly TELEPORT_PLAYER = 'world.teleport';
+  // smooth camera transition on different events
+  public readonly TRANSITION_CAMERA = 'camera.makeTransition';
 
   private subscriptions: Subscriptions = {};
   private lastId: number = 0;

@@ -63,7 +63,7 @@ interface Camera {
   width: number;
   height: number;
   adjustCamera(
-    aim: Character,
+    aim: CameraPosition | null,
     stageWidth: number,
     stageHeight: number,
   ): void
