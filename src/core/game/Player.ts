@@ -132,13 +132,11 @@ export default class Player extends Character implements Player {
   }
 
   public update(gravity: number) {
-    super.update(gravity);
     this.updateCameraPosition();
+    super.update(gravity);
   }
 
   private updateCameraPosition() {
-    // TODO: fix camera flicking on landing
-    // TODO: bug with first wrong frame on zone changing returned
     if (this.isDeathTriggered) {
       return;
     }

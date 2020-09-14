@@ -233,6 +233,11 @@ export default class {
         this.display.render();
         break;
       case 'game':
+        this.display.camera.adjustCamera(
+          this.game.player.cameraPosition,
+          this.game.world.width,
+          this.game.world.height
+        );
         const imagesTilesData = this.library.zones[this.game.world.activeZone].config.tilesets
           .filter(tileset => tileset.name === 'images')[0];
 
@@ -284,11 +289,6 @@ export default class {
         //   imagesTilesData
         // );
         this.display.render();
-        this.display.camera.adjustCamera(
-          this.game.player.cameraPosition,
-          this.game.world.width,
-          this.game.world.height
-        );
         break;
     }
   }
