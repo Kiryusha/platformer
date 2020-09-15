@@ -26,7 +26,7 @@ export default class Display {
     this.context2D = this.library.context2D;
     this.contextWebGL = this.library.contextWebGL;
     this.backgrounds = [];
-    this.camera = new Camera(cameraWidth, cameraHeight);
+    this.camera = new Camera(bus, cameraWidth, cameraHeight);
     this.renderer = new Renderer(
       this.contextWebGL,
       cameraWidth,

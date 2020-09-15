@@ -87,11 +87,15 @@ export default class {
     this.brain.update();
   }
 
-  private teleport(id: string) {
+  private async teleport(id: string) {
+    const oldCameraPosition = {...this.player.cameraPosition};
     const [point] = this['return-points'].filter(point => point.id === id);
     if (point) {
+      // await this.bus.publish(this.bus.TRANSITION_CAMERA, {
+      //   to: this.player.getCameraPositionRelativeToPlayer(point.left, point.bottom)
+      // });
       this.player.bottom = point.bottom;
-      this.player.left = point.left;
+        this.player.left = point.left;
     }
   }
 

@@ -20,12 +20,11 @@ export default class Player extends Character implements Player {
   // Property indicates maximum obtainable hp point by player
   public maxHealth: number;
   // Property shows amount of all the obtained stars
-  public currentStars: number;
+  public currentStars: number = 0;
   public cameraPosition: CameraPosition = {
     x: this.left,
     y: this.top,
   };
-  private maximumStars: number;
   private cameraVelocity: number = 0;
   private cameraVelocityModifier: number = 4;
   private cameraMaxVelocity: number = 100;
@@ -35,13 +34,11 @@ export default class Player extends Character implements Player {
     library: Library,
     playerConfig: CharacterConfig,
     playerSpriteMap: SpriteMap,
-    maximumStars: number,
+    private maximumStars: number,
   ) {
     super(bus, library, playerConfig, playerSpriteMap);
     this.maxHealth = playerConfig.player.maxHealth;
     this.currentHealth = this.maxHealth;
-    this.currentStars = 0;
-    this.maximumStars = maximumStars;
   }
 
   public startJumping(): void {
@@ -131,23 +128,21 @@ export default class Player extends Character implements Player {
     }
   }
 
-  public update(gravity: number) {
-    this.updateCameraPosition();
-    super.update(gravity);
-  }
-
-  private updateCameraPosition() {
+  // This method is needed in order to understand where the camera will be located, relative to
+  // the player, if you pass only the coordinates of the upper left corner of
+  // the character's square
+  public getCameraPositionRelativeToPlayer(x: number, y: number): CameraPosition | undefined {
     if (this.isDeathTriggered) {
       return;
     }
 
     let aimY;
-    let top = this.top;
+    let top = y;
 
     if (this.isDucking) {
       // This condition is necessary in order to keep the camera in the same place when the character
       // begins to duck.
-      top = this.top - (this.defaults.height - this.height);
+      top = y - (this.defaults.height - this.height);
 
       // But if the character continues ducking, gamera will smoothly moves down
       if (this.isKeepDucking && (this.cameraVelocity <= this.cameraMaxVelocity)) {
@@ -161,10 +156,25 @@ export default class Player extends Character implements Player {
 
     aimY = top + this.cameraVelocity;
 
-    const xCenter = this.left + (this.defaults.width / 2);
+    const xCenter = x + (this.defaults.width / 2);
     const yCenter = aimY + (this.defaults.height / 2);
 
-    this.cameraPosition.x = xCenter;
-    this.cameraPosition.y = yCenter;
+    return {
+      x: xCenter,
+      y: yCenter,
+    };
+  }
+
+  public update(gravity: number) {
+    this.updateCameraPosition();
+    super.update(gravity);
+  }
+
+  private updateCameraPosition() {
+    const cameraPosition = this.getCameraPositionRelativeToPlayer(this.left, this.top);
+    if (cameraPosition) {
+      this.cameraPosition.x = cameraPosition.x;
+      this.cameraPosition.y = cameraPosition.y;
+    }
   }
 }

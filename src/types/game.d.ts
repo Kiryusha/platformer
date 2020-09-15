@@ -117,6 +117,7 @@ interface Player extends Character {
   restoreHealth(): void;
   getHurt(returnPointId?: string): void;
   obtainStar(): void;
+  getCameraPositionRelativeToPlayer(x: number, y: number): CameraPosition;
 }
 
 interface Character extends Entity {

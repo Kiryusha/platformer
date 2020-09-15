@@ -57,6 +57,12 @@ interface LayerTile {
   tileSize: number;
 }
 
+interface CameraTransitionPayload {
+  to: CameraPosition;
+  steps?: number;
+  from?: CameraPosition;
+}
+
 interface Camera {
   x: number;
   y: number;

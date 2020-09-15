@@ -6,26 +6,53 @@ export default class Camera implements Camera {
   public yOld: number = 0;
   public width: number;
   public height: number;
+  private transitionTo: CameraPosition;
+  private transitionFrom: CameraPosition;
+  private transitionSteps: number;
+  private transitionCounter: number;
 
   constructor(
+    private bus: Bus,
     width: number,
     height: number,
   ) {
     this.width = width;
     this.height = height;
+    this.subscribeToEvents();
+  }
+
+  private transitionCamera({ to, steps = 10, from }: CameraTransitionPayload): void {
+    this.transitionCounter = steps;
+    this.transitionTo = to;
+    this.transitionSteps = steps;
+    this.transitionFrom = from ? from : {
+      x: this.x,
+      y: this.y,
+    };
+  }
+
+  private subscribeToEvents(): void {
+    this.bus.subscribe(this.bus.TRANSITION_CAMERA, this.transitionCamera.bind(this));
   }
 
   public adjustCamera(
-    aim: CameraPosition | null,
+    aimRaw: CameraPosition | null,
     stageWidth: number,
     stageHeight: number,
   ): void {
+    let aim;
     this.xOld = this.x;
     this.yOld = this.y;
 
-    if (!aim) {
-      this.x = this.xOld;
-      this.y = this.yOld;
+    if (this.transitionCounter) {
+      if (!aim) aim = this.transitionFrom;
+      aim.x += (this.transitionTo.x - this.transitionFrom.x) / this.transitionSteps;
+      aim.y += (this.transitionTo.y - this.transitionFrom.y) / this.transitionSteps;
+      console.log(aim.x, this.transitionTo.x)
+      
+      this.transitionCounter -= 1;
+    } else {
+      aim = aimRaw;
     }
 
     let positionX = aim.x - (this.width / 2);
